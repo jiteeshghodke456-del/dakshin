@@ -1,8 +1,8 @@
 {
-  "generated": "2026-11-21T17:31:24+00:00",
+  "generated": "2026-11-21T23:13:34+00:00",
   "truth": "NOAA/NSIDC G10016 v4 NRT (AMSR2), QA-masked",
   "forecast": "CMEMS GLO12 cmems_mod_glo_phy_anfc, archived at issue time",
-  "model": null,
+  "model": "re-run 2026-11-21 of the 2026-08-31 Kaggle training (identical code, seed and split; credentials cell only change)",
   "scoring": "corridor box 0-80E 55-78S, pooled RMSE on zero-filled fields over isfinite(forecast)&isfinite(truth) cells (training convention), IIEE at 15% threshold",
   "caveats": [
     "sensor change: truth is AMSR2 since 2025-01-01, training truth was F17 SSMIS",
@@ -13,16 +13,18 @@
   ],
   "leads": {
     "lead_1": {
-      "n_cycles": 76,
+      "n_cycles": 77,
       "first_cycle": "2026-08-31",
-      "last_cycle": "2026-11-18",
+      "last_cycle": "2026-11-19",
       "rmse": {
-        "cmems": 0.10199,
-        "persistence": 0.11977
+        "cmems": 0.10219,
+        "persistence": 0.11914,
+        "unet": 0.0914
       },
       "iiee_km2_mean": {
-        "cmems": 195058.0,
-        "persistence": 187706.0
+        "cmems": 196031.0,
+        "persistence": 186997.0,
+        "unet": 93231.0
       }
     },
     "lead_3": {
@@ -31,11 +33,13 @@
       "last_cycle": "2026-11-16",
       "rmse": {
         "cmems": 0.10479,
-        "persistence": 0.14391
+        "persistence": 0.14391,
+        "unet": 0.08741
       },
       "iiee_km2_mean": {
         "cmems": 194575.0,
-        "persistence": 277167.0
+        "persistence": 277167.0,
+        "unet": 142467.0
       }
     },
     "lead_5": {
@@ -44,11 +48,13 @@
       "last_cycle": "2026-11-15",
       "rmse": {
         "cmems": 0.10981,
-        "persistence": 0.15508
+        "persistence": 0.15508,
+        "unet": 0.0946
       },
       "iiee_km2_mean": {
         "cmems": 200203.0,
-        "persistence": 319189.0
+        "persistence": 319189.0,
+        "unet": 182601.0
       }
     },
     "lead_7": {
@@ -57,11 +63,13 @@
       "last_cycle": "2026-11-13",
       "rmse": {
         "cmems": 0.1153,
-        "persistence": 0.16414
+        "persistence": 0.16414,
+        "unet": 0.10245
       },
       "iiee_km2_mean": {
         "cmems": 210200.0,
-        "persistence": 353255.0
+        "persistence": 353255.0,
+        "unet": 221094.0
       }
     }
   }
