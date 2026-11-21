@@ -1,0 +1,43 @@
+{
+  "generated": "2026-11-21T23:21:08+00:00",
+  "cycle": "2026-11-20",
+  "grid": "NSIDC 25 km polar stereographic (model-native); the correction does not add resolution",
+  "question": "is any cell within 50 km of Bharati 4-connected to open water 400+ km out through cells at or under the limit (depth blocking not applied here)",
+  "ice_limit": 0.8,
+  "satellite_day0_reachable": false,
+  "ai_changed_reachability": true,
+  "leads": {
+    "lead_1": {
+      "target": "2026-11-21",
+      "station_reachable": {
+        "raw": true,
+        "corrected": false
+      },
+      "mean_abs_correction": 0.0629
+    },
+    "lead_3": {
+      "target": "2026-11-23",
+      "station_reachable": {
+        "raw": true,
+        "corrected": false
+      },
+      "mean_abs_correction": 0.0636
+    },
+    "lead_5": {
+      "target": "2026-11-25",
+      "station_reachable": {
+        "raw": true,
+        "corrected": false
+      },
+      "mean_abs_correction": 0.0578
+    },
+    "lead_7": {
+      "target": "2026-11-27",
+      "station_reachable": {
+        "raw": true,
+        "corrected": false
+      },
+      "mean_abs_correction": 0.0592
+    }
+  }
+}
