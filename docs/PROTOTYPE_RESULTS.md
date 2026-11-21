@@ -227,6 +227,20 @@ day-t satellite file is available on day t; 4 stale forecast cycles excluded;
 the sensor change itself (AMSR2 since 2025) shifts the observed-ice channels
 relative to training.
 
+## Does the AI change the route decision? (slice 3, scored once)
+
+On the live 2026-11-20 cycle, the router's question — is Bharati
+4-connected to open water through cells at or under the 80 % limit — gets
+three answers on the 25 km grid (`dakshin/figures/corrected_forecast.json`):
+raw CMEMS mean-pooled to 25 km says **reachable** at every lead (a spurious
+one-cell-wide thread); the U-Net-corrected field says **not reachable**; the
+day-0 satellite says **not reachable**. The full-resolution 1/12° router had
+already said closed (closest approach 50.6 km). So the correction repairs at
+25 km the decision the raw field only gets right at full resolution — it
+does not overturn any correctly-made decision, and it removes a false
+opening a coarse-grid consumer would have acted on. One cycle, one
+statistic; the hindcast tables above are the weight-bearing evidence.
+
 # Routing Result — Cape Town → Bharati
 
 Recomputed 2026-09-02 with PolarRoute 1.1.11 (British Antarctic Survey, MIT) on
