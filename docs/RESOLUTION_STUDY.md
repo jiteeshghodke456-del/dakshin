@@ -87,8 +87,19 @@ bergs stop being advected. For free-drifting bergs the eddy question stays
 open and needs either more moving bergs (wider region) or daily positions
 (e.g. the BYU/NIC scatterometer database).
 
-## Pending
+## The U-Net column (added 2026-11-21, checkpoints from that day's re-run)
 
-- U-Net column at each resolution (checkpoints regenerating on Kaggle; rerun
-  `scripts/resolution_study.py` without `--no-model` once
-  `models/sic_correction/checkpoints/` is populated).
+The correction cannot restore resolution the background has lost. Applied to
+the same forecasts coarsened to each grid (corrected IIEE, mean km²):
+
+| Lead | on 1/12° | on 1/4° | on 1° |
+|---|---|---|---|
+| 1 day | **93,231** | 93,287 | 97,792 |
+| 7 days | **221,094** | 223,342 | 246,580 |
+
+1/12° → 1/4° costs almost nothing (the corridor edge is wider than 1/4°), but
+1° degrades the corrected forecast at every lead — 5% more misplaced edge at
+day 1, 12% more at day 7. Same double-penalty story as the raw fields: RMSE
+barely moves across resolutions while IIEE separates them. The model also
+cannot be used to argue 1° is fine: feeding it coarser backgrounds just
+yields coarser corrected edges.

@@ -179,6 +179,54 @@ downloads its own data. Roughly 1–2 hours.
 
 ---
 
+# Real-forecast hindcast (2026) — the trained model on data it has never seen
+
+Scored 2026-11-21, once, with the checkpoints from that day's Kaggle re-run of
+the identical 2026-08-31 training (Release `model-v0.1`; SHA256-verified by
+`dakshin/model_io.py`). Everything here is out-of-sample twice over: a later
+year than any training data, and a different truth sensor (AMSR2 NRT vs the
+F17 SSMIS the model trained against). Corridor box 0–80°E 55–78°S, 72–77
+archived real CMEMS forecast cycles from 2026-08-31 to 2026-11-19, truth
+NOAA/NSIDC G10016 v4, QA-masked, never resampled. Full numbers:
+`dakshin/figures/realforecast_hindcast.json`.
+
+RMSE (lower is better):
+
+| Lead | Corrected (U-Net) | Raw CMEMS | Persistence |
+|---|---|---|---|
+| 1 day | **0.091** | 0.102 | 0.119 |
+| 3 days | **0.087** | 0.105 | 0.144 |
+| 5 days | **0.095** | 0.110 | 0.155 |
+| 7 days | **0.102** | 0.115 | 0.164 |
+
+IIEE, mean km² of misplaced ice edge (the metric a navigator feels):
+
+| Lead | Corrected (U-Net) | Raw CMEMS | Persistence |
+|---|---|---|---|
+| 1 day | **93,231** | 196,031 | 186,997 |
+| 3 days | **142,467** | 194,575 | 277,167 |
+| 5 days | **182,601** | 200,203 | 319,189 |
+| 7 days | 221,094 | **210,200** | 353,255 |
+
+## What is honest to claim
+
+- **The correction transfers.** Trained on 2015–2020 F17 data, it still beats
+  raw CMEMS RMSE at every lead on 2026 AMSR2 truth, and **halves the ice-edge
+  error at 1 day** (93k vs 196k km²).
+- **The edge advantage decays with lead.** By 7 days the corrected IIEE is
+  slightly *worse* than raw CMEMS (221k vs 210k km²), while RMSE stays ahead —
+  the correction keeps improving concentration values but no longer knows
+  where the edge is a week out. Quote both metrics; the pair is the finding.
+- **Do not compare these RMSEs with the training table above.** Different
+  years, season mix, truth sensor and region. The training table says the
+  architecture learns; this section says the learned correction survives
+  contact with live operational data.
+
+Caveats (also in the JSON): one spring season; corridor only; assumes the
+day-t satellite file is available on day t; 4 stale forecast cycles excluded;
+the sensor change itself (AMSR2 since 2025) shifts the observed-ice channels
+relative to training.
+
 # Routing Result — Cape Town → Bharati
 
 Recomputed 2026-09-02 with PolarRoute 1.1.11 (British Antarctic Survey, MIT) on

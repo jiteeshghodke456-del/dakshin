@@ -12,10 +12,11 @@
 - Source repo: grounding-aware berg v2 (26/88 held, 4.13 km/day), melt fixed
   to berg-relative speed, RealWorld serves real depth, currents/waves/SST
   int16-packed, NRT truth committed (rolls off NSIDC from 24 Nov), suite 197.
-- Kaggle: GPU re-run still QUEUED since ~18:50 UTC; CPU clone
-  (dakshin-prototype-train-cpu, same code/seed/split, enable_gpu false)
-  RUNNING since ~19:25 UTC — expect checkpoints in the morning; then run
-  `KAGGLE_API_TOKEN=<token> bash scripts/pull_checkpoints.sh`.
+- Kaggle: **DONE.** GPU v8 completed 2026-11-21 22:51 UTC (v7 died on a
+  pip numpy upgrade; pinned, commit d7b0d0f). Checkpoints committed with
+  SHA256SUMS, Release `model-v0.1` published, hindcast + resolution study
+  scored with the model (see docs/PROTOTYPE_RESULTS.md "Real-forecast
+  hindcast (2026)"). The redundant CPU clone can be ignored.
 
 
 If this session was cleared, read this file plus `docs/backlog.md` and
@@ -42,20 +43,17 @@ skips are model_io + pre-existing, they un-skip when checkpoints land).
 
 ## In flight
 
-- **Kaggle re-run** of the training notebook: kernel
-  `jiteeshghodke/notebookd39fdf7959` version 6, QUEUED for the free T4 pool.
-  History: the original 2026-08-31 checkpoints were never in Kaggle's output
-  store, and the saved notebook's training-loop cell was typed *markdown*, so
-  batch runs did nothing. v6 fixes the cell type; CMEMS credentials come from
-  the private dataset `jiteeshghodke/cmems-creds` (CLI batch runs cannot read
-  Kaggle Secrets). A background watcher polls every 5 min.
-- **When COMPLETE:** run `KAGGLE_API_TOKEN=<token> bash scripts/pull_checkpoints.sh`,
-  then write the "Real-forecast hindcast (2026)" section into the results doc
-  with the numbers as they come out (including any lead where the U-Net
-  loses), update `docs/RESOLUTION_STUDY.md`'s pending U-Net rows, commit the
-  checkpoints, create Release `model-v0.1`.
-- **If it ERRORs again:** `kaggle kernels logs jiteeshghodke/notebookd39fdf7959`,
-  fix only what the log names, push v7 unchanged otherwise.
+- **Slice 3 (AI ice into routing / site)**: unblocked now that checkpoints
+  are in the repo. Next: apply the lead-matched correction to the latest
+  archived cycle (`build_channels_operational` + `model_io`), compare the
+  real route decision on raw vs corrected ice, surface the corrected field
+  on the site as an AI layer.
+- History of the Kaggle saga (for the study doc): the original 2026-08-31
+  checkpoints were never in Kaggle's output store because the saved
+  notebook's training cell was typed *markdown*; v6 fixed the cell type,
+  v7 died importing numpy after pip half-upgraded it, v8 pinned numpy and
+  completed. CMEMS credentials come from the private dataset
+  `jiteeshghodke/cmems-creds` (CLI batch runs cannot read Kaggle Secrets).
 
 ## Progress since this file was written
 
