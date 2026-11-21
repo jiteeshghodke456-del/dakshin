@@ -88,7 +88,9 @@ def main() -> int:
         md(NOTEBOOK_INTRO),
         md("## 1. Environment"),
         code(
-            "!pip install -q copernicusmarine pyproj xarray netCDF4\n"
+            "# numpy is pinned to the image's own build: letting pip upgrade it\n"
+            "# leaves a mixed install whose compiled core breaks scipy on import.\n"
+            "!pip install -q copernicusmarine pyproj xarray netCDF4 \"numpy==$(python -c 'import numpy; print(numpy.__version__)')\"\n"
             "\n"
             "import torch\n"
             "print('torch', torch.__version__)\n"
