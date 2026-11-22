@@ -36,6 +36,7 @@
   move), drift chains always true to the grid (×k schematic removed), day
   replay at 0.45 s. IEEE paper drafted+reviewed+revised, **local only** at
   `paper/` (gitignored) and `~/dakshin-paper.pdf` per the owner.
+- Stale-history eval (post-update): a live-cycle AI edge on day−1 history is REJECTED by measurement — lead-1 RMSE 0.1076 vs raw 0.1022 (`dakshin/figures/stale_history_eval.json`). The AI layer lags the live cycle by one day, with the published number as the reason.
 - Suite: 209 passed, 2 skipped. Frank capability list:
   `docs/WEAKNESS_ANALYSIS.md` §11 (2026-11-22 addendum).
 
