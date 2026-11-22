@@ -1,0 +1,59 @@
+{
+  "generated": "2026-11-22T04:31:24+00:00",
+  "question": "cost of running the correction with satellite history ending at day-1 instead of day-0 (the live-cycle reality)",
+  "scoring": "identical to realforecast_hindcast.py (pooled RMSE, IIEE at 15%), cycles restricted to those where both history windows and the target observation exist",
+  "leads": {
+    "lead_1": {
+      "n_cycles": 77,
+      "rmse": {
+        "cmems": 0.10219,
+        "fresh": 0.0914,
+        "stale": 0.10763
+      },
+      "iiee_km2_mean": {
+        "cmems": 196031.0,
+        "fresh": 93231.0,
+        "stale": 139334.0
+      }
+    },
+    "lead_3": {
+      "n_cycles": 75,
+      "rmse": {
+        "cmems": 0.10479,
+        "fresh": 0.08741,
+        "stale": 0.09388
+      },
+      "iiee_km2_mean": {
+        "cmems": 194575.0,
+        "fresh": 142467.0,
+        "stale": 159967.0
+      }
+    },
+    "lead_5": {
+      "n_cycles": 74,
+      "rmse": {
+        "cmems": 0.10981,
+        "fresh": 0.0946,
+        "stale": 0.09715
+      },
+      "iiee_km2_mean": {
+        "cmems": 200203.0,
+        "fresh": 182601.0,
+        "stale": 190084.0
+      }
+    },
+    "lead_7": {
+      "n_cycles": 72,
+      "rmse": {
+        "cmems": 0.1153,
+        "fresh": 0.10245,
+        "stale": 0.10383
+      },
+      "iiee_km2_mean": {
+        "cmems": 210200.0,
+        "fresh": 221094.0,
+        "stale": 225790.0
+      }
+    }
+  }
+}

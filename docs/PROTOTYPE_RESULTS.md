@@ -245,6 +245,18 @@ does not overturn any correctly-made decision, and it removes a false
 opening a coarse-grid consumer would have acted on. One cycle, one
 statistic; the hindcast tables above are the weight-bearing evidence.
 
+### Why there is no AI edge for the live cycle (measured, 2026-11-22)
+
+The NSIDC NRT file publishes ~1 day late, so a live-cycle correction would
+have to run on satellite history ending at day−1. We measured that cost
+(`scripts/stale_history_eval.py`, same cycles/mask/scoring as the hindcast;
+`dakshin/figures/stale_history_eval.json`): at lead 1 the stale-input
+correction is **worse than the raw forecast on RMSE** (0.1076 vs 0.1022;
+fresh: 0.0914) — the short-lead skill lives in the day-0 image. Leads 3–7
+degrade only mildly (e.g. lead 3: 0.0939 vs fresh 0.0874). Verdict: no
+stale-input edge ships; the AI layer trails the live cycle by one day and
+this table is the reason.
+
 ### Season-long decision record (added 2026-11-22)
 
 `scripts/corrected_forecast.py --all` repeats the reachability question on

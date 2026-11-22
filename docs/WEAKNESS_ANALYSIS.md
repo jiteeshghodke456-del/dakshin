@@ -381,7 +381,7 @@ claim below has a committed artifact behind it; every failure names its cause.
   automatically on the first cycle that has both. [data gap]
 - **No correction for the live cycle, ever**: the model needs the day-0
   satellite file, which lands ~1 day late, so the newest corrected cycle
-  always trails the newest forecast by ≥1 day. [inherent data latency]
+  always trails the newest forecast by ≥1 day. Measured 2026-11-22: running on day−1 history makes lead-1 RMSE worse than the raw forecast (0.1076 vs 0.1022), so a stale-input live edge is rejected, not just deferred. [inherent data latency, cost quantified]
 - **The IIEE advantage dies by lead 7** (221,094 vs raw 210,200 km²). Both
   metrics are quoted together everywhere; do not quote RMSE alone. [finding]
 - **The decision record cannot separate the corrector from persistence** —
