@@ -1,0 +1,1949 @@
+{
+  "generated": "2026-11-22T04:03:54+00:00",
+  "encoding": "uint8 sic*200, 255 = no data; keys c<YYYYMMDD>_l<lead>",
+  "ice_limit": 0.8,
+  "verification": {
+    "note": "lead-decisions scored against the satellite field on the target date (not day 0); decisions whose target is beyond the archive are uncounted",
+    "n_decisions": 298,
+    "raw_correct": 287,
+    "corrected_correct": 298
+  },
+  "cycles": {
+    "2026-08-31": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-01": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-02": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-03": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-04": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-05": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-06": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-07": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-08": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-09": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-10": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-11": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-12": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-13": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-14": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-15": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-16": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-17": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-18": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-19": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-21": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-22": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-23": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-24": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-25": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-26": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-27": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-28": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-29": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-09-30": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-01": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-02": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-03": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-04": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-05": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-06": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-07": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-08": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-09": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-10": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-12": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-13": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-14": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-15": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-16": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-17": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-18": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-19": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-20": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-21": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-22": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-23": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-24": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-25": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-26": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-27": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-28": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-29": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-30": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-10-31": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-01": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-02": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-03": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-04": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-05": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-06": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-07": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-08": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-09": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-11": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-12": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-13": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        }
+      }
+    },
+    "2026-11-14": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false
+        }
+      }
+    },
+    "2026-11-15": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false
+        }
+      }
+    },
+    "2026-11-16": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": false,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_5": {
+          "raw": true,
+          "corrected": true
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false
+        }
+      }
+    },
+    "2026-11-18": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": true,
+          "corrected": false
+        },
+        "lead_5": {
+          "raw": true,
+          "corrected": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false
+        }
+      }
+    },
+    "2026-11-19": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": true,
+          "corrected": false,
+          "satellite_target": false
+        },
+        "lead_3": {
+          "raw": true,
+          "corrected": false
+        },
+        "lead_5": {
+          "raw": true,
+          "corrected": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false
+        }
+      }
+    },
+    "2026-11-20": {
+      "satellite_day0_reachable": false,
+      "leads": {
+        "lead_1": {
+          "raw": true,
+          "corrected": false
+        },
+        "lead_3": {
+          "raw": true,
+          "corrected": false
+        },
+        "lead_5": {
+          "raw": true,
+          "corrected": false
+        },
+        "lead_7": {
+          "raw": true,
+          "corrected": false
+        }
+      }
+    }
+  }
+}
