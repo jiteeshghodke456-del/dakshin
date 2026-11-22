@@ -118,7 +118,7 @@ def main() -> int:
 
     if run_all:
         packed, decisions = {}, {}
-        tally = {"raw": 0, "corrected": 0, "n": 0}
+        tally = {"raw": 0, "corrected": 0, "persistence": 0, "n": 0}
         for d in usable:
             flds, summ = correct_cycle(d, cycles[d], obs, rg, d2, models)
             leads_out = {}
@@ -134,6 +134,7 @@ def main() -> int:
                     tally["n"] += 1
                     tally["raw"] += row["raw"] == truth
                     tally["corrected"] += row["corrected"] == truth
+                    tally["persistence"] += reachable(obs[d], d2) == truth
                 leads_out[f"lead_{lead}"] = row
             decisions[str(d)] = {
                 "satellite_day0_reachable": reachable(obs[d], d2),
@@ -154,6 +155,11 @@ def main() -> int:
                 "n_decisions": tally["n"],
                 "raw_correct": tally["raw"],
                 "corrected_correct": tally["corrected"],
+                "persistence_correct": tally["persistence"],
+                "caveat": "the station's state never flipped inside a lead "
+                          "window this season, so persistence scores perfectly "
+                          "too: this record separates the corrected field from "
+                          "the RAW forecast, not from persistence",
             },
             "cycles": decisions,
         }, indent=2) + "\n")

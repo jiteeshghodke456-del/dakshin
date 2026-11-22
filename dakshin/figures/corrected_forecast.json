@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-22T04:03:54+00:00",
+  "generated": "2026-11-22T04:18:32+00:00",
   "cycle": "2026-11-20",
   "grid": "NSIDC 25 km polar stereographic (model-native); the correction does not add resolution",
   "question": "is any cell within 50 km of Bharati 4-connected to open water 400+ km out through cells at or under the limit (depth blocking not applied here)",

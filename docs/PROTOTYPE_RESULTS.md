@@ -257,12 +257,15 @@ decisions; 14 targets fall beyond the archive):
 |---|---|
 | raw CMEMS at 25 km | 287 / 298 (96.3 %) |
 | **U-Net-corrected** | **298 / 298** |
+| persistence (day-0 verdict carried) | 298 / 298 |
 
 All 11 raw errors are false "reachable" verdicts (the spurious coarse-grid
 thread); the correction removes every one and never flips a correct
-verdict. Honest scope: one station, one spring, and the station was closed
-nearly all season, so the base rate favours "not reachable" — this measures
-false-alarm removal, not general decision skill across regimes.
+verdict. Honest scope: one station, one spring, and the station never
+changed state inside a lead window all season — so persistence scores
+perfectly too, and this record separates the corrected field from the
+**raw forecast**, not from persistence. It measures false-alarm removal,
+not general decision skill across regimes.
 
 # Routing Result — Cape Town → Bharati
 

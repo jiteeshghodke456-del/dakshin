@@ -777,7 +777,8 @@ function renderRail() {
       ['DECISION RECORD', v ? `${v.corrected_correct}/${v.n_decisions} right (raw ${v.raw_correct}/${v.n_decisions})` : '—'],
     ]);
     if (v) b.appendChild(el('div', 'rule',
-      'approach go/no-go vs the satellite on each target date, one spring, one station'));
+      'approach go/no-go vs the satellite on each target date, one spring, one station; '
+      + 'persistence also scores perfectly here — this separates corrected from RAW, not from persistence'));
   }));
 
   // POLARIS - a second opinion from a different framework, deliberately not
