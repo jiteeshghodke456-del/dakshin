@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-21T17:51:17+00:00",
+  "generated": "2026-11-22T04:13:32+00:00",
   "cycle": "2026-11-21",
   "start": [
     -55.5,
@@ -10,8 +10,8 @@
     76.2
   ],
   "segment_note": "corridor segment south of 55S \u2014 the harvest box; no real wave/wind data exists north of it",
-  "approach_closed_at_ice_limit": true,
-  "closest_approach_km": 50.6,
+  "approach_closed_at_ice_limit": false,
+  "closest_approach_km": null,
   "eta_days": 5.55,
   "worst_ice": 0.723,
   "worst_hs_m": 4.77,
@@ -23,5 +23,10 @@
       "visibility"
     ]
   },
-  "n_legs": 45
+  "n_legs": 45,
+  "route_ends_km_from_station": 50.6,
+  "lattice_note": "router lattice is 0.55 x 0.9 deg over native 1/12 deg fields; it cannot resolve the final ~50 km to the station \u2014 the 25 km reachability check (corrected_forecast.json) covers the approach",
+  "corrected_ice_check": {
+    "skipped": "newest corrected cycle (2026-11-20) has no archived wave file and the router needs waves; the check runs on the first cycle that has both"
+  }
 }

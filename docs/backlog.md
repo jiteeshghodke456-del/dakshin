@@ -353,3 +353,4 @@ what was filed rather than fixed.
 - [minor][eval] ADR-027 calls for CRPS; scorer computes RMSE+IIEE only. No result carries a confidence interval yet.
 - [minor][nemo] NemoReader does no C-grid destaggering or grid-rotation of U/V; fine for scalar fields, wrong for vector use on native grids — document or fix before feeding real NEMO currents.
 - [minor][site] Verification layer cannot pair with full-res currents on one chart yet: full-res currents exist only for the latest cycle, which has no satellite truth — emit analysis currents for verifiable days (site agent note, 2026-11-21).
+- [med][harvest] Wave files archived only for the live cycle (one cmems_wav_*.nc exists); blocks the corrected-ice router check on past cycles — archive waves per cycle like siconc

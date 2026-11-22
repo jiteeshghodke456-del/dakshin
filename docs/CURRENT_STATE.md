@@ -32,7 +32,7 @@ only; score once, report what comes out; push only to jiteeshghodke456-del).
 | 2 (baselines) | NRT truth downloader (89 days), `build_channels_operational`, hindcast scorer. Raw CMEMS beats persistence at all leads | `dakshin/figures/realforecast_hindcast.json` |
 | 4 | Currents in daily harvest + 82-day analysis backfill; CI run green | `data/cmems_cur_analysis/`, workflow run 44931056680 |
 | 5 | RK2 berg forecast + USNIC validation: **persistence wins, giants are grounded**, measured 4.35 km/day error rate | `dakshin/figures/berg_hindcast.json` |
-| 6 | Waves in harvest (daily max), ECMWF wind harvest (daily, CC BY 4.0), `RealWorld`, weather gate from real data (FAILs at 4.77 m waves on 2026-11-21), real route run: **Bharati approach closed by spring ice, closest 50.6 km** | `dakshin/figures/real_route.json` |
+| 6 | Waves in harvest (daily max), ECMWF wind harvest (daily, CC BY 4.0), `RealWorld`, weather gate from real data (FAILs at 4.77 m waves on 2026-11-21), real route run: **Bharati approach: track ends 50.6 km short of the station** (arrival under the one-lattice-cell rule; the 25 km check says the approach is closed) | `dakshin/figures/real_route.json` |
 | 7 | IBCSO v2 subset (CC-BY-4.0), min-depth block in both routers, chart gate never PASS without ENC | `data/bathymetry/`, agent commit ce236c7 |
 | 8 | Hardened NMEA AIS decoder (pyais) + traffic gate bands | `dakshin/ais_feed.py` |
 | F1 | Resolution study: RMSE blind to resolution (double penalty), IIEE shows 1° losing the edge, 1/12°≈1/4° | `docs/RESOLUTION_STUDY.md` |

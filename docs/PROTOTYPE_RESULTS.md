@@ -234,8 +234,12 @@ On the live 2026-11-20 cycle, the router's question — is Bharati
 three answers on the 25 km grid (`dakshin/figures/corrected_forecast.json`):
 raw CMEMS mean-pooled to 25 km says **reachable** at every lead (a spurious
 one-cell-wide thread); the U-Net-corrected field says **not reachable**; the
-day-0 satellite says **not reachable**. The full-resolution 1/12° router had
-already said closed (closest approach 50.6 km). So the correction repairs at
+day-0 satellite says **not reachable**. The router (0.55°×0.9° lattice over
+native 1/12° fields — not a 1/12° lattice) tells the same story: its track
+ends 50.6 km from the station; since commit 478ecd2 it calls that an arrival
+under the one-lattice-cell rule, and its lattice cannot resolve the final
+~50 km either way, which is exactly the gap the 25 km reachability check
+covers. So the correction repairs at
 25 km the decision the raw field only gets right at full resolution — it
 does not overturn any correctly-made decision, and it removes a false
 opening a coarse-grid consumer would have acted on. One cycle, one
