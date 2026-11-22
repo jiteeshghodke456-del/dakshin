@@ -356,3 +356,4 @@ what was filed rather than fixed.
 - [med][harvest] Wave files archived only for the live cycle (one cmems_wav_*.nc exists); blocks the corrected-ice router check on past cycles — archive waves per cycle like siconc
 - [low][model] Corrected cycle always trails the newest forecast by >=1 day (needs day-0 satellite file) — inherent latency, documented in WEAKNESS_ANALYSIS §11
 - [low][site] AI edge exists only for cycles with full 7-day satellite history (78 of 83) — others show satellite/model edges only
+- [low][ops] berg_tracks.py + corrected_forecast.py run manually per cycle; future cycles have forcing (harvest saves cur+wav since 2026-11-21) but tracks/AI edges reach the site only on a manual run + site rebuild — automate when the owner wants torch in CI
