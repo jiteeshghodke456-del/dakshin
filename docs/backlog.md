@@ -357,3 +357,4 @@ what was filed rather than fixed.
 - [low][model] Corrected cycle always trails the newest forecast by >=1 day (needs day-0 satellite file) — inherent latency, documented in WEAKNESS_ANALYSIS §11
 - [low][site] AI edge exists only for cycles with full 7-day satellite history (78 of 83) — others show satellite/model edges only
 - [low][ops] berg_tracks.py + corrected_forecast.py run manually per cycle; future cycles have forcing (harvest saves cur+wav since 2026-11-21) but tracks/AI edges reach the site only on a manual run + site rebuild — automate when the owner wants torch in CI
+- [minor][docs] docs/WEAKNESS_ANALYSIS.md says the hindcast RMSE margin over raw CMEMS is 0.011-0.013; realforecast_hindcast.json gives 0.0108, 0.0174, 0.0148, 0.0129 (leads 1,3,5,7) — see docs/study/PHYSICS_AND_PAPERS.md 4.6

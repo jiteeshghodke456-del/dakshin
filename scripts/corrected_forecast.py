@@ -49,7 +49,9 @@ def reachable(sic: np.ndarray, d2_station_km: np.ndarray) -> bool:
     """Is any cell near the station 4-connected to distant open water
     through cells at or under the ice limit? This is the router's notion of
     'approach open', not a min over a circle that mixes in unreachable
-    water.  shortcut: ignores depth blocking; upgrade to Router if the
+    water. 4-connected (scipy default), stricter than the router's
+    8-neighbourhood, so it errs toward 'not reachable'.
+    shortcut: ignores depth blocking; upgrade to Router if the
     two ever disagree on a real cycle."""
     from scipy.ndimage import label
     passable = np.isfinite(sic) & (sic <= ICE_LIMIT)

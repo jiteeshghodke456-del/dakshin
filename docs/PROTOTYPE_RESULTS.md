@@ -253,9 +253,12 @@ have to run on satellite history ending at day−1. We measured that cost
 `dakshin/figures/stale_history_eval.json`): at lead 1 the stale-input
 correction is **worse than the raw forecast on RMSE** (0.1076 vs 0.1022;
 fresh: 0.0914) — the short-lead skill lives in the day-0 image. Leads 3–7
-degrade only mildly (e.g. lead 3: 0.0939 vs fresh 0.0874). Verdict: no
-stale-input edge ships; the AI layer trails the live cycle by one day and
-this table is the reason.
+degrade only mildly (e.g. lead 3: 0.0939 vs fresh 0.0874). For completeness: stale lead-1 IIEE
+(139,334 km²) still beats raw (196,031 km²), and at leads 3–7 the stale
+correction still beats raw on RMSE — the rejection is about lead-1 RMSE,
+the headline a live edge would be read by. Verdict: no stale-input edge
+ships; the AI layer trails the live cycle by one day and this table is
+the reason.
 
 ### Season-long decision record (added 2026-11-22)
 
@@ -275,9 +278,11 @@ All 11 raw errors are false "reachable" verdicts (the spurious coarse-grid
 thread); the correction removes every one and never flips a correct
 verdict. Honest scope: one station, one spring, and the station never
 changed state inside a lead window all season — so persistence scores
-perfectly too, and this record separates the corrected field from the
-**raw forecast**, not from persistence. It measures false-alarm removal,
-not general decision skill across regimes.
+perfectly too — as would a rule that always answers "not reachable"
+(every one of the 298 target-date verdicts is "not reachable"). This
+record separates the corrected field from the **raw forecast**, nothing
+more. It measures false-alarm removal, not sensitivity and not general
+decision skill across regimes.
 
 # Routing Result — Cape Town → Bharati
 

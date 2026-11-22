@@ -422,7 +422,7 @@ claim below has a committed artifact behind it; every failure names its cause.
   half-upgrade numpy over the image, NSIDC throws transient 500s. All three
   fixes are committed in the notebook generator; expect the next drift.
 - **Seed variance ≈ the margin**: run-to-run spread (≤0.012) is the same
-  size as the hindcast RMSE margin over raw CMEMS (0.011–0.013). Hindcast
+  size as the hindcast RMSE margin over raw CMEMS at leads 1 and 7 (0.0108 and 0.0129; leads 3 and 5 have more headroom, 0.0174 and 0.0148). Hindcast
   uses one checkpoint per lead; no seed ensemble.
 - **The router cannot see the final approach** (0.55°×0.9° lattice, ~60 km
   cells): any "arrived" within one lattice cell of a station ashore is a
