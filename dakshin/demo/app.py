@@ -207,6 +207,15 @@ def workflow_state():
     return workflow_service.state()
 
 
+@app.get("/api/model")
+def model():
+    """The trained SIC corrector: checkpoints, held-out skill, decision record."""
+    card = data.model_card()
+    if card is None:
+        raise HTTPException(404, "model checkpoints not present in this checkout")
+    return card
+
+
 @app.get("/api/waypoints")
 def waypoints():
     """The legs and their ETAs — §4's waypoint + ETA definition step."""

@@ -241,6 +241,25 @@ does not overturn any correctly-made decision, and it removes a false
 opening a coarse-grid consumer would have acted on. One cycle, one
 statistic; the hindcast tables above are the weight-bearing evidence.
 
+### Season-long decision record (added 2026-11-22)
+
+`scripts/corrected_forecast.py --all` repeats the reachability question on
+every archived cycle with a full 7-day satellite history (78 cycles, Aug 31
+– Nov 21) and verifies each lead-decision against the satellite field **on
+the target date** (`dakshin/figures/corrected_all.json`, 298 verifiable
+decisions; 14 targets fall beyond the archive):
+
+| field | correct go/no-go |
+|---|---|
+| raw CMEMS at 25 km | 287 / 298 (96.3 %) |
+| **U-Net-corrected** | **298 / 298** |
+
+All 11 raw errors are false "reachable" verdicts (the spurious coarse-grid
+thread); the correction removes every one and never flips a correct
+verdict. Honest scope: one station, one spring, and the station was closed
+nearly all season, so the base rate favours "not reachable" — this measures
+false-alarm removal, not general decision skill across regimes.
+
 # Routing Result — Cape Town → Bharati
 
 Recomputed 2026-09-02 with PolarRoute 1.1.11 (British Antarctic Survey, MIT) on

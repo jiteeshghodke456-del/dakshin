@@ -261,3 +261,17 @@ def test_the_preview_shows_corridor_b_failing_its_own_ice_limit(client):
 
 def test_a_day_outside_the_window_is_refused(client):
     assert client.get("/api/preview?day=1999-01-01").status_code == 404
+
+
+def test_model_card_is_real_artifacts(client):
+    """/api/model serves only published artifacts: SHA-pinned checkpoints and
+    the training run's own skill table (no recomputation in the demo)."""
+    r = client.get("/api/model")
+    assert r.status_code == 200
+    m = r.json()
+    assert [c["file"] for c in m["checkpoints"]] == [
+        f"isih_prototype_lead{k}.pt" for k in (1, 3, 5, 7)]
+    assert all(len(c["sha256"]) == 12 for c in m["checkpoints"])
+    assert [row["lead"] for row in m["held_out_skill"]] == [1, 3, 5, 7]
+    v = m["decision_verification"]
+    assert v["corrected_correct"] <= v["n_decisions"]

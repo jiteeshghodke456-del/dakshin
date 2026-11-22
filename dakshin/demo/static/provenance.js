@@ -31,6 +31,7 @@ export const PROVENANCE = {
   'panel.log':        ['real', 'decision log, versioned and attributed'],
   'panel.fresh':      ['real', 'per-layer age computed against the clock'],
   'route.planned':    ['real', 'PolarRoute corridor'],
+  'panel.model':      ['real', 'release model-v0.1 artifacts: checksummed checkpoints, training-run skill table, target-date decision record'],
 
   // --- synthetic: real physics, invented initial state ---------------------
   'chart.ice':        ['synthetic', 'sea-ice concentration field, modelled forward'],

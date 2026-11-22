@@ -415,3 +415,49 @@ def protected() -> dict:
         "drawn": len(drawable),
         "areas": drawable,
     }
+
+
+# --------------------------------------------------------------------------
+# AI correction model — published artifacts only, nothing recomputed
+# --------------------------------------------------------------------------
+
+CKPT = ROOT / "models" / "sic_correction" / "checkpoints"
+
+
+@lru_cache(maxsize=1)
+def model_card() -> dict | None:
+    """The trained SIC corrector as its published artifacts: SHA256-pinned
+    checkpoints, the skill table the training run wrote, and the season-long
+    decision verification from scripts/corrected_forecast.py --all."""
+    import csv
+
+    sums, skill = CKPT / "SHA256SUMS", CKPT / "isih_skill_by_lead.csv"
+    if not (sums.exists() and skill.exists()):
+        return None
+    checkpoints = []
+    for line in sums.read_text().splitlines():
+        sha, name = line.split()
+        name = name.lstrip("*")
+        if name.endswith(".pt") and (CKPT / name).exists():
+            checkpoints.append({"file": name, "sha256": sha[:12],
+                                "mb": round((CKPT / name).stat().st_size / 1e6, 1)})
+    with skill.open() as fh:
+        skill_rows = [{"lead": int(r["lead"]),
+                       "model_rmse": round(float(r["OUR MODEL"]), 4),
+                       "persistence_rmse": round(float(r["persistence"]), 4),
+                       "gain_pct": round(float(r["gain vs persistence %"]), 1)}
+                      for r in csv.DictReader(fh)]
+    out = {
+        "name": "SIC bias-correction residual U-Net (one checkpoint per lead)",
+        "release": "model-v0.1",
+        "checkpoints": checkpoints,
+        "held_out_skill": skill_rows,
+        "source": "models/sic_correction/checkpoints/ — checksums and skill "
+                  "table written by the training run, read here, never recomputed",
+    }
+    allj = FIG / "corrected_all.json"
+    if allj.exists():
+        doc = json.loads(allj.read_text())
+        if doc.get("verification"):
+            out["decision_verification"] = doc["verification"]
+    return out

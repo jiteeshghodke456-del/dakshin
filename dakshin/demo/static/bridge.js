@@ -765,6 +765,21 @@ function renderRail() {
     b.appendChild(lab);
   }));
 
+  // AI correction - the trained corrector's published record. Everything here
+  // is read from release artifacts (/api/model); nothing is recomputed in-page.
+  if (S.model) rail.appendChild(panel('AI correction', 'panel.model', b => {
+    const m = S.model, v = m.decision_verification;
+    const g1 = m.held_out_skill[0], g4 = m.held_out_skill[m.held_out_skill.length - 1];
+    kv(b, [
+      ['MODEL', 'residual U-Net, per-lead'],
+      ['RELEASE', m.release + ' · ' + m.checkpoints.length + ' ckpt, SHA-pinned'],
+      ['HELD-OUT GAIN', `+${g1.gain_pct}% (D+${g1.lead}) … +${g4.gain_pct}% (D+${g4.lead}) vs persistence`],
+      ['DECISION RECORD', v ? `${v.corrected_correct}/${v.n_decisions} right (raw ${v.raw_correct}/${v.n_decisions})` : '—'],
+    ]);
+    if (v) b.appendChild(el('div', 'rule',
+      'approach go/no-go vs the satellite on each target date, one spring, one station'));
+  }));
+
   // POLARIS - a second opinion from a different framework, deliberately not
   // wired into the nine gates: one assumption must not move the state twice.
   rail.appendChild(panel('POLARIS', 'panel.rio', b => {
@@ -1269,9 +1284,10 @@ async function refresh(fast = false) {
 async function boot() {
   S.meta = await api('/api/v2/meta');
   // Static layers, fetched once: they do not vary with the clock.
-  [S.coast, S.areas] = await Promise.all([
+  [S.coast, S.areas, S.model] = await Promise.all([
     api('/api/coastline').catch(() => null),
     api('/api/protected').catch(() => null),
+    api('/api/model').catch(() => null),
   ]);
   setupChart();
   buildToolRail();
