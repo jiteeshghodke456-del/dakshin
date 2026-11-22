@@ -10,18 +10,18 @@ Study documents for a technical reader are in `docs/study/`: [architecture and d
 
 All numbers below come from files committed in this repository. The path of the file that produces each is given.
 
-### 1. Raw operational forecast against persistence, 2026 spring
+### 1. Corrected forecast against the raw forecast and persistence, 2026 spring
 
-76 archived CMEMS GLO12 forecast cycles (2026-08-31 to 2026-11-18), regridded to the NSIDC 25 km grid and scored against NSIDC near-real-time concentration (AMSR2, QA-masked) in the corridor 0 to 80 E, 55 to 78 S. Source: `dakshin/figures/realforecast_hindcast.json`.
+72 to 77 archived CMEMS GLO12 forecast cycles per lead (2026-08-31 to 2026-11-19), regridded to the NSIDC 25 km grid and scored against NSIDC near-real-time concentration (AMSR2, QA-masked) in the corridor 0 to 80 E, 55 to 78 S. The U-Net was trained on 2019-2020 with F17 SSMIS truth, so this is out of sample twice: a different year and a different sensor. Source: `dakshin/figures/realforecast_hindcast.json`; checkpoints: release `model-v0.1`, SHA256-pinned in `models/sic_correction/checkpoints/`.
 
-| Lead | RMSE, CMEMS | RMSE, persistence | IIEE, CMEMS (km2) | IIEE, persistence (km2) | U-Net |
-|---|---|---|---|---|---|
-| 1 day | 0.10199 | 0.11977 | 195,058 | 187,706 | training re-run in progress |
-| 3 days | 0.10479 | 0.14391 | 194,575 | 277,167 | training re-run in progress |
-| 5 days | 0.10981 | 0.15508 | 200,203 | 319,189 | training re-run in progress |
-| 7 days | 0.11530 | 0.16414 | 210,200 | 353,255 | training re-run in progress |
+| Lead | RMSE U-Net | RMSE CMEMS | RMSE persistence | IIEE U-Net (km2) | IIEE CMEMS | IIEE persistence |
+|---|---|---|---|---|---|---|
+| 1 day | **0.0914** | 0.10219 | 0.11914 | **93,231** | 196,031 | 186,997 |
+| 3 days | **0.0874** | 0.10479 | 0.14391 | **142,467** | 194,575 | 277,167 |
+| 5 days | **0.0946** | 0.10981 | 0.15508 | **182,601** | 200,203 | 319,189 |
+| 7 days | **0.1025** | 0.11530 | 0.16414 | 221,094 | **210,200** | 353,255 |
 
-By RMSE the forecast beats persistence at every lead. By ice-edge error (IIEE, 15% threshold) persistence is marginally better at one day and clearly worse from three days. The sample is one spring season of strongly autocorrelated cycles and no confidence intervals are reported.
+The correction lowers RMSE at every lead and halves the ice-edge error at one day; the edge advantage decays with lead and is slightly lost to the raw forecast at seven days. Both metrics belong together; quote neither alone. The run-to-run training spread (up to 0.012 at the longer leads, `docs/PROTOTYPE_RESULTS.md`) is the same size as the RMSE margin over the raw forecast, the sample is one spring of strongly autocorrelated cycles, and no confidence intervals are reported.
 
 ### 2. Model resolution: RMSE cannot see it, the ice edge can
 
@@ -47,6 +47,12 @@ The NOAA/NSIDC CDR applies a land-spillover filter and writes the suppressed cel
 ### 5. A real-data route run
 
 On the 2026-11-21 forecast, with real ice, waves and wind, the time-dependent router finds the Bharati approach closed at the 80% limit; the closest reachable cell is 50.6 km away, the weather gate returns FAIL (4.77 m significant wave height against an assumed 3.0 m limit), and the segment south of 55 S takes 5.55 days. Source: `dakshin/figures/real_route.json`. The published prototype route (1 December 2019 ice, PolarRoute, real IBCSO v2 depth in the mesh) takes 8.66 days steaming and ends 16 km off the station; this is a lower bound with no sea-state penalty (`docs/TRUE_CLAIMS.md` claim 1.11).
+
+### 6. Decision-level verification, and where the correction honestly stops
+
+Across 78 cycles the approach go/no-go question (is any cell within 50 km of Bharati 4-connected to open water through cells at or under the 80% limit, on the 25 km grid) was asked of three fields and verified against the satellite on each decision's target date: 298 verifiable decisions. The raw forecast got 287 right (11 false "reachable" verdicts from a spurious coarse-grid thread); the corrected field got 298; persistence also got 298, because the station never changed state inside a lead window all season. The record therefore separates the corrected field from the raw forecast, not from persistence. Source: `dakshin/figures/corrected_all.json`.
+
+Two measured negative results bound the system. First, the live forecast cycle can never carry a correction: the day-0 satellite file publishes about a day late, and re-scoring the archive with history ending at day-1 makes lead-1 RMSE worse than the raw forecast (0.1076 against 0.1022), so a stale-input live edge was rejected rather than shipped (`dakshin/figures/stale_history_eval.json`). Second, an independent same-seed re-run reproduced lead-1 held-out RMSE to within 3e-5 but spread up to 0.012 at longer leads; every lead beat persistence in every run.
 
 ### Withdrawn claims
 
@@ -101,13 +107,16 @@ Run from the repository root with Python 3.12 and `numpy`, `xarray`, `netCDF4` o
 
 | Number | Command | Output |
 |---|---|---|
-| Test suite | `python -m pytest -q` | 195 passed, 7 skipped (the skips wait for model checkpoints) |
+| Test suite | `python -m pytest -q` | 209 passed, 2 skipped |
 | 29 quoted claims against source | `python scripts/verify_claims.py` | `PASSED 29` |
 | Table 1 (raw CMEMS, persistence) | `python scripts/realforecast_hindcast.py --no-model` | `dakshin/figures/realforecast_hindcast.json` |
 | Table 2 (resolution) | `python scripts/resolution_study.py --no-model` | `resolution_study.json`, `resolution_study.png` |
 | Table 3 (bergs) | `python scripts/berg_hindcast.py`, `python scripts/berg_resolution.py` | `berg_hindcast.json`, `berg_resolution.json` |
 | Melt estimate | `python scripts/berg_melt.py` | `berg_melt.json` |
-| Real-data route | `python scripts/real_route_run.py 2026-11-21` | `real_route.json` |
+| Real-data route | `python scripts/real_route_run.py 2026-11-21` | `real_route.json` (track ends 50.6 km from the station; arrival is the router's one-lattice-cell rule, and its 0.55 by 0.9 degree lattice cannot resolve the final approach) |
+| Hindcast with the model | `python scripts/realforecast_hindcast.py` | the U-Net columns above |
+| Corrections, all cycles + decision record | `python scripts/corrected_forecast.py --all` | `corrected_all.{npz,json}` |
+| Stale-history cost | `python scripts/stale_history_eval.py` | `stale_history_eval.json` |
 | Quality audit | `python dakshin/audit_ice_quality.py` | `ice_quality_audit.json` (needs the 2018 to 2020 archive) |
 | Iceberg regime table | `python models/iceberg/regime_report.py --csv data/icebergs/archive/AntarcticIcebergs_20260827.csv` | `models/iceberg/regime_report.json` (without `--csv` it downloads today's catalogue and the values change) |
 
@@ -123,7 +132,7 @@ Data that is not in the repository: the NSIDC near-real-time files (`python scri
 | `dakshin/readers/` | NEMO output reader (curvilinear coordinates into the regridder) |
 | `dakshin/sim/` | router and vessel model; synthetic demo world; bathymetry and land lookups |
 | `dakshin/figures/` | committed result files quoted above |
-| `models/sic_correction/` | residual U-Net (`unet.py`); checkpoints pending |
+| `models/sic_correction/` | residual U-Net (`unet.py`); trained checkpoints, SHA256-pinned (release `model-v0.1`) |
 | `models/iceberg/` | WDE17 drift, melt terms, USNIC loader, regime report |
 | `scripts/` | harvesters, back-fills, experiments |
 | `data/` | harvested archives (forecast cycles, currents, wind, bergs, bathymetry subset) |
@@ -133,8 +142,8 @@ Data that is not in the repository: the NSIDC near-real-time files (`python scri
 
 ## Status and what is pending
 
-Training re-run in progress. The four trained checkpoints (leads 1, 3, 5, 7 days) are not yet in the repository: the original 2026-08-31 checkpoints were never retrievable, and a re-run on Kaggle (kernel version 6) was queued when `docs/CURRENT_STATE.md` was last written. Until it completes, every U-Net column above is pending, the training-time results in `docs/PROTOTYPE_RESULTS.md` cannot be reproduced, and the question of whether the correction beats raw CMEMS on real forecasts is open. The no-background ablation that would settle the leakage question has not been run.
+The four checkpoints (leads 1, 3, 5, 7 days) are trained, committed with SHA-256 sums, and published as release `model-v0.1`; the hindcast and resolution tables above were scored once with them, and an independent re-run reproduced the held-out result (section 6). The corrected field is deployed: ice-edge overlays for all 78 eligible cycles in the companion viewer, a model panel in the demo that reads only release artifacts, and the decision record above. The no-background ablation that would settle the training-time leakage question has still not been run, and the router has not yet run on corrected ice with real weather: that comparison is wired but waits for the first cycle that has both a correction and an archived wave file (waves are archived since 2026-11-21 only).
 
-Not built, by design recorded in `docs/`: calibrated uncertainty (a conformal bound with a pre-committed pass gate), an ensemble, a thickness channel for POLARIS, berg grounding detection (a first version is an uncommitted change at the time of writing), a compression-risk field, and a time-expanded route graph for the PolarRoute engine. The nine gates include three that cannot pass in code (capability, chart, communications) and two that pass only with live data (traffic, execution).
+Not built, by design recorded in `docs/`: calibrated uncertainty (a conformal bound with a pre-committed pass gate), an ensemble, CRPS and confidence intervals, a thickness channel for POLARIS, a compression-risk field, and a time-expanded route graph for the PolarRoute engine. The nine gates include three that cannot pass in code (capability, chart, communications) and two that pass only with live data (traffic, execution).
 
-Known limits to state first: the sensor changes between the training truth (SSMIS) and the 2026 truth (AMSR2); the corridor and season are narrow; the 80% ice limit, the 3.0 m wave limit and the traffic distances are working assumptions, and ice class is defined by thickness, not concentration; fuel is relative only; the iceberg melt coefficients are Arctic-calibrated and the melt figures are estimates.
+Known limits to state first: the sensor changes between the training truth (SSMIS) and the 2026 truth (AMSR2); the corridor and season are narrow; the 80% ice limit, the 3.0 m wave limit and the traffic distances are working assumptions, and ice class is defined by thickness, not concentration; fuel is relative only; the iceberg melt coefficients are Arctic-calibrated and the melt figures are estimates. The full works / does-not-work / can-go-wrong list is `docs/WEAKNESS_ANALYSIS.md` section 11.
