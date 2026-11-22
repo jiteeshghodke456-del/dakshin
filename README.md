@@ -27,7 +27,7 @@ The correction lowers RMSE at every lead and halves the ice-edge error at one da
 
 The same forecasts block-averaged from 1/12 degree to about 1/4 degree and 1 degree, scored on identical cells. Source: `dakshin/figures/resolution_study.json`, `docs/RESOLUTION_STUDY.md`.
 
-Coarsening to 1/4 degree slightly improves RMSE (0.10035 against 0.10199 at one day) and 1 degree roughly ties it, which is the double-penalty effect: a sharp forecast that misplaces an edge is penalised twice, a smoothed one once. The ice-edge metric does separate them: at 1 degree the integrated ice-edge error is 4% worse than at 1/12 degree at one day and 16% worse (33,975 km2) at seven days. 1/12 degree and 1/4 degree are not distinguishable in this corridor and season. Coarsening one model's output is not the same as running a coarser model; a proper test needs the same model run at several resolutions, which is the purpose of the NEMO reader (`dakshin/readers/nemo.py`, not yet run on real NEMO output).
+Coarsening to 1/4 degree slightly improves RMSE (0.10055 against 0.10219 at one day) and 1 degree roughly ties it, which is the double-penalty effect: a sharp forecast that misplaces an edge is penalised twice, a smoothed one once. The ice-edge metric does separate them: at 1 degree the integrated ice-edge error is 4% worse than at 1/12 degree at one day and 16% worse (33,975 km2) at seven days. 1/12 degree and 1/4 degree are not distinguishable in this corridor and season. Coarsening one model's output is not the same as running a coarser model; a proper test needs the same model run at several resolutions, which is the purpose of the NEMO reader (`dakshin/readers/nemo.py`, not yet run on real NEMO output).
 
 ### 3. Icebergs: most corridor giants are grounded
 

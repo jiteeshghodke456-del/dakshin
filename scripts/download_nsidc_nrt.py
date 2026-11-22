@@ -7,7 +7,7 @@ run this promptly and never delete what it saved.
 Usage: python scripts/download_nsidc_nrt.py [--start 2026-08-24] [--end today] [--out data/nsidc_nrt]
 
 Files land as sic_pss25_YYYYMMDD_am2_icdr_v04r00.nc (~300 KB each).
-The folder is gitignored; MANIFEST.sha256 records what was fetched.
+The folder is committed (tracked in data/nsidc_nrt/); MANIFEST.sha256 records what was fetched.
 """
 from __future__ import annotations
 

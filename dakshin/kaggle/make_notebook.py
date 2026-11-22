@@ -514,7 +514,7 @@ def main() -> int:
             "    print('transfer until production validates against a real CMEMS forecast.')"
         ),
         md(
-            "## 11. What to quote\n\n"
+            "## 12. What to quote\n\n"
             "Download from the output panel: `isih_skill_curve.png`, "
             "`demo_comparison.png`, `isih_skill_by_lead.csv`, and the "
             "`isih_prototype_lead*.pt` checkpoints."

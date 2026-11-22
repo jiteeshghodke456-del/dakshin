@@ -452,9 +452,10 @@ can name precisely:
 3. **Service speed assumed sustained.** The vessel's AIS-observed average across
    all conditions is **8.6 kn**, roughly half the 16.4 kn service speed we feed
    the router.
-4. **No bathymetry.** GEBCO is still not downloaded; the mesh reports "no
-   elevation data" for every cell, so depth and land are not constraining the
-   route.
+4. **No bathymetry** *(resolved since: IBCSO v2 + GEBCO subsets are committed,
+   depth is in the mesh, and the depth-aware re-run gives 8.66 d)*. At the time:
+   the mesh reported "no elevation data" for every cell, so depth and land were
+   not constraining the route.
 
 A real 43rd-ISEA-style voyage takes two to three weeks. Our 8.6 days is the
 steaming component of that, not the voyage. **Do not present it as a predicted
