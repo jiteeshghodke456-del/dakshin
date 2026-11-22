@@ -1,6 +1,6 @@
 # Does ocean-model resolution change the navigation answer? (F1)
 
-**Setup.** The same 76 archived GLO12 forecast cycles (2026-08-31 → 2026-11-18,
+**Setup.** The same 72–77 archived GLO12 forecast cycles per lead (2026-08-31 → 2026-11-19,
 corridor 0–80E 55–78S) were block-averaged from native 1/12° to ~1/4° and ~1°,
 then every resolution was scored against the same NSIDC NRT satellite truth on
 the *same* cells at leads 1, 3, 5, 7 days. Only the ocean model's information

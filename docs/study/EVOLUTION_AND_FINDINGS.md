@@ -1,7 +1,13 @@
 # Dakshin: evolution, findings, and what is still open
 
-Scope: the project from the first commit (2026-08-31, `0020fba`) to the
-night build of 2026-11-21. 332 commits on `main` in that window (as of 17:56 UTC on 2026-11-21). Every
+Scope: the project from the first commit (2026-08-31, `0020fba`) to HEAD
+`779cf83` (2026-11-22 05:12 UTC): the night build of 2026-11-21 and the morning
+of 2026-11-22. 382 commits on `main` in that window (`git rev-list --count HEAD`),
+172 of them daily CMEMS harvest commits (subject "CMEMS harvest"). The first
+study pass read the repository on 2026-11-21 (snapshot paragraph below). The
+2026-11-22 update, which covers `44e3efa..HEAD` (46 commits, 4 of them harvest),
+adds stages 6 to 11 (Section 1), findings 2l to 2q (Section 2), Section 3 and 4
+rows, Appendix A items 29 to 41 and Appendix D. Every
 number below comes from a file in this repository; the path is cited next to
 it. Three labels are used throughout:
 
@@ -17,13 +23,15 @@ figure from the docs.
 
 ---
 
-**Snapshot.** The repository was read between about 17:56 and 18:21 UTC on 2026-11-21. "In this pass" means the study pass that wrote this file. Commits and uncommitted edits by other agents that landed or appeared later are listed in Appendix C.
+**Snapshot.** The repository was read between about 17:56 and 18:21 UTC on 2026-11-21. "In this pass" means the study pass that wrote this file. Commits and uncommitted edits by other agents that landed or appeared later are listed in Appendix C. **Update pass (2026-11-22):** read against HEAD `0cda289`, then re-checked against `ad97f88` (05:04 UTC, a claims-review commit) and `779cf83` (05:12 UTC, the Kaggle batch recipe and refreshed runbook and physics volumes), both by other agents and both landed while this pass was running; they already correct some mismatches below, and each affected item says so. Sections 1, 2l to 2q, 3, 4 and Appendices A, B, D carry the new material; where a 2026-11-21 statement is now false it carries an inline "Superseded" or "Committed update" note rather than being rewritten, so the earlier state stays readable. Times in stages 6 to 11 are UTC unless marked IST (UTC+5:30).
 
 ## 1. Stage timeline
 
 Commit dates are from `git log --reverse --format='%h %ad %s' --date=short`.
-Commit counts per month: August (from the 31st) 30, September 155, October 72,
-November 75. Of the 332 commits, 168 are daily CMEMS harvest commits.
+Commit counts per month at HEAD (`TZ=UTC git log --format=%ad --date=format-local:%Y-%m`):
+August (31st only) 27, September 158, October 71, November 126; total 382, of
+which 172 are daily CMEMS harvest commits. The first pass's monthly counts
+(30, 155, 72, 75 of 332) do not reproduce (Appendix A item 38).
 
 | Stage | Dates | What was built | Motivating question |
 |---|---|---|---|
@@ -33,12 +41,20 @@ November 75. Of the 332 commits, 168 are daily CMEMS harvest commits.
 | 3. Archive growth | 2026-09-09 to 11-17 | Daily harvest continues; prompt pack and materials (`f568877`, 10-05); harvest fixes for late and stale bulletins (`1a00b3b`, 11-18) | Can the forecast archive be kept intact while the rest of the system changes? |
 | 4. Pre-build measurement | 2026-11-18 to 11-20 | Stale-forecast rejection rule (`1a00b3b`); CMEMS forecasts scored against persistence (`5be27ca`); 13 weekly USNIC issues back-filled (`6d2a212`); login retries (`47e0ce1`) | What does the archive say about skill, before any model is retrained? |
 | 5. Night build (2026-11-21) | 2026-11-21 | Seven slices (1, 2, 4, 5, 6, 7, 8), resolution studies F1 to F4, licence and claims verifier (slice 11), package rename to `dakshin` | Each slice answers one question: model loading (1), real-forecast skill (2), currents in the harvest (4), iceberg drift on real currents (5), real wind and waves (6), real bathymetry (7), AIS decoding (8), and the resolution, melt and rename work |
+| 6. Kaggle training saga, completed (2l) | 2026-11-21 to 11-22 | Original 2026-08-31 checkpoints found unretrievable (training cell saved as markdown); v6 fixed the cell type; v7 died on a pip numpy half-upgrade, pinned in `d7b0d0f`; v8 completed 22:51 UTC; checkpoints and SHA256SUMS committed in `5612621`, Release `model-v0.1`. Reproducibility clone (`dakshin-prototype-train-gpu2`): v1, v2 died on a changed dataset mount layout, v3 on a transient NSIDC HTTP 500 (retry and `.part` files, `0848d7e`), v4 completed | Can the 2026-08-31 numbers be reproduced, and what broke on the way? |
+| 7. Model scored once on 2026 real forecasts (2m) | 2026-11-21 ~23:13 to 23:18 UTC | `scripts/realforecast_hindcast.py` and `scripts/resolution_study.py` re-run with the checkpoints (`cf04a4d`); docs folded (`1dc4e95`) | Does the correction beat raw CMEMS on data it never saw, on both RMSE and IIEE? |
+| 8. Slice 3 and the season decision record (2n) | 2026-11-21 23:21 (case study); 2026-11-22 04:05 to 04:18 (record) | Reachability flood fill on the 25 km grid, one-cycle case study (`620d3a3`, `a4c37a9`); `corrected_forecast.py --all` over 78 cycles with decisions verified on target dates (`9e332bd`); persistence caveat welded to the headline (`fb246b2`) | Does the AI change the go/no-go decision at the station, and against which baseline? |
+| 9. Stale-history experiment (2o) | 2026-11-22 04:29 to 04:41 | `scripts/stale_history_eval.py` (`6dc4719`); verdict and state (`e32332b`, `71a8b08`) | Can the live forecast cycle carry an AI edge when the newest satellite file is a day old? |
+| 10. Route honesty (2p) | 2026-11-22 04:15 | `real_route_run.py` reports `route_ends_km_from_station`; `CorrectedIceWorld` wired and gated; "1/12 degree router" overclaim corrected (`0d7be9f`) | What does "the route arrives" mean after the one-lattice-cell rule? |
+| 11. Deployment and documentation sweep (2q) | 2026-11-22 04:05 to 04:45 | Demo AI panel from release artifacts (`0c3b9ef`); AI edge on 78 cycles in the companion viewer (site repo, not in this repository); local IEEE-format paper (gitignored); frank capability addendum (`d178f95`); README results rewrite (`0cda289`) | Where does the model honestly appear in the product, and what is the written record of what does and does not work? |
 
 Slice numbers come from the handoff specification that `docs/CURRENT_STATE.md`
 and `docs/backlog.md` refer to as HANDOFF_TONIGHT. That file is not in the
-repository, so slices 3, 9 and 10 cannot be described from the repository.
-Slice 10 (the site) and slice 3 are recorded as "in flight" in
-`docs/CURRENT_STATE.md`.
+repository, so slices 9 and 10 cannot be described from the repository.
+Slice 3 can now be described from its commits and figures (stage 8, 2n).
+Slice 10 (the site) lives in a separate repository (2q). Note that
+`docs/CURRENT_STATE.md` still lists slice 3 under "In flight" below its own
+Update 4 (Appendix A item 39).
 
 ---
 
@@ -142,6 +158,14 @@ The percentages are computed from the JSON values. IIEE is the mean
 ice-edge error at the 15% threshold (see the glossary, Section 4 of the
 runbook). The RMSE values match `docs/TRUE_CLAIMS.md` §1.13.
 
+**Committed update (`cf04a4d`, 2026-11-21 23:16 UTC).** The regenerated
+`dakshin/figures/realforecast_hindcast.json` has 77 cycles at lead 1, not 76
+(cycle 2026-11-19 became scorable): raw CMEMS 0.10219, persistence 0.11914, IIEE
+196,031 and 186,997 km². Leads 3, 5, 7 are unchanged. At lead 1 raw CMEMS is
+now 14.2% lower than persistence on RMSE and 4.8% higher on IIEE, so the
+qualification below is slightly larger. The table above is the 76-cycle value.
+The regenerated file also carries the U-Net column (2m).
+
 **The qualification the repo's summary omits.** On RMSE, raw CMEMS beats
 persistence at every lead. On IIEE, it does not beat persistence at lead 1: the
 edge error of the operational forecast is 3.9% higher than persistence's. The
@@ -174,7 +198,8 @@ table. They use a different region, truth product, period and background.
 - The learned correction has not been scored on these cycles. The checkpoints
   are not in the repository (`models/sic_correction/` contains only `unet.py`),
   so the "U-Net" column is pending. `docs/CURRENT_STATE.md` lists the re-run as
-  queued on Kaggle.
+  queued on Kaggle. **Superseded:** the checkpoints were committed in `5612621`
+  and scored once in `cf04a4d` (2l, 2m).
 
 ### 2c. RMSE cannot see model resolution; the ice-edge metric can
 
@@ -228,6 +253,12 @@ The NEMO-native reader added on the night (`93ff026`, slice F2) is intended
 for that. It is "untested on real NEMO output" by its own commit message.
 
 **Pending.** The U-Net columns are pending the checkpoints, as in §2b.
+**Superseded:** the U-Net column landed in `cf04a4d` (2m). The same commit
+regenerated `resolution_study.json` at 77 cycles for lead 1: raw RMSE 0.10219
+(1/12°), 0.10055 (1/4°), 0.10419 (1°); IIEE 196,031, 190,714, 204,367 (1° is
++4.3%, was +4.2%). Leads 3, 5, 7 are unchanged. The tables above are the
+76-cycle values, as are the raw columns in `docs/RESOLUTION_STUDY.md`
+(Appendix A item 29).
 
 **What changed.** RMSE is no longer used as a resolution criterion anywhere in
 the docs. IIEE is the metric the decision layer should use. The 1/12° versus
@@ -405,6 +436,13 @@ limit is an assumption ("limits are assumptions, not this hull's PWOM", per the
 JSON). The wind and wave values are real forecast values, and the gate decision
 uses assumed thresholds.
 
+**Superseded in part (`0d7be9f`, 2026-11-22; see 2p).** The table above is the
+pre-regeneration file. Under the one-lattice-cell arrival rule the regenerated
+`real_route.json` reads `approach_closed_at_ice_limit: false` and
+`closest_approach_km: null`, with the track unchanged (5.55 days, worst ice
+0.723, worst waves 4.77 m, weather gate FAIL) and a new
+`route_ends_km_from_station: 50.6`.
+
 **What changed.** The weather and traffic gates are implemented in
 `dakshin/gates.py` (`weather_gate`, `traffic_gate`) and used by the real-route
 run. `real_route.json` was generated before the router's nearest-node rule changed in `478ecd2`
@@ -461,6 +499,13 @@ claim.
 - The prototype numbers are labelled as an upper bound on forecast skill (see 2h),
   because the reanalysis background is in the input. The document states this
   next to the numbers.
+
+**Resolved 2026-11-21 to 22 (2l).** v8 completed at 22:51 UTC on 2026-11-21,
+the four checkpoints and `SHA256SUMS` were committed (`5612621`), and the hindcast
+and resolution study were scored with them (`cf04a4d`). The correction to the
+brief above is partly superseded: `realforecast_hindcast.json` now records the
+re-run as "identical code, seed and split; credentials cell only change".
+`docs/CURRENT_STATE.md` still says nothing about the seed or split.
 
 ### 2h. The reanalysis background leaks the target, and the leak is not yet measured out
 
@@ -519,6 +564,12 @@ records (`[major][ml]`, "One seed means no error bar"). The shift of about 6%
 in the same model's 3-day score is a direct measure of how much a single run
 can move. Three or more seeds are required before any comparison that differs
 by a few percent is adopted (`docs/backlog.md`).
+
+**Update (2l).** The committed `models/sic_correction/checkpoints/isih_skill_by_lead.csv`
+from the 2026-11-21 re-run gives 0.07196 at lead 3, which rounds to the later
+headline (0.0720), not to 0.0765. The independent clone (v4) spread by up to
+0.012 at leads 3 to 7 (`docs/CURRENT_STATE.md`), larger than the 0.0045 gap
+between the two 2026-08-31 numbers.
 
 ### 2j. The CMEMS archive has stale cycles, and the harvest's clock rule is the fix
 
@@ -608,6 +659,158 @@ repository until that is fixed.
 an estimate in the JSON and in the module, and is not used in any decision in
 the routing code.
 
+### 2l. The Kaggle training saga, completed: environment failures, two working runs, and a batch recipe that lives beside the generator, not in it
+
+*Continues 2g. Sources: `docs/CURRENT_STATE.md` ("Overnight run update", "Update 4"), the messages of `d7b0d0f` and `0848d7e`, the `model` field of `dakshin/figures/realforecast_hindcast.json`.*
+
+**Question.** The checkpoints behind the 2026-08-31 headline were gone (2g). Can the training be re-run, and do the numbers come back?
+
+**The runs, in order.**
+
+| Run | Outcome | Cause recorded | Fix |
+|---|---|---|---|
+| 2026-08-31 original (saved notebook) | Numbers recorded in `docs/PROTOTYPE_RESULTS.md`; checkpoints never in Kaggle's output store | The training-loop cell was typed markdown, so batch runs executed nothing (`docs/CURRENT_STATE.md`). How the 08-31 numbers were produced from that notebook is not recorded in the repository | v6 of kernel `jiteeshghodke/notebookd39fdf7959` fixed the cell type; `make_notebook.py` builds the cell with `code()` |
+| v6 | Outcome not recorded beyond "fixed the cell type" | | |
+| v7 (GPU) | Died on first import | pip's resolver upgraded numpy to 2.5.5 over the image's compiled core; `numpy.testing` then referenced `_blas_supports_fpe`, which the loaded C core does not export, which broke scipy and so xarray (`d7b0d0f` message). The CPU image survived "by chance" | `d7b0d0f` (21:41 UTC): pin numpy to the already-installed version in the same pip command |
+| v8 (GPU) | **Completed 2026-11-21 22:51 UTC** | | Checkpoints and `SHA256SUMS` committed 23:16 (`5612621`); Release `model-v0.1` |
+| Clone `dakshin-prototype-train-gpu2` v1, v2 | Died | Kaggle changed the dataset mount layout for new kernels to `/kaggle/input/datasets/<owner>/<slug>/`; legacy kernels keep the old path. The creds dataset `jiteeshghodke/cmems-creds` was not found (implied: v3 "found the creds") | Glob for the path (see the delta below) |
+| v3 | Died | Transient NSIDC HTTP 500; the download had no retry | `0848d7e` (2026-11-22 02:40): 3 attempts, sleep 15 s times the attempt number, download to `.part` and rename on success |
+| v4 | **Completed** | | |
+| CPU clone | Output discarded | On pace to hit Kaggle's 12 h wall mid-lead-1; partial log agreed (best val 0.0434 to 0.0439) | Redundant once v8 completed |
+
+**What the reruns show.** All from `docs/CURRENT_STATE.md` Update 4 unless marked:
+
+- v4's lead-1 held-out RMSE is 0.04649 against the released 0.04646: 3e-5. Leads 3 to 7 spread by up to 0.012 (attributed to GPU nondeterminism). Persistence was beaten at every lead in every run.
+- Derived here: the committed `models/sic_correction/checkpoints/isih_skill_by_lead.csv` (the v8 run) holds 0.04646, 0.07196, 0.09377, 0.09685 at leads 1, 3, 5, 7, which round to the 2026-08-31 headline table in `docs/PROTOTYPE_RESULTS.md` (0.0465, 0.0720, 0.0938, 0.0968) at all four leads. v8 therefore reproduces the original to four decimals, while v4 (same notebook, different kernel) spreads by up to 0.012. The repository does not say why, and does not record the hardware of v4. For the two lead-3 numbers in 2i, v8 is consistent with 0.0720, not 0.0765; v4's lead-3 value is not recorded, and its spread is larger than the 0.0045 gap between them.
+- Every figure in the two bullets above except the CSV rests on prose in `docs/CURRENT_STATE.md`. No committed file holds v4's numbers or the discarded CPU log. They are **Claimed** in the sense of the labels at the top.
+
+**What was not in the repository, and what is now.** `docs/CURRENT_STATE.md` Update 4 said the glob and the retry fixes were "both now in `make_notebook.py`, commit 0848d7e". The commit contains only the retry. At HEAD the generator's credentials cell still reads `kaggle_secrets.UserSecretsClient` (`dakshin/kaggle/make_notebook.py`, section 3), which batch runs cannot do. The hindcast JSON says the re-run was "identical code, seed and split; credentials cell only change", and that changed cell, a dataset-mount glob over `/kaggle/input/**/cmems.json`, existed only on Kaggle. `779cf83` (2026-11-22 05:12, landed during this pass) records it: `dakshin/kaggle/README.md` holds the replacement cell and the failure modes, `dakshin/kaggle/kernel-metadata.json` the push template (`dataset_sources: jiteeshghodke/cmems-creds`), and `docs/CURRENT_STATE.md` was corrected to say the creds-glob "lives in the pushed batch kernel". So the recipe is now in the repository as documentation; the generator still emits the Secrets cell and the swap is manual, so regenerating the notebook alone does not reproduce v8 or v4. The kernel metadata names `jiteeshghodke/dakshin-prototype-train`, a third kernel id beside `notebookd39fdf7959` (`scripts/pull_checkpoints.sh`) and the clone `dakshin-prototype-train-gpu2`; which pushes used which id is not recorded.
+
+**Lessons.** Each is tied to one failure above.
+
+1. **A notebook cell's type is part of the code.** A markdown training cell executes nothing and a batch run still ends. Assert `cell_type == "code"` for the training cell after generation, and treat "the output store holds four `.pt` files" as the definition of done. `dakshin/kaggle/README.md` (`779cf83`) lists "check cell types before pushing" as a manual step; no test asserts either (`grep cell_type` finds only the generator).
+2. **Keep weights outside the platform's store.** The 08-31 weights are unrecoverable. Now: checkpoints committed, `SHA256SUMS`, `dakshin/model_io.py` verifies before loading, Release `model-v0.1`. The sums are computed by `scripts/pull_checkpoints.sh` after the pull, so they pin integrity from then on, not provenance.
+3. **pip can half-upgrade a preinstalled compiled package.** Pin it to the image's own version in the same command as the install (`d7b0d0f`). A survived CPU run proves nothing about the GPU image.
+4. **A platform's filesystem layout is part of its interface, and it changes per kernel generation.** Legacy kernels keep the old path, so the old kernel keeps working while a new clone fails, which is the worst case for a reproducibility check. Glob, do not hard-code.
+5. **Transient 5xx from a public archive is normal.** Retry with backoff, and write to `.part` first. The skip test in the downloader is "file exists and larger than 1000 bytes", so a truncated file left behind by a failed try would be accepted as complete on the next.
+6. **CLI batch runs cannot read Kaggle Secrets.** Credentials went into a private dataset. Whatever delta a run needs from the generator has to be committed beside it; this one was recorded only after the fact (`779cf83`), and in prose rather than in the generator.
+7. **Budget against the wall clock.** The CPU clone would have hit Kaggle's 12 h limit during lead 1. A GPU run completes in well under that (v8 completed 70 minutes after the numpy-pin commit; its start time is not recorded; the "23 min on a free T4" figure appears in `docs/WEAKNESS_ANALYSIS.md` section 11 and `docs/study/PHYSICS_AND_PAPERS.md`; no run log is committed to check it against).
+8. **Failures surfaced one at a time.** Each fix exposed the next stage's failure (numpy, then layout, then the 500). A cheap smoke test per stage (imports, input mount, one download) would have found them in minutes rather than as a series of full runs.
+9. **Reproduction is statistical.** Report the spread beside the margin. The hindcast margin of the U-Net over raw CMEMS is 0.0108, 0.0174, 0.0152 and 0.0129 RMSE at leads 1, 3, 5, 7 (computed from `realforecast_hindcast.json`); the rerun spread at leads 3 to 7 is up to 0.012, measured on the held-out training split, not on the hindcast. The two are different evaluation sets, so the comparison is indicative only. The hindcast uses one checkpoint per lead.
+10. **A redundant hedge was cheap and was used.** The CPU clone was started in parallel and discarded when the GPU run completed.
+
+### 2m. The model scored once on 2026 real forecasts: RMSE wins at every lead, the ice-edge win ends before lead 7
+
+*Sources: `dakshin/figures/realforecast_hindcast.json` (generated 2026-11-21 23:13:34 UTC, `cf04a4d`), `dakshin/figures/resolution_study.json` (23:15:37), `docs/PROTOTYPE_RESULTS.md` section "Real-forecast hindcast (2026)", `docs/RESOLUTION_STUDY.md` "The U-Net column".*
+
+**Question.** 2b left the U-Net column pending. Does the correction beat raw CMEMS on data it has never seen, on both RMSE and IIEE?
+
+**Setup.** Same as 2b: archived CMEMS GLO12 cycles at issue time, NSIDC NRT G10016 v4 truth (AMSR2, QA-masked), corridor 0 to 80 E, 55 to 78 S, 4 stale cycles excluded. Checkpoints from the v8 run (2l). The scorer's rule is "scored once, reported as it comes out". Out of sample twice: 2026 against 2019 to 2020 training, and AMSR2 against F17 SSMIS truth.
+
+| Lead | Cycles | RMSE U-Net | RMSE raw | RMSE persistence | U-Net vs raw | IIEE U-Net (km²) | IIEE raw | IIEE persistence | U-Net vs raw |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 77 | 0.0914 | 0.10219 | 0.11914 | -10.6% | 93,231 | 196,031 | 186,997 | -52.4% |
+| 3 | 75 | 0.08741 | 0.10479 | 0.14391 | -16.6% | 142,467 | 194,575 | 277,167 | -26.8% |
+| 5 | 74 | 0.0946 | 0.10981 | 0.15508 | -13.9% | 182,601 | 200,203 | 319,189 | -8.8% |
+| 7 | 72 | 0.10245 | 0.1153 | 0.16414 | -11.1% | 221,094 | 210,200 | 353,255 | +5.2% |
+
+The percentage columns are computed from the JSON values.
+
+**What the data said.**
+
+- RMSE improves at every lead. The edge error is cut by 52.4% at lead 1, 26.8% at lead 3 and 8.8% at lead 5, then is **5.2% worse than raw CMEMS at lead 7**. The edge advantage decays monotonically with lead. The documents say to quote both metrics (`docs/PROTOTYPE_RESULTS.md`).
+- Against persistence, the U-Net wins IIEE at every lead including lead 1 (-50.1%), the lead at which raw CMEMS loses to persistence (2b). So the correction removes the one place raw CMEMS lost to persistence.
+- **Against ADR-027** (`docs/DECISIONS.md`: the corrected forecast must beat raw CMEMS on both IIEE and CRPS at every lead, and "a lead that fails is not claimed", with the declared skill horizon shortening): lead 7 fails on IIEE, and CRPS is computed nowhere in `dakshin/figures/`, so the rule cannot be shown to pass at any lead. Read strictly, the claimable horizon is at most 5 days. Yet the decision record (2n) and the site AI edge (2q) include lead 7. Appendix A item 36.
+- **The baseline moved by one cycle.** 2b's table had 76 cycles at lead 1 (raw 0.10199, persistence 0.11977, IIEE 195.1 and 187.7 thousand km²). The regenerated files have 77 (cycle 2026-11-19 became scorable; a `docs/backlog.md` line said so and was removed in this pass): raw 0.10219, persistence 0.11914, IIEE 196,031 and 186,997. Leads 3, 5, 7 are unchanged. Raw CMEMS against persistence at lead 1 is now 14.2% lower on RMSE (was 14.8%) and 4.8% higher on IIEE (was 3.9%). The qualification in 2b stands and is slightly larger.
+- **Resolution, with the U-Net** (`resolution_study.json`, corrected IIEE in km², change against 1/12 degree):
+
+| Lead | 1/12° | 1/4° | 1° |
+|---|---|---|---|
+| 1 | 93,231 | 93,287 (+0.1%) | 97,792 (+4.9%) |
+| 3 | 142,467 | 143,208 (+0.5%) | 155,683 (+9.3%) |
+| 5 | 182,601 | 183,818 (+0.7%) | 198,902 (+8.9%) |
+| 7 | 221,094 | 223,342 (+1.0%) | 246,580 (+11.5%) |
+
+  The 2c conclusion holds with the correction in the loop: 1/12 degree and 1/4 degree are not separable, 1 degree loses the edge. Raw loses 4.3%, 7.6%, 11.2% and 16.2% at 1 degree (same file). Applied to a 1 degree field the correction still beats raw at 1/12 degree at leads 1, 3 and 5 (97,792 against 196,031; 155,683 against 194,575; 198,902 against 200,203, a margin of 0.7%) but not at lead 7 (246,580 against 210,200). It does not restore the 1/12 degree edge. RMSE of the corrected field barely moves across resolutions (lead 1: 0.0914, 0.0914, 0.09183).
+
+**Caveats** (in the JSON, plus two): one spring, one corridor, sensor change AMSR2 against F17, day-t satellite file assumed available on day t (stage 9 tests exactly this), no confidence intervals, no CRPS. Added here: one checkpoint per lead, and the training truth was not QA-masked while the hindcast truth is (`docs/backlog.md`, `[minor][ml]`), so the coastal effect of that train/serve mismatch is unquantified.
+
+**What changed.** The prototype's upper-bound training numbers (2h) now have a production-path companion. The claim the project makes is the pair of tables above, not the training table (`docs/PROTOTYPE_RESULTS.md`: "Do not compare these RMSEs with the training table"). The no-background ablation remains unrun (4.6).
+
+### 2n. Slice 3: a reachability flood fill, a one-cycle case study, then a season-long decision record whose baseline ties
+
+*Sources: `scripts/corrected_forecast.py`, `dakshin/figures/corrected_forecast.json`, `dakshin/figures/corrected_all.json`, commits `620d3a3`, `a4c37a9`, `9e332bd`, `fb246b2`, `0c3b9ef`.*
+
+**Question.** Does the corrected ice change the router's go/no-go at the station?
+
+**Method.** The lead-matched checkpoint is applied to a cycle on the model-native 25 km NSIDC grid (the correction adds no resolution). The decision: is any cell within 50 km of Bharati 4-connected to open water 400+ km out through cells at or under the 80% ice limit? Depth blocking is not applied (the JSON's `question` field). The fill is 4-connected, which the docstring (`scripts/corrected_forecast.py`, since `ad97f88`) says is stricter than the router's 8-neighbourhood and so "errs toward 'not reachable'": a structural lean toward the one answer every verified target turned out to have. The flood fill is unit-tested and the ice limit is pinned to the router's `VesselModel` default by a test (`620d3a3` message).
+
+**Case study (`620d3a3`, cycle 2026-11-20).** Raw CMEMS mean-pooled to 25 km says reachable at all four leads (targets 11-21, 11-23, 11-25, 11-27), a spurious one-cell-wide thread. The corrected field says not reachable at all four. The day-0 satellite says not reachable. Mean absolute correction 0.0629, 0.0636, 0.0578, 0.0592 SIC. The cycle is 2026-11-20 and not the live 11-21 because the newest correctable cycle needs a day-0 file (2o). The case-study text claimed the 1/12 degree router "had already said closed"; that is the overclaim corrected in 2p.
+
+**Decision record (`9e332bd`, 04:05 UTC 2026-11-22).** Every archived cycle with a full 7-day satellite history, 78 cycles from 2026-08-31, four leads each: 312 lead-decisions, 298 verifiable against the satellite on the target date (14 targets fall beyond the archive). `corrected_all.json["verification"]`:
+
+| Field | Correct go/no-go | Rate |
+|---|---|---|
+| Raw CMEMS at 25 km | 287 / 298 | 96.3% (11 false "reachable") |
+| U-Net corrected | 298 / 298 | 100% |
+| Persistence (day-0 verdict carried) | 298 / 298 | 100% |
+
+The first write-up (`0c3b9ef`, 04:05) had no persistence row and justified the scope with "the station was closed nearly all season, so the base rate favours 'not reachable'". Thirteen minutes later (`fb246b2`, 04:18) the persistence arm was added to the script, it scored 298 of 298, and the caveat was welded to the headline in the JSON, the doc, the demo text and the README: the record separates the corrected field from raw CMEMS, not from persistence. The baseline that should have been in the first run was found by the project's own pass over its own headline.
+
+**Derived here, stronger than the caveat.** In `corrected_all.json` every one of the 298 `satellite_target` values is false and so is every one of the 78 `satellite_day0_reachable` values. The station was closed on every verified date. "Never flipped" understates it: there is no positive case at all, so the 298 of 298 measures false-alarm avoidance only, and sensitivity (a correction that wrongly closes a real opening) cannot be measured on this sample. An always-"not reachable" rule also scores 298 of 298. The 11 raw errors are all in November: cycles 11-04, 11-11, 11-12, 11-13, 11-14, 11-15, 11-16, 11-18, 11-19; by lead, 4 at lead 7, 3 at lead 5, 2 at lead 3, 2 at lead 1. Four of the 11 are at lead 7, a lead ADR-027 would not claim (2m).
+
+**What changed.** The README and `docs/WEAKNESS_ANALYSIS.md` section 11 state the persistence tie. `ad97f88` (05:04, after this analysis was drafted) added the constant-rule sentence to `docs/PROTOTYPE_RESULTS.md` and the README: "a rule that always says no would also score 298", measuring false-alarm removal, "not sensitivity". The README also says the router "has not yet run on corrected ice with real weather": `CorrectedIceWorld` is wired and tested (`dakshin/test_real_route_corrected.py`) but gated on a cycle with both a correction and a wave file, and only one wave file was ever archived (`docs/backlog.md`, `[med][harvest]`). The next real-opening season is the missing test; the forecast archive cannot be back-filled to produce one.
+
+### 2o. The stale-history experiment: measured, rejected, and the rejection is narrower than its verdict
+
+*Sources: `scripts/stale_history_eval.py`, `dakshin/figures/stale_history_eval.json` (generated 2026-11-22 04:31 UTC), `docs/PROTOTYPE_RESULTS.md` "Why there is no AI edge for the live cycle", commits `6dc4719`, `e32332b`, `71a8b08`.*
+
+**Question.** The NSIDC NRT file publishes about a day late, so a correction of the live forecast cycle must run on satellite history ending at day-1, outside the training assumption. What does that cost?
+
+**Method.** Same cycles, mask, checkpoints and scoring as the hindcast, scored once. Fresh history is obs[t-0 .. t-6]; stale history is obs[t-1 .. t-7]. The evaluation was committed (`6dc4719`) before any live-cycle AI edge was built ("measure the cost ... before any live-cycle AI edge"). Cycles are 77, 75, 74, 72 as in 2m.
+
+| Lead | RMSE fresh | RMSE stale | RMSE raw | Stale vs raw | IIEE fresh | IIEE stale | IIEE raw | Stale vs raw |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 0.0914 | **0.10763** | 0.10219 | **+5.3%** | 93,231 | 139,334 | 196,031 | -28.9% |
+| 3 | 0.08741 | 0.09388 | 0.10479 | -10.4% | 142,467 | 159,967 | 194,575 | -17.8% |
+| 5 | 0.0946 | 0.09715 | 0.10981 | -11.5% | 182,601 | 190,084 | 200,203 | -5.1% |
+| 7 | 0.10245 | 0.10383 | 0.1153 | -9.9% | 221,094 | 225,790 | 210,200 | +7.4% |
+
+**What the data said.** Stale lead-1 RMSE is 17.8% worse than fresh and 5.3% worse than raw CMEMS (0.1076 against 0.1022): the short-lead skill lives in the day-0 image. Degradation shrinks with lead: stale against fresh RMSE is +7.4%, +2.7%, +1.3% at leads 3, 5, 7.
+
+**The verdict and what it rests on.** The documents conclude that no stale-input edge ships and that the AI layer trails the live cycle by a day (`docs/PROTOTYPE_RESULTS.md`, `docs/WEAKNESS_ANALYSIS.md` section 11, `README.md` section 6). The JSON supports that for lead-1 RMSE. It does not show stale loss elsewhere: stale RMSE beats raw at leads 3, 5, 7 (by 9.9% to 11.5%), and stale IIEE beats raw at leads 1, 3, 5 (by 28.9%, 17.8%, 5.1%). Only lead 1 RMSE and lead 7 IIEE lose. `ad97f88` (05:04) added the same two points as a "for completeness" sentence in `docs/PROTOTYPE_RESULTS.md` and left the verdict unchanged. So "rejected" is a product decision on one metric at one lead. It may be the right decision, because a live consumer of lead 1 gets a worse concentration field than the raw forecast, but the table also supports a narrower deployment (leads 3 to 5), and the documents do not say why that was not chosen. Appendix A item 40; open in 4.30.
+
+**What changed.** The AI layer is shown only for cycles with full satellite history (78 of 83, `docs/backlog.md` `[low][site]`). The negative result is published with the number that caused it. This is the clearest instance of the method the README names: "The project treats its own negative results as findings."
+
+### 2p. Route honesty: the arrival rule silently turned "closed" into "open", and the router was never at 1/12 degree
+
+*Sources: `scripts/real_route_run.py`, `dakshin/figures/real_route.json`, commits `478ecd2`, `620d3a3`, `0d7be9f`.*
+
+**Question.** What does "the route arrives" mean after the router's arrival rule changed?
+
+**What happened.**
+
+1. `478ecd2` (2026-11-21, 18:21; Appendix C) let the router arrive anywhere navigable within one lattice cell of a station ashore.
+2. The committed `real_route.json` before that (generated 17:51 on 11-21, `ba37f25`) said `approach_closed_at_ice_limit: true`, `closest_approach_km: 50.6`.
+3. Regenerated on 2026-11-22 04:13 under the new rule, the same run gives `approach_closed_at_ice_limit: false`, `closest_approach_km: null`, with the track unchanged: 45 legs, 5.55 days, worst ice 0.723, ending 50.6 km from the station. A reader of the flag alone would have taken the approach as open. The repository does not record how this was noticed; the fix is `0d7be9f`.
+
+**The fix.** `real_route.json` always carries `route_ends_km_from_station` (50.6, computed from the last leg) and a `lattice_note`: the router lattice is 0.55 by 0.9 degrees over native 1/12 degree fields and cannot resolve the final 50 km, which the 25 km reachability check (2n) covers. The site ribbon says so (`docs/CURRENT_STATE.md`). Three statements about one approach now coexist and each is labelled: the router flag (open under the one-cell rule), the track end (50.6 km short), the 25 km check (not reachable).
+
+**The second overclaim.** The slice-3 commit message and `docs/PROTOTYPE_RESULTS.md` called the router "full-resolution 1/12 degree". The fields are 1/12 degree; the lattice is 0.55 by 0.9 degrees (`lattice_note`). Corrected in `docs/PROTOTYPE_RESULTS.md`, `docs/CURRENT_STATE.md` and the JSON in `0d7be9f`.
+
+**Gated check.** `CorrectedIceWorld` adds delta = corrected minus raw (from `corrected_forecast.npz`) to the router's ice, by nearest 25 km cell at the nearest lead. The `corrected_ice_check` in the JSON is `skipped`: the newest corrected cycle (2026-11-20) has no archived wave file and the router needs waves. It runs on the first cycle that has both. Two tests in `dakshin/test_real_route_corrected.py`.
+
+**Superseded.** The 2f table (approach closed true, closest reachable 50.6 km) describes the pre-`0d7be9f` file. The README (section 5) still says the router "finds the Bharati approach closed ... the closest reachable cell is 50.6 km away", which matches the 25 km check and the track end but not the JSON flag (Appendix A item 31).
+
+### 2q. Deployment: where the model honestly appears, and what the written record says
+
+- **Demo bridge console** (`0c3b9ef`): an "AI correction" panel fed only by release artifacts (`/api/model`, provenance kind *real*). Changes in `dakshin/demo/app.py`, `dakshin/demo/data.py`, `dakshin/demo/static/bridge.js`, `provenance.js`. The panel text was reworded in `fb246b2` when the persistence caveat landed.
+- **Companion viewer (separate repository, not read in this pass).** `docs/CURRENT_STATE.md` Update 4 and `docs/backlog.md` give: the AI edge drawn on every one of the 78 cycles that have a full 7-day satellite history (of 83); weekly USNIC berg fixes following the issued date (14 issues); drift chains true to the grid; day replay 0.45 s. This document cannot verify the site's behaviour from this repository.
+- **Router on corrected ice** is wired and gated (2p), not deployed.
+- **Paper.** An IEEE-format paper was drafted, reviewed and revised, local only: `paper/` (gitignored in `d10cc44`; the directory exists in the working tree with `main.tex` and `main.pdf`) and `~/dakshin-paper.pdf`, "per the owner" (`docs/CURRENT_STATE.md`). Not pushed; whether it is ever pushed is the owner's decision. It was not read in this pass, so no number in it is vouched for here.
+- **Honesty sweep.** `d10cc44`: training years corrected to 2019 to 2020 (`YEARS = [2019, 2020]`), not 2015 to 2020. `d178f95`: `docs/WEAKNESS_ANALYSIS.md` section 11, three lists (confident, does not work and why, what can go wrong with mitigations), plus a state and backlog sweep. `0cda289`: README results rewritten with the U-Net in the tables, the decision record, the stale-history rejection, a "Withdrawn claims" table, and a status paragraph. Suite: 209 passed, 2 skipped (`docs/CURRENT_STATE.md` Update 4).
+- **Mismatches in that sweep** are in Appendix A items 31 to 37.
+
 ---
 
 ## 3. How we innovate
@@ -619,9 +822,9 @@ says whether it is built, designed, or claimed.
 |---|---|---|
 | **Gates that stay UNKNOWN when the data does not decide** | `dakshin/gates.py`: `capability_gate` returns UNKNOWN because no vessel threshold is sourced (line 69 comment cites the §48A.3 rule). `chart_gate` never returns PASS without an official ENC. The weather gate fails honestly at 4.77 m (`real_route.json`). The ice-gate MARGINAL band is 7.4 concentration points, derived in the module (`MARGINAL_BAND_BASIS`). | Built |
 | **Claims ledger with withdrawals** | `docs/TRUE_CLAIMS.md` lists 17 claims, each with a file, and records two withdrawals (§1.11, §3). `scripts/verify_claims.py` runs 18 `check()` calls covering 29 claims against source files; on 2026-11-21, after `13861d9`, it printed `PASSED 29`. One of its checks still tests the pre-depth 8.6-day transit (Appendix A, item 27). | Built |
-| **Score once, report as it comes out** | `scripts/realforecast_hindcast.py` docstring: "Scored once, reported as it comes out — no re-tuning on this set, ever." The prototype's test set is scored once. | Built, but see 2i: a single seed moved the headline by about 6% between commits. |
+| **Score once, report as it comes out** | `scripts/realforecast_hindcast.py` docstring: "Scored once, reported as it comes out — no re-tuning on this set, ever." The prototype's test set is scored once. | Built, but see 2i: a single seed moved the headline by about 6% between commits. Applied again to the trained model (2m) and to the stale-history evaluation (2o). |
 | **Operational-first data engineering** | Daily CMEMS harvest from 2026-08-31 (168 harvest commits). Stage B forecasts cannot be back-filled, so the harvest started on day 0 (`docs/DECISIONS.md` ADR-019). NSIDC NRT truth is downloaded before it rolls off. Harvest contract: never fail the ice cycle because of currents or waves (`scripts/harvest_cmems.sh`, `run_currents`, `run_waves`). Compression from 42.6 MB to about 5 MB per day (`f2de08e`). | Built |
-| **Physics-grounded residual correction** | The network predicts a correction to the forecast, not the field: an untrained model returns zero and reproduces the forecast (`docs/PROTOTYPE_RESULTS.md`). The innovation channel is the observation-versus-background difference at each cell (`dakshin/features.py`, channel 8). | Built, but the 2b baseline has not been scored with the trained model. |
+| **Physics-grounded residual correction** | The network predicts a correction to the forecast, not the field: an untrained model returns zero and reproduces the forecast (`docs/PROTOTYPE_RESULTS.md`). The innovation channel is the observation-versus-background difference at each cell (`dakshin/features.py`, channel 8). | Built and scored once on the 2b baseline (2m, `dakshin/figures/realforecast_hindcast.json`): lower RMSE than raw CMEMS at every lead, lower IIEE at leads 1 to 5, higher at lead 7. |
 | **Iceberg drift from first principles, tested against the paper** | `models/iceberg/drift.py` implements the closed-form WDE17 model, with the drag-coefficient swap that changes wind-driven drift by 44% fixed (`docs/backlog.md`, `[resolved][ml]`). 23 tests reproduce the paper's coefficient table and its 765 m critical length (`docs/TRUE_CLAIMS.md` §1.9). | Built |
 | **Choosing the metric the decision depends on** | IIEE, the ice-edge error, is the metric for the decision, because RMSE does not register resolution (2c). | Built |
 | **Calibrated uncertainty by stratified conformal prediction, with a pre-committed pass/fail gate** | ADR-020 in `docs/DECISIONS.md`: coverage in the marginal ice zone at lead 5 must be 85% to 96%, mean width below 25 SIC points, and calibrated spread must beat inter-source disagreement. | Designed. Not implemented. The gate has not been run. |
@@ -630,6 +833,11 @@ says whether it is built, designed, or claimed.
 | **A 12-run dominance-filtered route sweep** | ADR-021. | Designed. `objective_function` is hard-coded to `traveltime` in two scripts (`docs/backlog.md`, `[major][routing]`). |
 | **Robust routing across scenarios** | Not built. `docs/backlog.md` records it as a gap against the research matrix. | Gap |
 | **A synthetic world model for the bridge demo** | `docs/backlog.md` "synthetic world model": designed in `docs/audit/WORLD_MODEL_DESIGN.md`, partly built in `dakshin/sim/`, and labelled as simulated input. Changed again by `f67493b` (Appendix C). | Partly built |
+| **Negative results published with the number that caused them** | Stale-history evaluation: lead-1 RMSE 0.10763 against raw 0.10219 (`dakshin/figures/stale_history_eval.json`), so no live-cycle AI edge ships (2o). Raw-CMEMS-loses-to-persistence on IIEE at lead 1 kept in the record (2b). `README.md` "Withdrawn claims" table. Stage 5's grounding result: persistence beats the drift model (2d). | Built. The verdict in 2o is narrower in the data than in the prose. |
+| **Add the missing baseline, then weld the caveat to the headline** | The decision record had no persistence arm for 13 minutes; adding it gave 298 of 298 and rewrote the claim in the JSON, doc, demo and README (`fb246b2`, 2n). | Built |
+| **Report where the thing actually ends, not whether a flag is set** | `real_route.json` carries `route_ends_km_from_station` (50.6) beside the arrival flag after the one-cell rule flipped the flag (`0d7be9f`, 2p). | Built |
+| **Product reads release artifacts only** | Demo `/api/model` panel (provenance kind *real*), site AI edge on 78 cycles (2q). Checkpoints are loaded only after SHA-256 match (`dakshin/model_io.py`), Release `model-v0.1`. | Built (site not verifiable from this repository) |
+| **Gated check that runs itself when its data exists** | `CorrectedIceWorld` router check is `skipped` in `real_route.json` with its reason, and runs on the first cycle with a correction and a wave file (2p). | Built, not yet run on real data |
 
 The strongest evidence of honest reporting is the withdrawals in
 `docs/TRUE_CLAIMS.md`. The weakest is the reanalysis background, whose leakage has
@@ -658,6 +866,11 @@ item. Items the backlog marks as resolved are listed in Appendix B, not here.
    age on or about 2026-11-24. The directory is gitignored and not on origin.
    Without a copy elsewhere, the real-forecast hindcast cannot be re-run from
    scratch after roll-off. This is not an item in `docs/backlog.md`.
+   **Superseded:** `a6fdc83` (2026-11-21 18:37 UTC) committed the archive:
+   `data/nsidc_nrt/` holds 89 `.nc` files, 2026-08-24 to 2026-11-20, plus
+   `MANIFEST.sha256`. `docs/WEAKNESS_ANALYSIS.md` section 11 says the files roll
+   off "after ~30 days"; the downloader and the commit message say about three
+   months (Appendix A item 33).
 2. **CMEMS file dates come from the clock.** `[critical][data]`. Still open;
    mitigated by the 12:23, 17:23 and 21:23 UTC schedule.
 3. **Missed-bulletin sentinel.** `[high][ops]`. Still open.
@@ -673,8 +886,8 @@ item. Items the backlog marks as resolved are listed in Appendix B, not here.
    `[critical][ml]`, the riskiest assumption in `docs/ML_ARCHITECTURE.md` §6. Not built.
 8. **Mask the land-spillover zeros in training.** `[major][ml]`. The notebook's
    valid mask is `isfinite`, not the QA-masked field (2a).
-9. **Pull the checkpoints and score the U-Net column.** `[major][model]`. Pending
-   the Kaggle kernel. `scripts/pull_checkpoints.sh` is ready.
+9. **Pull the checkpoints and score the U-Net column.** `[major][model]`. **Done**
+   (`5612621`, `cf04a4d`; 2l, 2m).
 10. **Three or more seeds before adopting or rejecting any forcing or architecture
     change.** `[major][ml]`. Not started (2i).
 11. **Stratify skill by distance to coast, marginal ice zone and ice edge.**
@@ -727,6 +940,29 @@ item. Items the backlog marks as resolved are listed in Appendix B, not here.
 26. **Correct the claims listed in Appendix A.** Several are in the ledger itself.
 27. **README rewrite for a physical oceanographer.** Queued in `docs/CURRENT_STATE.md`
     as the owner's second end-of-build ask. Not done in committed form. `README.md` was modified and uncommitted at the snapshot, so it is in progress elsewhere.
+    **Done in `0cda289`** (2026-11-22 04:45 UTC), with the mismatches in Appendix A items 31, 32 and 40.
+
+### Added 2026-11-22 (from stages 6 to 11)
+
+28. **Make the generator emit the batch credentials cell (or a flag for it).** The recipe is
+    documented in `dakshin/kaggle/README.md` (`779cf83`) but the swap is manual (2l).
+    Not in `docs/backlog.md` as of this pass's edit.
+29. **Assert the training cell is a code cell, and that a run's output holds four `.pt`
+    files; add a per-stage smoke test (imports, input mount, one download).** 2l,
+    lessons 1 and 8. The README lists the cell-type check as a manual step only.
+30. **Decide the stale-input scope with the owner.** The JSON shows stale RMSE beating
+    raw at leads 3 to 7 and stale IIEE beating raw at leads 1 to 5, while the prose
+    rejects the whole live edge on lead-1 RMSE (2o).
+31. **Reconcile ADR-027 with lead 7.** Corrected IIEE is 5.2% worse than raw at lead 7
+    and CRPS is not computed, yet the decision record and the site include lead 7
+    (2m, 2n). Either shorten the claimed horizon or compute CRPS.
+32. **A season with a real opening, or a sensitivity measure.** All 298 verifiable
+    target values are "not reachable", so the decision record has no positive case
+    (2n). The forecast archive cannot be back-filled.
+33. **Archive wave files per cycle, like `siconc`.** Gates the corrected-ice router
+    check (`docs/backlog.md`, `[med][harvest]`; 2p).
+34. **Correct the documents listed in Appendix A items 29 to 41.**
+35. **Owner decision on the local paper** (`paper/`, gitignored). Not pushed (2q).
 
 ---
 
@@ -805,7 +1041,20 @@ Listed, not fixed. Each entry names the files on both sides.
     depth, and `docs/TRUE_CLAIMS.md` §1.11 now uses 8.66 days. The "PASSED 29" result therefore includes a
     check on the superseded figure.
 28. **Destination-window figure.** Section 2a quotes 23 of 31 days closed at Bharati (ice-only). The committed
-    file now says 31 of 31 (`1a9ff0b`, depth in the mesh). The text in §2a is the snapshot value.
+    file now says 31 of 31 (`1a9ff0b`, depth in the mesh). The text in §2a is the snapshot value. Superseded again by item 32.
+29. **Hindcast numbers moved between passes.** Sections 2b and 2c carry the 76-cycle lead-1 values (raw 0.10199, persistence 0.11977, IIEE 195.1 and 187.7 thousand km²). `dakshin/figures/realforecast_hindcast.json` and `resolution_study.json` at HEAD have 77 cycles (0.10219, 0.11914, 196,031, 186,997 km²). Leads 3, 5, 7 agree. `docs/RESOLUTION_STUDY.md` still prints the 76-cycle raw and persistence columns ("187.7 vs 195.1").
+30. **The Kaggle notebook delta was not in the repository.** `docs/CURRENT_STATE.md` Update 4 said the glob and retry fixes are "both now in `make_notebook.py`, commit 0848d7e"; the commit has only the retry. The generator's credentials cell uses Kaggle Secrets, which batch runs cannot read, and nothing in `dakshin/` referenced `cmems-creds` or a glob (grep, 2026-11-22). Partly resolved by `779cf83` (`dakshin/kaggle/README.md`, `kernel-metadata.json`, corrected CURRENT_STATE sentence): the recipe is documented, the generator still emits the Secrets cell (2l). The v4 figures (3e-5, 0.012, best val 0.0434 to 0.0439) remain in `docs/CURRENT_STATE.md` prose only.
+31. **Three statements about the Bharati approach.** `real_route.json` at HEAD: `approach_closed_at_ice_limit: false`. `README.md` section 5: "finds the Bharati approach closed ... the closest reachable cell is 50.6 km away". The 25 km check (`corrected_forecast.json`): not reachable. The track ends 50.6 km short. They are reconcilable (2p) but the README sentence is not what the JSON flag says. Section 2f's table is the pre-`0d7be9f` file.
+32. **Destination-window figure, again.** Section 2a and item 28 say the committed file reports Bharati closed 31 of 31. `dakshin/figures/destination_window.json` at HEAD (`06d7d70`) scores "Bharati" at the route's arrival point (23 of 31 closed, 74.2%) and adds a separate row "Bharati station cell (ashore)" (31 of 31). `README.md` section 4 calls the 23-of-31 row "Bharati's own cell", which the JSON's `target_note` contradicts. README's "four of the eight apparently open days were exact-zero artefacts" is the earlier ice-only count and was not re-checked against the regenerated file.
+33. **NRT roll-off.** `docs/WEAKNESS_ANALYSIS.md` section 11: "after ~30 days". `scripts/download_nsidc_nrt.py` docstring and `5f32ae3`: "about 3 months". `docs/CURRENT_STATE.md`: rolls off from 2026-11-24, which is three months after the first file (2026-08-24).
+34. **Seed variance against margin.** `docs/WEAKNESS_ANALYSIS.md` section 11 and `README.md` section 1 say the run-to-run spread (up to 0.012) is the same size as the RMSE margin over raw CMEMS, with the margin given as 0.011 to 0.013. The hindcast margins computed from `realforecast_hindcast.json` are 0.0108, 0.0174, 0.0152, 0.0129. The spread is on the held-out training split and the margin on the hindcast; they are different sets (2l, lesson 9). `ad97f88` corrected the WEAKNESS sentence to 0.0108 and 0.0129 at leads 1 and 7 and gives 0.0174 and 0.0148 for leads 3 and 5; the lead-5 value from the JSON is 0.10981 minus 0.0946 = 0.0152, not 0.0148. `README.md` section 1 still says "the same size".
+35. **Under-sourced Kaggle claims in `docs/WEAKNESS_ANALYSIS.md` section 11.** "Mid-November ... 3 failed runs to diagnose": Update 4 gives two runs failing on the mount layout (v1, v2) and one on the NSIDC 500 (v3), and does not date v1 or v2; only the `0848d7e` message dates the 500 ("2026-11-22"). So "mid-November" may refer to when Kaggle changed the layout, which no file records. "Retrain is 23 min on a free T4" is in that section and in `docs/study/PHYSICS_AND_PAPERS.md`; no run log is committed to check it.
+36. **ADR-027 against lead 7.** Corrected IIEE is 5.2% worse than raw CMEMS at lead 7 (2m) and CRPS is uncomputed, so ADR-027 as written would not claim lead 7. The decision record (298 decisions, all four leads), the README tables and the site AI edge include it. The README states the lead-7 IIEE loss; it does not mention ADR-027.
+37. **"Never flipped" understates the decision record.** `corrected_all.json["verification"]` says the station never changed state. The `cycles` block shows all 298 `satellite_target` and all 78 `satellite_day0_reachable` values false: closed throughout, so there is no positive case (2n). The first write-up (`0c3b9ef`) said "closed nearly all season". `ad97f88` since states the always-"not reachable" point in `docs/PROTOTYPE_RESULTS.md` and the README; I did not find the 78 closed day-0 verdicts stated in either file.
+38. **Monthly commit counts do not reproduce.** The first pass gave 30, 155, 72, 75 (sum 332) as of 17:56 on 2026-11-21. `git rev-list --count 44e3efa` (the commit this pass starts from, 18:28) is 337, by month 27, 158, 71, 81. Commits landed after 17:56 explain extra November commits (11 non-harvest commits between 18:00 and 18:21 alone), but not the August, September and October shifts (-3, +3, -1). Author date in the commit's own timezone and in UTC give the same buckets, so timezone bucketing is not the cause. Not established.
+39. **`docs/CURRENT_STATE.md` is internally stale.** Update 4 and the overnight update sit above sections that still say slice 3 is "In flight", describe the Kaggle v6 as queued with a watcher, list the 186- and 194-test counts, and say the router closed the approach with "closest 50.6 km" (the "Done tonight" slice 6 row). The slice-3 commit `620d3a3` and `docs/PROTOTYPE_RESULTS.md` called the router full-resolution 1/12 degree; corrected in `0d7be9f` (2p).
+40. **The stale-input verdict against its table.** Prose (`docs/PROTOTYPE_RESULTS.md`, section 11, README) rejects the live-cycle edge. `stale_history_eval.json` shows the stale correction beating raw on RMSE at leads 3, 5, 7 and on IIEE at leads 1, 3, 5 (2o). `docs/PROTOTYPE_RESULTS.md` quoted RMSE only until `ad97f88` added the IIEE and leads 3 to 7 sentence; the verdict was not changed and the README and section 11 still give the lead-1 RMSE alone.
+41. **Original 2026-08-31 numbers reproduced to four decimals by v8, but not by v4.** `isih_skill_by_lead.csv` (v8) rounds to the headline at all four leads; v4 differs by up to 0.012 at leads 3 to 7 (`docs/CURRENT_STATE.md`). Not explained in the repository; v4's hardware is not recorded. Item 10 above is partly superseded: the hindcast JSON records "identical code, seed and split".
 
 ---
 
@@ -821,6 +1070,13 @@ Listed, not fixed. Each entry names the files on both sides.
 - Harvest login failure and stale cycles: rejection rule and retries (`1a00b3b`,
   `47e0ce1`).
 - The "Pareto set" naming: renamed; the sweep itself is still open (see 4.20).
+- Checkpoints missing: committed with `SHA256SUMS` (`5612621`), Release `model-v0.1`; U-Net column scored (`cf04a4d`).
+- Lead-1 n=76 hindcast files: regenerated at n=77 with the U-Net column (`cf04a4d`); the backlog line that asked for it was removed.
+- NSIDC NRT archive not committed: committed with a manifest (`a6fdc83`).
+- Kaggle numpy half-upgrade and NSIDC 500: pinned (`d7b0d0f`), retried (`0848d7e`). The mount-layout and credentials delta is documented in `dakshin/kaggle/README.md` (`779cf83`) but not emitted by the generator (Appendix A item 30).
+- Router "closed" flipped to "open" by the arrival rule: `route_ends_km_from_station` reported (`0d7be9f`); the 1/12 degree router overclaim corrected.
+- Decision record without a persistence baseline: added (`fb246b2`); the tie is disclosed.
+- Training-years typo (2015 to 2020): corrected to 2019 to 2020 (`d10cc44`).
 
 ---
 
@@ -847,3 +1103,37 @@ Uncommitted at the snapshot, and not in any commit: `dakshin/berg_forecast.py` (
 **Later commits by other agents, on `main` after the snapshot.** `1a9ff0b` (truth pass: melt uses berg-relative speed; `RESOLUTION_STUDY.md` persistence IIEE corrected to 277.2 with the lead-1 nuance; the R << 1 phrase removed; docstrings aligned with code; regenerated `berg_hindcast.json`, `destination_window.json`, `route_regret.json`, `alternatives.json` and `vessel_comparison.json`). `1a9ff0b` also swept this document's uncommitted glossary and snapshot edits into its commit. `df7f39e` (melt rerun with berg-relative speed; top-level `requirements.txt`). The committed route-regret results changed too: the first three result rows now give 8.65, 8.63 and 9.00 days, against 8.61, 8.58 and 9.00 at the snapshot. Earlier, `09f6ad0` added the architecture and physics study docs and a README. The 0.03-day regret in §2a is therefore a snapshot number.
 
 **Commit `a274a64` (after the snapshot).** The CMEMS workflow now runs the ECMWF wind harvest on every run and the USNIC list on Fridays. `scripts/harvest_cmems.sh` fetches SST (`cmems_mod_glo_phy-thetao_anfc_0.083deg_P1D-m`) under the same never-fail rule as the currents. These close the schedule gap in §2.2 and §4 item 4 (SST), and the "no schedule" statements in §2.4 and §2.5. The same commit adds a grounding-aware berg forecast, v2 (26 of 88 segments held, 4.13 km/day). §2d describes the snapshot version (4.35 km/day). Re-read those sections against HEAD before quoting. The SST and schedule statements in §2k and the runbook's §2.1 and §2.2 also describe the snapshot.
+
+---
+
+## Appendix D. Commits in `44e3efa..HEAD` not covered by Appendix C (UTC, 2026-11-21 unless marked)
+
+46 commits, 4 of them harvest (`90d58e5`, `f8fa368`, `4a4e103`, `0fa7b32`, all "already_have"). Effects are taken from commit messages and diffs; none was re-run here.
+
+| Commit | Time | Effect |
+|---|---|---|
+| `a6fdc83` | 18:37 | NSIDC NRT truth archive committed because it rolls off the server from 24 Nov and cannot be re-fetched (4.1) |
+| `06d7d70` | 18:43 | Route regret, destination window and alternatives re-run on depth-aware meshes; changes the destination-window figure (Appendix A item 32) |
+| `b9920e1`, `19c7f1c` | 19:00 | Per-berg forecast drift tracks and vectors for the chart (grounding-aware, caveats embedded); docstring matches mid-track grounding |
+| `2ffa6b2` | 19:14 | uo, vo, waves and SST packed to int16: daily currents 10 MB to 3.9 MB at 0.05 mm/s error |
+| `e724417` | 19:14 | `RealWorld` serves real seabed depth, so the chart gate is no longer UNKNOWN on real data |
+| `2a7cfad`, `3106bb9` | 19:15, 19:16 | Transit prose quotes the depth-aware 8.66 days; hindcast JSON wind wording follows the measured R |
+| `9cbab07`, `0d25c09`, `ed3a31c` | 19:34 to 19:40 | Backlog closes site items and adds the currents-versus-verification pairing gap; merge; state snapshot |
+| `d7b0d0f` | 21:41 | numpy pinned in the Kaggle install cell (2l) |
+| `5612621` | 23:16 | Four checkpoints committed from the 2026-11-21 re-run (2l) |
+| `cf04a4d`, `1dc4e95` | 23:16, 23:18 | Hindcast and resolution study scored with the U-Net; results, resolution study and state updated (2m) |
+| `620d3a3`, `a4c37a9` | 23:21 | Slice 3: corrected forecast for the live cycle and reachability check; docs (2n) |
+| `0848d7e` | 2026-11-22 02:40 | NSIDC download retries with `.part` files (2l) |
+| `d10cc44` | 03:47 | Training years corrected to 2019 to 2020; local `paper/` ignored (2q) |
+| `9e332bd`, `0c3b9ef` | 04:05 | `corrected_forecast.py --all` decision record (raw 287, corrected 298 of 298); demo AI-correction panel and first doc write-up, without a persistence row (2n, 2q) |
+| `0d7be9f`, `4437116` | 04:15 | Route honesty: `route_ends_km_from_station`, gated `CorrectedIceWorld` check, "1/12 degree router" overclaim removed (2p). The first commit also added two stray `.claude/worktrees` gitlinks; the second removes them |
+| `fb246b2` | 04:18 | Persistence arm added (298 of 298); caveat welded to the JSON, doc and demo text (2n) |
+| `d178f95` | 04:21 | Update 4 and `docs/WEAKNESS_ANALYSIS.md` section 11 (2q) |
+| `6dc4719`, `e32332b`, `71a8b08` | 04:29 to 04:41 | Stale-history evaluation, verdict, state (2o) |
+| `0cda289` | 04:45 | README results rewritten with the U-Net, decision record, stale-history rejection, release `model-v0.1` (2q) |
+| `ad97f88` | 05:04 | Claims review by another agent, landed during this pass: adds the "always answers not reachable" caveat to the decision record (`docs/PROTOTYPE_RESULTS.md`, `README.md`); adds stale IIEE and leads 3 to 7 RMSE context to the stale-history paragraph; corrects the margin sentence in `docs/WEAKNESS_ANALYSIS.md` section 11; documents 4-connectivity in `scripts/corrected_forecast.py` |
+| `779cf83` | 05:12 | `dakshin/kaggle/README.md` (batch recipe) and `kernel-metadata.json`; `docs/CURRENT_STATE.md` corrected on where the creds-glob lives; runbook and physics volumes refreshed (2l) |
+
+**Not itemised in the table:** the four harvest commits (named at the top); six study-pack commits (`f84da4d`, `6e18a34`, `5356a69`, `e9164de` study docs, `53fc775` study guide index, `a640cba` merge); and five already in Appendix C (`1a9ff0b`, `df7f39e`, `a274a64`, `aaddb78`, `09f6ad0`). Every commit in `44e3efa..HEAD` is cited somewhere in this document by that accounting.
+
+**Not covered here:** the companion viewer (separate repository) and the local paper. Re-read `dakshin/figures/*.json` before quoting any number in this document; several were regenerated during the window above.

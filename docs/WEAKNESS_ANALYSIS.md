@@ -404,7 +404,7 @@ claim below has a committed artifact behind it; every failure names its cause.
 
 ### What can go wrong — operational failure modes, with mitigations
 
-- **NSIDC NRT files roll off after ~30 days** — committed truth starts
+- **NSIDC NRT files roll off (the server keeps roughly the last three months)** — committed truth starts
   rolling off 2026-11-24; the decision record is reproducible only while the
   window holds, after which `corrected_all.json` is the record. [archive]
 - **CMEMS harvest outage → stale cycles**: 4 already excluded and badged on
@@ -422,7 +422,7 @@ claim below has a committed artifact behind it; every failure names its cause.
   half-upgrade numpy over the image, NSIDC throws transient 500s. All three
   fixes are committed in the notebook generator; expect the next drift.
 - **Seed variance ≈ the margin**: run-to-run spread (≤0.012) is the same
-  size as the hindcast RMSE margin over raw CMEMS at leads 1 and 7 (0.0108 and 0.0129; leads 3 and 5 have more headroom, 0.0174 and 0.0148). Hindcast
+  size as the hindcast RMSE margin over raw CMEMS at leads 1 and 7 (0.0108 and 0.0129; leads 3 and 5 have more headroom, 0.0174 and 0.0152). Hindcast
   uses one checkpoint per lead; no seed ensemble.
 - **The router cannot see the final approach** (0.55°×0.9° lattice, ~60 km
   cells): any "arrived" within one lattice cell of a station ashore is a

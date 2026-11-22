@@ -9,7 +9,9 @@
   v4 completed with the glob + retry fixes (the NSIDC retry is in
   `make_notebook.py`, commit 0848d7e; the creds-glob lives in the pushed
   batch kernel — the generator keeps the Kaggle-Secrets cell for
-  interactive runs, and `dakshin/kaggle/README.md` records the batch swap). Result: lead-1 held-out RMSE reproduces to 3e-5
+  interactive runs, and `dakshin/kaggle/README.md` records the batch swap). Result (rerun table committed:
+  `models/sic_correction/checkpoints/rerun_2026-11-22_skill_by_lead.csv`):
+  lead-1 held-out RMSE reproduces to 3e-5
   (0.04649 vs released 0.04646); leads 3–7 spread up to 0.012 (GPU
   nondeterminism); persistence beaten at every lead in every run. The CPU
   clone was on pace to hit Kaggle's 12 h wall mid-lead-1 and its output is
@@ -85,14 +87,14 @@ skips are model_io + pre-existing, they un-skip when checkpoints land).
 
 ## In flight
 
-- **Slice 3 (AI ice into routing / site)**: unblocked now that checkpoints
-  are in the repo. Next: apply the lead-matched correction to the latest
-  archived cycle (`build_channels_operational` + `model_io`), compare the
-  real route decision on raw vs corrected ice, surface the corrected field
-  on the site as an AI layer.
+- **Slice 3: DONE** (see Update 4): corrections for all 78 eligible cycles,
+  AI edge on the site, decision record, router comparison wired (waiting on
+  a cycle with waves + correction).
 - History of the Kaggle saga (for the study doc): the original 2026-08-31
   checkpoints were never in Kaggle's output store because the saved
-  notebook's training cell was typed *markdown*; v6 fixed the cell type,
+  notebook's training cell was typed *markdown* (the original interactive
+  session executed it fine — only the saved batch re-execution skipped it,
+  which is why the 08-31 numbers exist but their checkpoints do not); v6 fixed the cell type,
   v7 died importing numpy after pip half-upgraded it, v8 pinned numpy and
   completed. CMEMS credentials come from the private dataset
   `jiteeshghodke/cmems-creds` (CLI batch runs cannot read Kaggle Secrets).
