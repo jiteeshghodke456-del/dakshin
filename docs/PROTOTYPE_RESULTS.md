@@ -210,7 +210,7 @@ IIEE, mean km² of misplaced ice edge (the metric a navigator feels):
 
 ## What is honest to claim
 
-- **The correction transfers.** Trained on 2015–2020 F17 data, it still beats
+- **The correction transfers.** Trained on 2019–2020 F17 data, it still beats
   raw CMEMS RMSE at every lead on 2026 AMSR2 truth, and **halves the ice-edge
   error at 1 day** (93k vs 196k km²).
 - **The edge advantage decays with lead.** By 7 days the corrected IIEE is

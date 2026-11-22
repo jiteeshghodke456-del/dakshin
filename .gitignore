@@ -49,3 +49,4 @@ data/bathymetry/raw/
 
 # PolarRoute waypoint scratch files written by route_regret/alternatives runs
 dakshin/figures/_wp*.csv
+paper/
