@@ -1,5 +1,44 @@
 # Current state — night build 2026-11-21/22
 
+## Update 4 (written ~09:50 IST 22 Nov) — model wired in, honesty sweep
+
+- **Reproducibility rerun (Kaggle GPU, dakshin-prototype-train-gpu2)**: v1/v2
+  died because Kaggle changed the dataset mount layout for new kernels
+  (`/kaggle/input/datasets/<owner>/<slug>/`, legacy kernels keep the old
+  path); v3 found the creds but died on a transient NSIDC HTTP 500 (no retry);
+  v4 completed with the glob + retry fixes (both now in `make_notebook.py`,
+  commit 0848d7e). Result: lead-1 held-out RMSE reproduces to 3e-5
+  (0.04649 vs released 0.04646); leads 3–7 spread up to 0.012 (GPU
+  nondeterminism); persistence beaten at every lead in every run. The CPU
+  clone was on pace to hit Kaggle's 12 h wall mid-lead-1 and its output is
+  discarded; its partial log agreed (best val 0.0434–0.0439).
+- **The model is now in the product, everywhere it honestly can be**:
+  `corrected_forecast.py --all` applies the released checkpoints to all 78
+  cycles with full satellite history (`corrected_all.{npz,json}`); the site
+  draws the AI edge on every one of those issued dates; the demo bridge
+  console gained an "AI correction" panel fed only by release artifacts
+  (`/api/model`, provenance kind *real*); the router comparison on corrected
+  ice is wired (`CorrectedIceWorld`) but **gated**: no archived cycle has
+  both a correction and a wave file yet, and the payload says so.
+- **Season-long decision record** (new headline, with its caveat welded on):
+  298 verifiable approach go/no-go decisions scored against the satellite on
+  each target date — raw 287/298 (11 false "reachable"), corrected 298/298,
+  **persistence also 298/298** (the station never flipped state inside a lead
+  window all season). The record separates corrected from RAW, not from
+  persistence. In `corrected_all.json["verification"]`.
+- **Honesty fixes**: real_route.json now always reports
+  `route_ends_km_from_station` (50.6 km) — the one-lattice-cell arrival rule
+  (478ecd2) had silently turned "closed" into "open" while the track still
+  ends 50.6 km out; site ribbon says so. The "full-resolution 1/12° router"
+  overclaim is corrected everywhere: 1/12° **fields**, 0.55°×0.9° lattice.
+  PROTOTYPE_RESULTS training-years typo fixed (2019–2020, not 2015–2020).
+- Site: weekly USNIC berg fixes now follow the issued date (14 issues, bergs
+  move), drift chains always true to the grid (×k schematic removed), day
+  replay at 0.45 s. IEEE paper drafted+reviewed+revised, **local only** at
+  `paper/` (gitignored) and `~/dakshin-paper.pdf` per the owner.
+- Suite: 209 passed, 2 skipped. Frank capability list:
+  `docs/WEAKNESS_ANALYSIS.md` §11 (2026-11-22 addendum).
+
 ## Overnight run update (written ~01:55 IST 22 Nov)
 
 - Site: full-screen GIS viewer (Polar TEP shell), zoom/pan 1-8x with locked

@@ -346,3 +346,85 @@ NSIDC-gridded, ERA5, CMEMS, plus name the GPU; (3) upgrade the calibration plan 
 VIF to per-lead/regime or conformal, with a pre-committed pass/fail coverage rule; (4) close
 the day-8-to-14 routing-horizon hole and the NCPOR-overlap check. Phases 0–1 can start
 immediately in parallel — nothing above blocks the non-ML vertical slice.
+
+---
+
+## 11. 2026-11-22 addendum — what works, what doesn't, what can go wrong
+
+Written after the model landed in the product. Three lists, no spin. Every
+claim below has a committed artifact behind it; every failure names its cause.
+
+### Confident — verified, reproducible, quotable
+
+- **The correction beats the raw forecast on data it never saw twice over**
+  (2026 vs 2019–2020 training; AMSR2 vs F17 truth): RMSE lower at every lead
+  (n=72–77 cycles/lead), ice-edge error halved at lead 1 (93,231 vs
+  196,031 km²). `dakshin/figures/realforecast_hindcast.json`.
+- **Training reproduces.** Independent same-seed rerun: lead-1 held-out RMSE
+  within 3e-5 of the released checkpoint; all leads beat persistence in every
+  run. Checkpoints SHA256-pinned, Release `model-v0.1`.
+- **False-alarm removal at decision level**: 78 cycles, 298 target-date-
+  verified approach decisions — the correction removed all 11 of the raw
+  field's false "reachable" verdicts and broke nothing.
+  `corrected_all.json["verification"]`.
+- **Resolution finding**: IIEE exposes what RMSE hides; a 1° background loses
+  the edge and the unretrained correction does not restore it.
+  `docs/RESOLUTION_STUDY.md`.
+- Suite 209 passed; verify_claims 29/29; site AI edge browser-verified on
+  early and late cycles, 0 console errors.
+
+### Doesn't work / not delivered — and exactly why
+
+- **Corrected ice inside the router** is wired (`CorrectedIceWorld`, tested)
+  but has never run on real data: only ONE wave file was ever archived
+  (2026-11-21) and no cycle has both waves and a correction. Runs
+  automatically on the first cycle that has both. [data gap]
+- **No correction for the live cycle, ever**: the model needs the day-0
+  satellite file, which lands ~1 day late, so the newest corrected cycle
+  always trails the newest forecast by ≥1 day. [inherent data latency]
+- **The IIEE advantage dies by lead 7** (221,094 vs raw 210,200 km²). Both
+  metrics are quoted together everywhere; do not quote RMSE alone. [finding]
+- **The decision record cannot separate the corrector from persistence** —
+  the station never changed state inside a 7-day window all season, so
+  persistence also scores 298/298. A season with a real opening is needed.
+  [regime, not fixable with this data]
+- **No significance testing**: 72–77 consecutive, autocorrelated daily
+  cycles; effective sample far smaller than n; no CRPS, no confidence
+  intervals (ADR-027 backlog). [methodology debt, needs owner sign-off]
+- **Berg drift forecasting lost to persistence** (4.35 km/day measured error;
+  giants grounded). Shipped as uncertainty rings + advisory chains, not as a
+  model claim. Growlers/bergy bits are in no satellite product at all.
+- **AIS is structurally empty** in the corridor: no shore stations in the
+  Southern Ocean; the aisstream key is unused. Traffic gate runs on bands.
+- **NemoReader untested on real NEMO output** (written for the Mitacs ANHA
+  context; says so in its docstring). [no data access]
+- **No wind/wave data north of 55°S** — the harvest box ends there; the
+  route segment note says so. The 2019 full-route 8.6-day claim is withdrawn
+  (route ended on land per IBCSO).
+
+### What can go wrong — operational failure modes, with mitigations
+
+- **NSIDC NRT files roll off after ~30 days** — committed truth starts
+  rolling off 2026-11-24; the decision record is reproducible only while the
+  window holds, after which `corrected_all.json` is the record. [archive]
+- **CMEMS harvest outage → stale cycles**: 4 already excluded and badged on
+  the site (KNOWN_STALE.md); the cron fails loud by design.
+- **Coastal QA is the soft spot of the reachability check**: the Bharati box
+  has suspect (land-spillover) cells on 43.2% of days, and those are exactly
+  the cells the flood fill walks. The 0.80 limit is an assumed working limit,
+  not a POLARIS row for this hull; no sensitivity scan over
+  threshold/radius has been run.
+- **Sensor drift**: truth switched F17→AMSR2 in 2025; a future sensor change
+  shifts the bias the model learned. Mitigation: retrain is 23 min on a free
+  T4, recipe pinned in `make_notebook.py`.
+- **Kaggle environment drift is real and recurring**: the dataset mount
+  layout changed under us mid-November (3 failed runs to diagnose), pip can
+  half-upgrade numpy over the image, NSIDC throws transient 500s. All three
+  fixes are committed in the notebook generator; expect the next drift.
+- **Seed variance ≈ the margin**: run-to-run spread (≤0.012) is the same
+  size as the hindcast RMSE margin over raw CMEMS (0.011–0.013). Hindcast
+  uses one checkpoint per lead; no seed ensemble.
+- **The router cannot see the final approach** (0.55°×0.9° lattice, ~60 km
+  cells): any "arrived" within one lattice cell of a station ashore is a
+  lattice statement, not an approach clearance. The 25 km check owns the
+  last 50 km — and it, in turn, sits on the QA-suspect coastal cells above.

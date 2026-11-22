@@ -354,3 +354,5 @@ what was filed rather than fixed.
 - [minor][nemo] NemoReader does no C-grid destaggering or grid-rotation of U/V; fine for scalar fields, wrong for vector use on native grids — document or fix before feeding real NEMO currents.
 - [minor][site] Verification layer cannot pair with full-res currents on one chart yet: full-res currents exist only for the latest cycle, which has no satellite truth — emit analysis currents for verifiable days (site agent note, 2026-11-21).
 - [med][harvest] Wave files archived only for the live cycle (one cmems_wav_*.nc exists); blocks the corrected-ice router check on past cycles — archive waves per cycle like siconc
+- [low][model] Corrected cycle always trails the newest forecast by >=1 day (needs day-0 satellite file) — inherent latency, documented in WEAKNESS_ANALYSIS §11
+- [low][site] AI edge exists only for cycles with full 7-day satellite history (78 of 83) — others show satellite/model edges only
