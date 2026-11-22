@@ -6,8 +6,10 @@
   died because Kaggle changed the dataset mount layout for new kernels
   (`/kaggle/input/datasets/<owner>/<slug>/`, legacy kernels keep the old
   path); v3 found the creds but died on a transient NSIDC HTTP 500 (no retry);
-  v4 completed with the glob + retry fixes (both now in `make_notebook.py`,
-  commit 0848d7e). Result: lead-1 held-out RMSE reproduces to 3e-5
+  v4 completed with the glob + retry fixes (the NSIDC retry is in
+  `make_notebook.py`, commit 0848d7e; the creds-glob lives in the pushed
+  batch kernel — the generator keeps the Kaggle-Secrets cell for
+  interactive runs, and `dakshin/kaggle/README.md` records the batch swap). Result: lead-1 held-out RMSE reproduces to 3e-5
   (0.04649 vs released 0.04646); leads 3–7 spread up to 0.012 (GPU
   nondeterminism); persistence beaten at every lead in every run. The CPU
   clone was on pace to hit Kaggle's 12 h wall mid-lead-1 and its output is

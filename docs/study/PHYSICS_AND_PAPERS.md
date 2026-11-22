@@ -1,8 +1,8 @@
 # Dakshin: physics, statistics and papers
 
-Study document, written 2026-11-21 against the committed repository (HEAD `44e3efa` at the final check). It explains each physical or statistical concept the code uses, gives the equation exactly as implemented, says where in the code it lives, and records what the evidence in the repository does and does not show. Numbers come from repository files (paths given) or were measured while writing (marked "measured here"). Statements of general domain knowledge that the repository does not itself record are marked "outside the repository" so they are not mistaken for project findings. Pending U-Net results are marked "training re-run in progress".
+Study document, written 2026-11-21 and updated 2026-11-22 against the committed repository (HEAD `0cda289` at the update check; the first version was checked at `44e3efa`). The update adds the reachability decision statistic (6.5), the out-of-sample-twice design (4.5), seed variance against margin (4.6), the stale-history experiment (4.7) and the Palerme et al. (2024) paper (10). It explains each physical or statistical concept the code uses, gives the equation exactly as implemented, says where in the code it lives, and records what the evidence in the repository does and does not show. Numbers come from repository files (paths given) or were measured while writing (marked "measured here"). Statements of general domain knowledge that the repository does not itself record are marked "outside the repository" so they are not mistaken for project findings. Pending U-Net results are marked "training re-run in progress"; the real-forecast hindcast scored on 2026-11-21 is no longer pending and is covered in 4.5.
 
-Contents: 1 passive-microwave sea-ice concentration and its quality control; 2 the iceberg drift law (WDE17); 3 iceberg melt; 4 verification (RMSE, IIEE, persistence, discipline); 5 the U-Net; 6 routing; 7 ice edge, grounding and bathymetry; 8 POLARIS; 9 questions a physical oceanographer is likely to ask, with where the evidence is; 10 papers.
+Contents: 1 passive-microwave sea-ice concentration and its quality control; 2 the iceberg drift law (WDE17); 3 iceberg melt; 4 verification (RMSE, IIEE, persistence, discipline, out-of-sample-twice design, seed variance, stale-history experiment); 5 the U-Net; 6 routing (including the reachability decision statistic); 7 ice edge, grounding and bathymetry; 8 POLARIS; 9 questions a physical oceanographer is likely to ask, with where the evidence is; 10 papers.
 
 ---
 
@@ -242,7 +242,62 @@ An earlier run reported +27% over persistence by choosing the best of 30 epochs 
 
 ### 4.4 The honest limits of the headline training result
 
-The training-time table (`docs/PROTOTYPE_RESULTS.md`, model beats persistence by +18.5% at 1 day to +30.6% at 7 days) used a reanalysis background that has assimilated the target date. Raw GLORYS12 scores 0.1630 at lead 1 and 0.1637 at lead 7, essentially flat; a real forecast degrades with lead. The correct reading, from that file, is an upper bound on forecast skill, with the defence that 0.163 is mere bias withdrawn. The real-forecast scoring is the hindcast; the U-Net rows are training re-run in progress, and the no-background ablation has not been run.
+The training-time table (`docs/PROTOTYPE_RESULTS.md`, model beats persistence by +18.5% at 1 day to +30.6% at 7 days) used a reanalysis background that has assimilated the target date. Raw GLORYS12 scores 0.1630 at lead 1 and 0.1637 at lead 7, essentially flat; a real forecast degrades with lead. The correct reading, from that file, is an upper bound on forecast skill, with the defence that 0.163 is mere bias withdrawn. The real-forecast scoring is the hindcast (4.5); the U-Net rows of the resolution table (section 4.1) are training re-run in progress, and the no-background ablation has not been run.
+
+### 4.5 Out-of-sample twice: the evaluation design, and why the training table is only an upper bound
+
+Design (`scripts/realforecast_hindcast.py`, results in `dakshin/figures/realforecast_hindcast.json`, narrative in `docs/PROTOTYPE_RESULTS.md` "Real-forecast hindcast (2026)"). The network is scored on data that differs from its training data on two independent axes at once:
+
+| Axis | Training | Hindcast |
+|---|---|---|
+| Time | the 2019 to 2020 F17 slice (as `docs/PROTOTYPE_RESULTS.md` words it) | 2026, 72 to 77 archived forecast cycles, 2026-08-31 to 2026-11-19 |
+| Truth sensor | SSMIS on F17 (G02202) | AMSR2 (G10016 v4 NRT), QA-masked, never resampled |
+| Background channel | GLORYS12 reanalysis | the real CMEMS forecast, archived at issue time |
+
+Scoring is fixed before looking: corridor box 0 to 80 E, 55 to 78 S; pooled RMSE on zero-filled fields over cells where both forecast and truth are finite (the training convention); IIEE at the 15% threshold; scored once, with checkpoints from the 2026-11-21 Kaggle re-run of the identical training, SHA256-verified by `dakshin/model_io.py`. The baselines are raw CMEMS and persistence of the day-0 satellite field.
+
+Why two shifts rather than one: a chronological holdout inside the training years tests only time. A model that learned a sensor-specific or reanalysis-specific bias would pass it and then fail in operation. Here a pass has to survive a new year, a new sensor and a new kind of background together. The price is confounding: because the shifts are applied together, a failure could not be assigned to one of them, and the size of the sensor effect on its own is not measured anywhere in the repository (section 1.4). The honest reading of a pass is "the correction transfers", not "the sensor change is harmless".
+
+Result (measured here from the JSON, as the model's RMSE reduction against raw CMEMS): 10.6, 16.6, 13.9 and 11.1% at leads 1, 3, 5 and 7. IIEE at 1 day falls from 196,031 to 93,231 km2 (a 52% reduction) but at 7 days is 221,094 against raw 210,200, so the edge advantage decays with lead while RMSE stays ahead. Persistence is worse than raw CMEMS on RMSE at every lead here (0.1191 at lead 1), unlike the training slice, where persistence beat the raw background at short lead; the two tables must not be compared with each other (different years, season mix, sensor, region; the file says so).
+
+Why the training-domain table is only an upper bound. In the training run, channel 0 is the background valid at the target time `t + lead`, taken from a reanalysis (GLORYS12) that has assimilated the target date (`docs/RELEASE_AUDIT.md` P1 item 1; `docs/PROTOTYPE_RESULTS.md`). The background has therefore already seen the answer, and the network is partly learning to remove a bias from a field that is, in effect, a nowcast of the target. The fingerprint is in the raw baseline: raw GLORYS12 scores 0.1630 at lead 1 and 0.1637 at lead 7 (`docs/PROTOTYPE_RESULTS.md`), flat in lead. A forecast gets worse as it looks further ahead; an error that does not depend on lead means the field is not lead-limited, which is what a reanalysis of the target date looks like. The real CMEMS forecast archive shows the expected behaviour: raw RMSE 0.10219, 0.10479, 0.10981, 0.1153 at leads 1, 3, 5, 7 (`dakshin/figures/realforecast_hindcast.json`), rising. `docs/RELEASE_AUDIT.md` calls the +30.6% at 7 days "our most contaminated number" for this reason. The training table says the architecture learns; the hindcast says what survives contact with a real forecast. The leak-free ablation (channel 0 = `background[t]`, plus a no-background arm) is the pending experiment that would remove the caveat.
+
+### 4.6 Seed variance against margin: what a single checkpoint can and cannot claim
+
+What is recorded (`docs/CURRENT_STATE.md`; `docs/WEAKNESS_ANALYSIS.md`): an independent re-run of the same code, seed and split on a Kaggle GPU reproduced the released lead-1 held-out RMSE to 3e-5 (0.04649 against 0.04646), while leads 3 to 7 differed by up to 0.012, attributed to GPU nondeterminism; persistence was beaten at every lead in every run. The hindcast used the re-run checkpoints, not the originals.
+
+Set that against the hindcast margin over raw CMEMS, measured here from `dakshin/figures/realforecast_hindcast.json`: 0.0108, 0.0174, 0.0148, 0.0129 at leads 1, 3, 5, 7. `docs/WEAKNESS_ANALYSIS.md` quotes the margin as 0.011 to 0.013, which matches leads 1 and 7 only (logged in `docs/backlog.md`).
+
+What follows, stated in plain terms:
+
+- The run-to-run spread and the margin are the same size (about 0.01 in RMSE). A difference of that order between two arms trained once each cannot be credited to the method. This is why any adopt or reject decision between inputs (the forcing comparison in `docs/backlog.md`) needs several seeds; `docs/RELEASE_AUDIT.md` P1 item 2 sets three as the minimum.
+- The claim "beats raw CMEMS on RMSE at every lead" rests on one checkpoint per lead. At lead 1 the observed spread (3e-5) is far below the margin (0.0108), so that claim is the safest. At leads 3 to 7 the observed spread (up to 0.012) is comparable to the margin (0.0129 to 0.0174), so those leads are real but less firmly separated from run-to-run noise than the table suggests.
+- Two cautions on the comparison itself, both my reading and not repository findings: the spread was measured on the training-domain held-out RMSE and the margin on the hindcast, which are different tables, so setting one against the other is a heuristic; and two runs of the same seed give a lower bound on seed variance, because they share initialisation and differ only by hardware nondeterminism. Hindcast cycles are also serially correlated, and the JSON carries no confidence interval, so n = 72 to 77 overstates the independent evidence.
+
+### 4.7 The stale-history experiment: cost of a one-day-old satellite input
+
+The question. The NSIDC NRT file for day `t` appears about a day late (`scripts/stale_history_eval.py` docstring), so a live forecast cycle can only run the correction on satellite history that ends at day `t - 1`. The network was trained assuming day-0 history. What does the shift cost?
+
+The design (`scripts/stale_history_eval.py`, output `dakshin/figures/stale_history_eval.json`):
+
+| Arm | Satellite history fed in | Meaning |
+|---|---|---|
+| fresh | `obs[t-0 .. t-6]` | the hindcast setting |
+| stale | `obs[t-1 .. t-7]` | the live-cycle reality |
+| cmems | none (the raw background, channel 0) | the baseline to beat |
+
+Everything else is held identical: the same checkpoints, the same forecast and analysis fields, the same target truth and mask, and the same scoring as the hindcast (pooled RMSE, IIEE at 15%). Only the input window moves by one day, so the difference between arms isolates the cost of staleness. The cycles are paired: each retained cycle is scored under all three arms, and a cycle is kept only if both history windows and the target observation exist, which gives n = 77, 75, 74, 72 cycles at leads 1, 3, 5, 7 (the same n as the hindcast). The comparison is pooled over cycles, not a per-cycle paired test, so there is no confidence interval. The stale arm also sits outside the training assumption by construction; the network never saw a shifted window.
+
+Result (RMSE, from `dakshin/figures/stale_history_eval.json`):
+
+| Lead | Fresh | Stale | Raw CMEMS | Stale minus fresh (measured here) |
+|---|---|---|---|---|
+| 1 | 0.0914 | 0.1076 | 0.1022 | 0.0162 |
+| 3 | 0.0874 | 0.0939 | 0.1048 | 0.0065 |
+| 5 | 0.0946 | 0.0972 | 0.1098 | 0.0026 |
+| 7 | 0.1025 | 0.1038 | 0.1153 | 0.0014 |
+
+Interpretation, as `docs/PROTOTYPE_RESULTS.md` states it: the short-lead skill lives in the day-0 observation. At lead 1 the staleness penalty (0.0162) is larger than the whole fresh gain over raw (0.0108), so a stale lead-1 correction is worse than the raw forecast. The penalty shrinks with lead (0.0162 to 0.0014) because at long lead even a fresh day-0 image is already several days old, so one more day costs little. The repository's verdict is that no stale-input edge ships for the live cycle. Two points the table adds, which the verdict does not mention: at leads 3 to 7 the stale correction still beats raw CMEMS on RMSE, and at lead 1 the stale IIEE (139,334 km2) is still below raw (196,031 km2) even though stale RMSE is worse than raw, so the two metrics disagree at lead 1 and the verdict rests on RMSE. This is the same reason the pair of metrics is quoted together in 4.5.
 
 ---
 
@@ -301,6 +356,40 @@ Since 80% is an assumption, the honest daily output is the concentration limit a
 
 For the prototype corridors: PolarRoute 1.1.11 with meshiphi 2.3.1 (BAS, MIT). It builds a non-uniform mesh from scalar data through `scalar_csv`, applies a vessel performance model (`SDA`: speed derated by ice resistance from thickness and density, with an inaccessibility rule), runs Dijkstra over cell crossings, then a physics-informed smoothing. Verified by source reading (`docs/NAVIGATION_RESEARCH.md`, `docs/backlog.md`): the planner has no time dimension, `wave_resistance()` is defined and never called, and the fuel polynomial is fitted to RRS Sir David Attenborough. Ice thickness and density come from a literature look-up table inside meshiphi (ADR-013); without them the ice-resistance speed adjustment silently does nothing. `force_limit` 96,634.5 is carried over from the Attenborough configuration and is uncalibrated; `max_ice_conc` 80 is a working threshold, not derived from the ice class (RS notation KM(*) ULA, whose modern equivalent is not sourced).
 
+### 6.5 The reachability decision statistic (`scripts/corrected_forecast.py`, `reachable()`)
+
+The question asked of any 25 km field (raw forecast, corrected forecast, or satellite): can a ship get from the station's approach to open sea? The router answers this on its own lattice, but that lattice cannot resolve the last ~50 km to the station (0.55 by 0.9 degree cells, `docs/WEAKNESS_ANALYSIS.md`), so the 25 km check owns the final approach. The implementation:
+
+```
+passable = isfinite(sic) and sic <= ICE_LIMIT                 # ICE_LIMIT = 0.80, the VesselModel default
+labels   = scipy.ndimage.label(passable)                      # connected components
+near     = labels at passable cells within  50 km of Bharati
+far      = labels at passable cells at least 400 km from Bharati
+reachable = (near and far share a label)
+```
+
+In plain terms: cut the field into cells a ship may enter and cells it may not, group the enterable cells into connected pools, and say yes only if one pool touches the station's neighbourhood and also reaches water 400 km or more away. The code passes no structuring element, so `label` uses its default, which is 4-connected (outside the repository: the scipy default is the cross-shaped element). Two cells touching only at a corner are not joined. That is stricter than the router, whose lattice uses an 8-neighbourhood (section 6.1), so the statistic can say "not reachable" where the router would slip through a diagonal gap; the code does not record whether this strictness was chosen on purpose, so treat it as a difference between the two, not a design claim. Distances use a flat approximation (111 km per degree of latitude, longitude scaled by the cosine of the station latitude, `d2` in `main()`), adequate for a 50 km and a 400 km threshold and not a geodesic.
+
+Why connectivity and not a minimum over a circle. The tempting statistic is "minimum SIC within 50 km of the station is below the limit". That says only that some cell nearby is open. A pocket of open water or thin ice enclosed by the fast-ice belt along the coast satisfies it while being unreachable from the sea; the ship would have to cross the belt to get there. Reachability is a path property, not a neighbourhood property, and the connected-component test is the cheapest path test that matches how the router treats cells at or above the limit (impassable). The docstring says this is "the router's notion of 'approach open', not a min over a circle that mixes in unreachable water".
+
+Behaviour worth knowing, read from the code:
+
+- A cell with NaN (for example a QA-masked coastal cell, section 1.2) is not passable, so masked cells block. If every cell within 50 km is masked, `near` is empty and the answer is "not reachable" whatever the sea beyond looks like. The statistic therefore inherits the coastal QA problem.
+- The code marks its own shortcut: depth blocking is not applied, and the upgrade is to use the `Router` if the two ever disagree on a real cycle.
+- The failure mode of the raw field is a one-cell-wide thread of cells just under the limit, produced by averaging 1/12 degree cells to 25 km. On the live cycle 2026-11-20 (`dakshin/figures/corrected_forecast.json`) raw CMEMS says reachable at all four leads, the corrected field says not reachable, and the day-0 satellite says not reachable.
+
+Target-date verification methodology (`scripts/corrected_forecast.py --all`, results in `dakshin/figures/corrected_all.json`, `verification` block). For each of the 78 archived cycles with a full 7-day satellite history (2026-08-31 to 2026-11-20) and each lead L in 1, 3, 5, 7, three verdicts are formed: raw forecast, corrected forecast, and persistence (the day-0 satellite verdict carried forward). Each is compared with `reachable()` applied to the satellite field on the target date `day + L`, not on day 0, so a verdict has to survive the lead time. 78 x 4 = 312 decisions; 14 have targets beyond the archive and are uncounted, leaving 298.
+
+| Verdict source | Correct of 298 |
+|---|---|
+| raw CMEMS at 25 km | 287 (96.3%) |
+| U-Net corrected | 298 |
+| persistence | 298 |
+
+All 11 raw errors are false "reachable" verdicts (counted here from the JSON; there are no false "not reachable"). The correction removes every one and flips no correct verdict.
+
+The base-rate caveat, which limits what this table can mean. The file's own caveat says the station's state never flipped inside a lead window this season, so persistence also scores perfectly. Counting from the same JSON (measured here), the stronger fact is that the satellite verdict on the target date is "not reachable" in all 298 decisions and the day-0 satellite verdict is "not reachable" in all 78 cycles. The positive class never occurred. Consequences: a rule that always answers "not reachable" would also score 298 of 298; the record measures false-alarm removal against the raw forecast and says nothing about the miss rate (whether the corrected field would say "reachable" when the way is open) or about decision skill across regimes; and the 11 raw errors are not 11 independent events, since neighbouring cycles and the four leads of one cycle share the same ice state. The case where the station opens, in late summer, is outside this record (one station, one austral late-winter to spring season).
+
 ---
 
 ## 7. Ice edge, grounding and bathymetry
@@ -347,8 +436,10 @@ The ice gate's 80% limit is therefore an assumption, and the MARGINAL band aroun
 | How are cells regridded? | Unweighted mean of source cell centres per NSIDC cell, not a conservative remap (section 4.3 of the architecture document). |
 | What is the truth, and can it be trusted at the coast? | NSIDC CDR; coastal cells are spillover-filtered and written as 0.0; the audit shows 43.2% of days affected in a 17 x 17 box around Bharati. QA masking sets them NaN. |
 | Which sensor? | Training SSMIS (F17); 2026 scoring AMSR2. Not separable with held data. |
-| Where is the leakage? | Training background is a reanalysis that has seen the target date; the training table is an upper bound; the operational hindcast uses real forecast cycles; the ablation is unrun; U-Net rows pending. |
-| Does the U-Net beat CMEMS? | Not yet known. Training re-run in progress. By design the U-Net starts at CMEMS and cannot be much worse by construction; ADR-027 requires beating raw CMEMS on IIEE and CRPS, and the scorer computes no CRPS yet. |
+| Where is the leakage? | Training background is a reanalysis that has seen the target date; the training table is an upper bound (flat raw-GLORYS12 error across leads is the fingerprint, section 4.5); the operational hindcast uses real forecast cycles; the leak-free ablation is unrun. |
+| Does the U-Net beat CMEMS? | On the 2026 real-forecast hindcast, yes on RMSE at every lead (0.091 to 0.102 against 0.102 to 0.115) and on IIEE at leads 1 to 5, but not at lead 7 (221,094 against 210,200 km2); the margin is comparable to run-to-run spread at leads 3 to 7 (`dakshin/figures/realforecast_hindcast.json`; sections 4.5 and 4.6). ADR-027 also requires CRPS, and the scorer computes none yet. The resolution-study U-Net rows (section 4.1) are still training re-run in progress. |
+| Does the correction survive a one-day-old satellite input? | At lead 1 no (RMSE 0.1076 against raw 0.1022); at leads 3 to 7 it still beats raw but gives back part of the gain (`dakshin/figures/stale_history_eval.json`; section 4.7). |
+| Is the 298 of 298 decision score evidence of general skill? | No. The station was never reachable on any target date, so it measures removal of false "reachable" verdicts only (`dakshin/figures/corrected_all.json`; section 6.5). |
 | Why not a coupled model or data assimilation? | Out of scope; the pivot (ADR-018) is to correct an operational field, not rebuild one (`docs/ML_ARCHITECTURE.md` section 1.4). |
 | What do the nine gates mean? | Evidence-derived states, no score; missing evidence caps health at DEGRADED (`dakshin/gates.py`, `dakshin/decision.py`). |
 | What would you do with ANHA output? | Read it with `NemoReader`, regrid, and run the same hindcast metrics with that run in place of block-averaged GLO12. The regridder targets the south polar NSIDC grid, so a Northern Hemisphere configuration would need its own target grid and observations (outside the repository: ANHA is generally described as a Northern Hemisphere regional NEMO configuration; the repository says only "e.g. the ANHA family"). |
@@ -362,7 +453,7 @@ Bibliographic details are taken from repository files where those exist (path gi
 | Reference | Contribution | Source in repo |
 |---|---|---|
 | Wagner, T. J. W., Dell, R. W., and Eisenman, I. (2017). An analytical model of iceberg drift. J. Phys. Oceanogr. 47(7), 1605 to 1616. doi:10.1175/JPO-D-16-0262.1; arXiv:1610.06403; reference code at tillwagner.me/wde17 | Closed-form drift law (section 2); regime analysis; drag-coefficient and |f| errata found against the reference code | `docs/ICEBERG_RESEARCH.md` section b |
-| Goessling, H. F. et al. (2016), integrated ice-edge error | IIEE as a verification metric (section 4) | partial in repo (`dakshin/features.py` docstring only) |
+| Goessling, H. F., Tietsche, S., Day, J. J., Hawkins, E., and Jung, T. (2016). Predictability of the Arctic sea ice edge. Geophys. Res. Lett. 43(4), 1642 to 1650. doi:10.1002/2015GL067232 | IIEE as a verification metric (section 4) | `paper/refs.bib` (local, gitignored); `dakshin/features.py` docstring |
 | Bigg, G. R. et al. (1997) | Canonical iceberg momentum balance; buoyant convection and wave-erosion melt terms; drag coefficients | partial in repo (`docs/ICEBERG_RESEARCH.md`) |
 | Gladstone, R. M., Bigg, G. R., and Nicholls, K. W. (2001) | Iceberg trajectory and melt-water injection in the Southern Ocean; wave erosion | partial in repo |
 | El-Tahan, M. et al. (1987); Weeks, W. F. and Campbell, W. J. (1973) | Basal turbulent melt form and the iceberg temperature of -4 C | partial in repo |
@@ -379,11 +470,24 @@ Bibliographic details are taken from repository files where those exist (path gi
 | Ozsoy-Cicek, B. et al. (2009) | Antarctic AMSR-E against ship observations: R-squared 0.41, edge 38 to 102 km too far south | partial in repo (`docs/NAVIGATION_RESEARCH.md` 6.6) |
 | Hibler, W. D. (1979) | Ice strength exponential in concentration | partial in repo |
 | Thorndike, A. S. and Colony, R. (1982); Nansen (1902) | Free-drift rule; to be verified before a wind-advected first guess is used | partial in repo (`docs/PROTOTYPE_RESULTS.md`, `docs/research/MODEL_REUSE_MATRIX.md`) |
-| Andersson, T. R. et al. (2021), IceNet, Nature Communications | Closest prior art: a purpose-built U-Net at 25 km for sea ice; rejected as a dependency because `icenet` 0.2.9 pins `netcdf4<1.6.1` and `python<3.12`, conflicting with `meshiphi` | partial in repo (`docs/backlog.md`, `docs/research/MODEL_REUSE_MATRIX.md`) |
+| Andersson, T. R., Hosking, J. S., Perez-Ortiz, M., Paige, B., Elliott, A., Russell, C., Law, S., Jones, D. C., Wilkinson, J., Phillips, T., Byrne, J., Tietsche, S., Sarojini, B. B., Blanchard-Wrigglesworth, E., Aksenov, Y., Downie, R., and Shuckburgh, E. (2021). Seasonal Arctic sea ice forecasting with probabilistic deep learning (IceNet). Nature Communications 12, 5124. doi:10.1038/s41467-021-25257-4 | A purpose-built U-Net at 25 km for sea ice, but a seasonal Arctic forecaster with probabilistic output, not a short-lead correction of an operational forecast; rejected as a dependency because `icenet` 0.2.9 pins `netcdf4<1.6.1` and `python<3.12`, conflicting with `meshiphi` | `paper/refs.bib` (local, gitignored); `docs/backlog.md`, `docs/research/MODEL_REUSE_MATRIX.md` |
+| Palerme, C., Lavergne, T., Rusin, J., Melsom, A., Brajard, J., Kvanum, A. F., Macdonald Sorensen, A., Bertino, L., and Muller, M. (2024). Improving short-term sea ice concentration forecasts using deep learning. The Cryosphere 18, 2161 to 2176. doi:10.5194/tc-18-2161-2024 | The closest prior work: deep-learning post-processing of an operational forecast's sea-ice concentration (the Arctic TOPAZ4 system), one model per lead from 1 to 10 days, AMSR2 reference, 2022 test year; reported RMSE reductions of 41% against raw TOPAZ4 (28 to 62% across leads) and 29% against persistence (19 to 33%), and a 44% IIEE reduction against TOPAZ4 (figures as recorded in `docs/research/FORECAST_HORIZONS.md` section 2.5; per-lead values are in the paper's figures only). See the positioning note below the table | `paper/refs.bib` (local, gitignored); `docs/research/FORECAST_HORIZONS.md`, `docs/research/RESEARCH_MATRIX.md` |
 | Meier, W. N. et al. NOAA/NSIDC Climate Data Record of Passive Microwave Sea Ice Concentration, Version 6 (G02202), doi:10.7265/efmz-2t65; Near-Real-Time CDR Version 4 (G10016), doi:10.7265/tgam-yv28 | Truth data | `ATTRIBUTION.md` |
 | Dorschel, B. et al. (2022). The International Bathymetric Chart of the Southern Ocean Version 2. Scientific Data 9, 275. doi:10.1038/s41597-022-01366-7; dataset doi:10.1594/PANGAEA.937574 | Bathymetry south of 50 S | `ATTRIBUTION.md`, `scripts/subset_bathymetry.py` |
 | GEBCO Compilation Group (2020). GEBCO 2020 Grid. doi:10.5285/a29c5465-b138-234d-e053-6c86abc040b9 | Bathymetry north of 50 S | `scripts/subset_bathymetry.py` |
 | IMO MSC.1/Circ.1519 (2016-06-06), Guidance on methodologies for assessing operational capabilities and limitations in ice (POLARIS) | Risk index and thresholds | `docs/NAVIGATION_RESEARCH.md`, `dakshin/polaris.py` |
 | Copernicus Marine products: Global Ocean Physics Analysis and Forecast, doi:10.48670/moi-00016; Waves Analysis and Forecast, doi:10.48670/moi-00017; Physics Reanalysis (GLORYS12), doi:10.48670/moi-00021 | Forecast, currents, waves, training background | `ATTRIBUTION.md` |
 | ECMWF open data (IFS 10 m wind), CC BY 4.0 | Wind | `ATTRIBUTION.md` |
+| Lellouche, J.-M. et al. (2021). The Copernicus Global 1/12 degree Oceanic and Sea Ice GLORYS12 Reanalysis. Frontiers in Earth Science 9, 698876. doi:10.3389/feart.2021.698876 | The reanalysis used as the training background (section 4.5) | `paper/refs.bib` (local, gitignored) |
+| Virtanen, P. et al. (2020). SciPy 1.0: fundamental algorithms for scientific computing in Python. Nature Methods 17, 261 to 272. doi:10.1038/s41592-019-0686-2 | `scipy.ndimage.label`, the connected-component step of the reachability statistic (section 6.5) | `paper/refs.bib` (local, gitignored); `scripts/corrected_forecast.py` |
 | Dijkstra (1959); Ronneberger et al. (2015), U-Net | The two algorithms underlying the router and the network | outside the repository; standard references |
+
+### Positioning against Palerme et al. (2024)
+
+Palerme et al. are the paper a reviewer will put next to this work, and the overlap is real: both train a convolutional network to correct a numerical forecast's sea-ice concentration, one model per lead, against AMSR2-era observations, and score against persistence and the raw forecast with RMSE and IIEE. The differences are where Dakshin claims its ground, each stated as the repository records it.
+
+- Corridor scale. Palerme et al. correct the Arctic TOPAZ4 forecast over its Arctic domain. Dakshin works in one Southern Ocean corridor (0 to 80 E, 55 to 78 S) on CMEMS GLO12 and resolves the approach to one named station (Bharati), the place where the 25 km coastal and fast-ice problems of sections 1.2 and 6.5 bite.
+- Decision-verified. The skill metrics (RMSE, IIEE) are also reported here, but the repository additionally verifies a navigational go/no-go statistic against the satellite on the target date (298 decisions, section 6.5), with its base-rate limit stated. That check shows false-alarm removal only; it does not show skill across regimes.
+- Free compute. The model has 1,929,601 parameters and retrains in about 23 minutes on a free Kaggle T4 (`docs/WEAKNESS_ANALYSIS.md`), with SHA256-pinned checkpoints. The repository records no compute figures for Palerme et al., so no comparison of cost is made.
+
+What the comparison does not support. The gain Dakshin measures against the raw forecast is smaller than Palerme et al.'s headline (10.6 to 16.6% RMSE against raw CMEMS, measured here from `dakshin/figures/realforecast_hindcast.json`, against 41% on average, 28 to 62%, in Palerme et al.), and the domains, forecast systems, reference products and test years differ, so the numbers are not like-for-like. The only comparison `docs/research/FORECAST_HORIZONS.md` regards as honest is the shape: error grows more slowly with lead than persistence. That file also places the training-table gain over persistence (+18.5 to +30.6%) inside Palerme's 19 to 33% band, but that training table is an upper bound (section 4.5), so the band comparison should not be quoted for the training numbers without that caveat.

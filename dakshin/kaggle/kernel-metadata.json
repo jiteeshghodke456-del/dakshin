@@ -1,0 +1,13 @@
+{
+  "id": "jiteeshghodke/dakshin-prototype-train",
+  "title": "dakshin-prototype-train",
+  "code_file": "isih_train.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": ["jiteeshghodke/cmems-creds"],
+  "competition_sources": [],
+  "kernel_sources": []
+}
