@@ -45,8 +45,8 @@ The model forecasts earn their place from lead 3 onward.
    +34,000 km² of misplaced edge by day 7. For passage planning the edge is
    the quantity that matters.
 3. **1/12° vs 1/4° is indistinguishable here.** In this corridor, this season,
-   by these two metrics, the step from 1/4° to 1/12° adds nothing persistence
-   and IIEE can detect — an honest null result worth discussing, not hiding.
+   by these two metrics, the step from 1/4° to 1/12° adds nothing RMSE
+   or IIEE can detect — an honest null result worth discussing, not hiding.
 
 ## The caveat that keeps this honest
 

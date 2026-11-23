@@ -39,7 +39,14 @@ FACTORS = {1: "1/12°", 3: "1/4°", 12: "1°"}
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-model", action="store_true")
+    ap.add_argument("--replot", action="store_true",
+                    help="redraw the PNG from the committed JSON without re-scoring")
     args = ap.parse_args()
+
+    if args.replot:
+        saved = json.loads(OUT_JSON.read_text())["resolutions"]
+        results = {f: saved[label] for f, label in FACTORS.items()}
+        return plot(results, use_model=not args.no_model)
 
     results = run(factors=tuple(FACTORS), use_model=not args.no_model)
 
@@ -58,7 +65,10 @@ def main() -> int:
     }
     OUT_JSON.write_text(json.dumps(payload, indent=2) + "\n")
     print(f"wrote {OUT_JSON}")
+    return plot(results, use_model=not args.no_model)
 
+
+def plot(results: dict, use_model: bool) -> int:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -78,7 +88,7 @@ def main() -> int:
               for k in LEADS]
     axes[1].plot(LEADS, pers_i, marker="s", ls="--", color="gray",
                  label="persistence (satellite)")
-    if not args.no_model:
+    if use_model:
         unet = [results[1][f"lead_{k}"]["rmse"].get("unet") for k in LEADS]
         if all(unet):
             axes[0].plot(LEADS, unet, marker="^", color="tab:red",
@@ -89,11 +99,12 @@ def main() -> int:
                          label="U-Net @ 1/12°")
     axes[0].set_xlabel("lead (days)"); axes[0].set_ylabel("RMSE (SIC fraction)")
     axes[1].set_xlabel("lead (days)"); axes[1].set_ylabel("IIEE (10³ km²)")
-    axes[0].set_title("Ice-edge skill vs model resolution")
-    axes[1].set_title("Extent-edge error vs model resolution")
+    axes[0].set_title("RMSE vs model resolution (lower is better)")
+    axes[1].set_title("Ice-edge error (IIEE, 15%) vs model resolution")
     for ax in axes:
         ax.grid(alpha=0.3); ax.legend(fontsize=8)
-    fig.suptitle("Corridor 0–80E 55–78S, 2026 spring, truth = NSIDC NRT (AMSR2)",
+    fig.suptitle("Corridor 0–80E 55–78S, 2026 spring, truth = NSIDC NRT (AMSR2). "
+                 "1/4° and 1° = the 1/12° forecast block-averaged, not separate model runs",
                  fontsize=9, y=1.02)
     fig.tight_layout()
     fig.savefig(OUT_PNG, dpi=150, bbox_inches="tight")
