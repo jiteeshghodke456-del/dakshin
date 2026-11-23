@@ -106,9 +106,9 @@ def main() -> int:
     if len(blocked):
         anchor = blocked[len(blocked) // 2]
         ax.annotate(
-            f"The straight line runs into ice {str_max:.0f}% thick.\n"
-            f"This ship cannot pass above {ICE_LIMIT:.0f}% — it would\n"
-            "be stuck here.",
+            f"The straight line runs into {str_max:.0f}% ice cover.\n"
+            f"Above the assumed {ICE_LIMIT:.0f}% limit, this ship\n"
+            "would be stuck here.",
             xy=(anchor[0], anchor[1]), xytext=(48.5, -41.0),
             fontsize=11.5, weight="bold", color="#D55E00", ha="left", zorder=11,
             arrowprops=dict(arrowstyle="->", color="#D55E00", lw=2.2,
@@ -118,7 +118,7 @@ def main() -> int:
     mid = coords[int(len(coords) * 0.30)]
     ax.annotate(
         f"Our route never exceeds {route_max:.0f}% ice.\n"
-        "It stays passable the whole way.",
+        "It stays under the assumed limit the whole way.",
         xy=(mid[0], mid[1]), xytext=(16.5, -52.5),
         fontsize=11.5, weight="bold", color="#009E73", ha="left", zorder=11,
         arrowprops=dict(arrowstyle="->", color="#009E73", lw=2.2,
@@ -131,7 +131,7 @@ def main() -> int:
         Line2D([], [], color="#D55E00", lw=2.2, ls="--",
                label=f"Straight line — reaches {str_max:.0f}% ice"),
         Line2D([], [], color="#D55E00", lw=0, marker="X", ms=11,
-               label="Impassable for this ship"),
+               label="Over the assumed ice limit"),
     ]
     ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.085),
               ncol=3, fontsize=10.5, framealpha=0.97, borderpad=0.7)
