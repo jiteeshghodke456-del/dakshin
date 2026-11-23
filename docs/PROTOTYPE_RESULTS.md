@@ -124,7 +124,7 @@ Either outcome is worth having before a viva. Not yet run.
 ## What the model actually is
 
 ```
-corrected SIC = clip( GLORYS12 forecast + model's predicted correction, 0, 1 )
+corrected SIC = clip( GLORYS12 reanalysis background + model's predicted correction, 0, 1 )
 ```
 
 It predicts the *correction*, never the field. An untrained model outputs
