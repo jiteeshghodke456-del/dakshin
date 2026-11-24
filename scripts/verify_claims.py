@@ -50,6 +50,28 @@ static = [r for r in rr['results'] if r['planner'] == 'STATIC'][0]
 check("static regret days", static['regret_days'], -0.01)
 check("transit days (rounded)", round(static['actual_days'], 1), 8.7)
 
+# Sea-ice locking experiment (docs/SIL_EXPERIMENT.md), scored 2026-11-24.
+sj = json.loads((R / 'dakshin/figures/berg_sil_hindcast.json').read_text())
+sv = sj['variants_error_km_per_day']
+check("SIL segments", (sj['n_segments'], sj['split']['moving'], sj['split']['still']),
+      (88, 13, 75))
+check("SIL v1 all median/mean", (sv['v1_wde17']['all']['median'], sv['v1_wde17']['all']['mean']), (4.31, 4.98))
+check("SIL v3 all median/mean", (sv['v3_sil']['all']['median'], sv['v3_sil']['all']['mean']), (4.38, 5.4))
+check("SIL v1 moving median/mean", (sv['v1_wde17']['moving']['median'], sv['v1_wde17']['moving']['mean']), (6.01, 5.82))
+check("SIL v3 moving median/mean", (sv['v3_sil']['moving']['median'], sv['v3_sil']['moving']['mean']), (6.4, 8.6))
+check("SIL v4 still median/mean", (sv['v4_grounding_sil']['still']['median'], sv['v4_grounding_sil']['still']['mean']), (3.52, 4.31))
+check("SIL persistence moving median", sj['persistence_km_per_day']['moving']['median'], 2.45)
+check("SIL hours locking / fully locked",
+      (sv['v3_sil']['sil']['fraction_hours_lambda_gt_0'], sv['v3_sil']['sil']['fraction_hours_lambda_eq_1']),
+      (0.8533, 0.7564))
+check("SIL ice speed at still / moving bergs km/day",
+      (sj['ice_at_observed_berg_positions']['still']['mean_ice_speed_km_per_day'],
+       sj['ice_at_observed_berg_positions']['moving']['mean_ice_speed_km_per_day']), (6.7, 12.3))
+sil_doc = (R / 'docs/SIL_EXPERIMENT.md').read_text()
+for token in ["4.38 (5.40)", "6.40 (8.60)", "4.31 (4.98)", "6.01 (5.82)", "3.52 (4.31)",
+              "2.45 (2.54)", "85.3 %", "75.6 %", "14,440", "10.1029/2023JC020697"]:
+    (ok if token in sil_doc else bad).append(f"SIL_EXPERIMENT.md contains {token!r}")
+
 res = (R / 'docs/PROTOTYPE_RESULTS.md').read_text()
 for token in ["+18.5%", "+30.6%", "1,929,601", "43.2%", "46.8%", "54.6%",
               "23 / 31", "8.66"]:
