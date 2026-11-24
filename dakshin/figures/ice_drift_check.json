@@ -1,0 +1,224 @@
+{
+  "generated": "2026-11-24T09:57:59+00:00",
+  "observation": "EUMETSAT OSI SAF Global Low Resolution Sea Ice Drift OSI-405-d, Southern Hemisphere, 62.5 km, 48 h displacements, doi:10.15770/EUM_SAF_OSI_NRT_2007, CC BY 4.0",
+  "model": "CMEMS GLO12 usi/vsi, day 0 of each archived cycle, sampled at the vector start point and averaged over the same 48 h",
+  "box": {
+    "lon": [
+      0.0,
+      80.0
+    ],
+    "lat": [
+      -78.0,
+      -55.0
+    ]
+  },
+  "period": "2026-08-31..2026-11-21 (window starts)",
+  "caveats": [
+    "fixed-point 48 h mean of the model, not a tracked parcel",
+    "observations are 62.5 km averages; the model grid is 1/12 degree",
+    "no observed vectors close to the coast or the ice edge (product flag)",
+    "windows touching a stale CMEMS day are dropped"
+  ],
+  "vectors_dropped_for_stale_cmems_day": 10490,
+  "vectors_dropped_no_model_ice": 145,
+  "headline_nominal_quality": {
+    "n": 53800,
+    "observed_speed_km_per_day": {
+      "mean": 12.05,
+      "median": 10.44
+    },
+    "model_speed_km_per_day": {
+      "mean": 10.61,
+      "median": 9.57
+    },
+    "model_over_observed_mean_speed": 0.88,
+    "share_of_vectors_where_model_is_faster": 0.37,
+    "vector_difference_km_per_day": {
+      "mean": 6.33,
+      "rmse": 7.74
+    },
+    "correlation": {
+      "east": 0.86,
+      "north": 0.81
+    },
+    "observation_uncertainty_km_per_day_1sd_per_component": 3.62
+  },
+  "all_accepted_flags": {
+    "n": 63956,
+    "observed_speed_km_per_day": {
+      "mean": 11.93,
+      "median": 10.35
+    },
+    "model_speed_km_per_day": {
+      "mean": 10.91,
+      "median": 9.79
+    },
+    "model_over_observed_mean_speed": 0.91,
+    "share_of_vectors_where_model_is_faster": 0.4,
+    "vector_difference_km_per_day": {
+      "mean": 6.4,
+      "rmse": 7.88
+    },
+    "correlation": {
+      "east": 0.85,
+      "north": 0.8
+    },
+    "observation_uncertainty_km_per_day_1sd_per_component": 3.85
+  },
+  "nominal_where_model_conc_ge_0p90": {
+    "n": 33818,
+    "observed_speed_km_per_day": {
+      "mean": 11.62,
+      "median": 10.2
+    },
+    "model_speed_km_per_day": {
+      "mean": 10.49,
+      "median": 9.4
+    },
+    "model_over_observed_mean_speed": 0.9,
+    "share_of_vectors_where_model_is_faster": 0.38,
+    "vector_difference_km_per_day": {
+      "mean": 6.44,
+      "rmse": 7.91
+    },
+    "correlation": {
+      "east": 0.84,
+      "north": 0.8
+    },
+    "observation_uncertainty_km_per_day_1sd_per_component": 3.49
+  },
+  "nominal_where_model_conc_lt_0p90": {
+    "n": 19982,
+    "observed_speed_km_per_day": {
+      "mean": 12.77,
+      "median": 10.89
+    },
+    "model_speed_km_per_day": {
+      "mean": 10.81,
+      "median": 9.91
+    },
+    "model_over_observed_mean_speed": 0.85,
+    "share_of_vectors_where_model_is_faster": 0.34,
+    "vector_difference_km_per_day": {
+      "mean": 6.16,
+      "rmse": 7.43
+    },
+    "correlation": {
+      "east": 0.88,
+      "north": 0.82
+    },
+    "observation_uncertainty_km_per_day_1sd_per_component": 3.84
+  },
+  "nominal_within_200km_of_a_hindcast_berg": {
+    "n": 4933,
+    "observed_speed_km_per_day": {
+      "mean": 7.96,
+      "median": 5.93
+    },
+    "model_speed_km_per_day": {
+      "mean": 9.43,
+      "median": 7.61
+    },
+    "model_over_observed_mean_speed": 1.18,
+    "share_of_vectors_where_model_is_faster": 0.57,
+    "vector_difference_km_per_day": {
+      "mean": 6.38,
+      "rmse": 8.6
+    },
+    "correlation": {
+      "east": 0.66,
+      "north": 0.66
+    },
+    "observation_uncertainty_km_per_day_1sd_per_component": 3.81
+  },
+  "nominal_by_month": {
+    "8": {
+      "n": 764,
+      "observed_speed_km_per_day": {
+        "mean": 16.11,
+        "median": 15.91
+      },
+      "model_speed_km_per_day": {
+        "mean": 12.49,
+        "median": 12.44
+      },
+      "model_over_observed_mean_speed": 0.78,
+      "share_of_vectors_where_model_is_faster": 0.23,
+      "vector_difference_km_per_day": {
+        "mean": 7.19,
+        "rmse": 8.15
+      },
+      "correlation": {
+        "east": 0.93,
+        "north": 0.85
+      },
+      "observation_uncertainty_km_per_day_1sd_per_component": 3.14
+    },
+    "9": {
+      "n": 21711,
+      "observed_speed_km_per_day": {
+        "mean": 13.15,
+        "median": 11.57
+      },
+      "model_speed_km_per_day": {
+        "mean": 12.24,
+        "median": 11.36
+      },
+      "model_over_observed_mean_speed": 0.93,
+      "share_of_vectors_where_model_is_faster": 0.39,
+      "vector_difference_km_per_day": {
+        "mean": 7.14,
+        "rmse": 8.89
+      },
+      "correlation": {
+        "east": 0.83,
+        "north": 0.76
+      },
+      "observation_uncertainty_km_per_day_1sd_per_component": 3.33
+    },
+    "10": {
+      "n": 21123,
+      "observed_speed_km_per_day": {
+        "mean": 12.17,
+        "median": 10.76
+      },
+      "model_speed_km_per_day": {
+        "mean": 10.02,
+        "median": 9.32
+      },
+      "model_over_observed_mean_speed": 0.82,
+      "share_of_vectors_where_model_is_faster": 0.33,
+      "vector_difference_km_per_day": {
+        "mean": 6.02,
+        "rmse": 7.1
+      },
+      "correlation": {
+        "east": 0.89,
+        "north": 0.85
+      },
+      "observation_uncertainty_km_per_day_1sd_per_component": 3.08
+    },
+    "11": {
+      "n": 10202,
+      "observed_speed_km_per_day": {
+        "mean": 9.14,
+        "median": 8.1
+      },
+      "model_speed_km_per_day": {
+        "mean": 8.2,
+        "median": 7.35
+      },
+      "model_over_observed_mean_speed": 0.9,
+      "share_of_vectors_where_model_is_faster": 0.4,
+      "vector_difference_km_per_day": {
+        "mean": 5.19,
+        "rmse": 6.19
+      },
+      "correlation": {
+        "east": 0.84,
+        "north": 0.82
+      },
+      "observation_uncertainty_km_per_day_1sd_per_component": 5.4
+    }
+  }
+}

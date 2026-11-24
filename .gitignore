@@ -51,3 +51,4 @@ data/bathymetry/raw/
 dakshin/figures/_wp*.csv
 paper/
 .claude/worktrees/
+data/osisaf_drift/raw/
