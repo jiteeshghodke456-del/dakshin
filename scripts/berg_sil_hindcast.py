@@ -7,16 +7,25 @@ hindcast.
     https://doi.org/10.1029/2023JC020697
 
 Scores the same weekly USNIC fix-to-fix segments as scripts/berg_hindcast.py
-in four variants:
+in six variants:
 
     v1  WDE17 on analysis currents, zero wind
     v2  v1 + grounding (assumed keel against IBCSO bathymetry)
-    v3  v1 + sea-ice locking
-    v4  v2 + sea-ice locking
+    v3  v1 + sea-ice locking, drag-form strength threshold
+    v4  v2 + the same
+    v5  v1 + sea-ice locking, the paper's strength threshold (its Eq. 3)
+    v6  v2 + the same
+
+Run order matters and is recorded in the output. v1-v4 were scored first, on
+2026-11-24. Reading the paper's PDF afterwards showed that P_s there is the
+force needed to cancel all other forces on the berg, not the sea-ice drag
+form v3 and v4 use. v5 and v6 apply the paper's rule. They were added after
+the v3/v4 result was known, with no parameter changed, and the script checks
+that v1-v4 still come out exactly as first scored.
 
 Sea ice is day 0 of each archived CMEMS cycle (dakshin.berg_forecast.IceField).
-SIL runs at the paper's default parameters. The sensitivity grid at the end is
-reported as sensitivity only; no parameter is chosen from it.
+SIL runs at the paper's default parameters. The sensitivity grids at the end
+are reported as sensitivity only; no parameter is chosen from them.
 
 Before scoring anything new, the script checks that v1 and v2 reproduce the
 committed dakshin/figures/berg_hindcast.json row for row.
@@ -48,6 +57,7 @@ OUT = ROOT / "dakshin" / "figures" / "berg_sil_hindcast.json"
 MOVING_KM = 3.0   # same split as berg_hindcast.py: USNIC fixes resolve ~0.01 deg
 SENS_A_S = (0.85, 0.90, 0.95)
 SENS_P_STAR = (10_000.0, 20_000.0, 40_000.0)
+FORCES = {"strength_rule": "forces"}   # the paper's P_s; see models/iceberg/sil.py
 
 
 def stats(values: list[float]) -> dict:
@@ -141,6 +151,9 @@ def main() -> int:
         "v2_grounding": dict(bathymetry=bathy),
         "v3_sil": dict(ice_field=ice),
         "v4_grounding_sil": dict(bathymetry=bathy, ice_field=ice),
+        "v5_sil_force_balance": dict(ice_field=ice, sil_params=FORCES),
+        "v6_grounding_sil_force_balance": dict(bathymetry=bathy, ice_field=ice,
+                                               sil_params=FORCES),
     }
     results = {name: run_segments(field_, verbose=False, **kw) for name, kw in runs.items()}
 
@@ -158,8 +171,12 @@ def main() -> int:
     descriptions = {
         "v1_wde17": "WDE17 on CMEMS analysis surface currents, zero wind",
         "v2_grounding": f"v1 + grounding (assumed keel {ASSUMED_DRAUGHT_M:.0f} m on IBCSO)",
-        "v3_sil": "v1 + sea-ice locking, paper defaults",
-        "v4_grounding_sil": "v2 + sea-ice locking, paper defaults",
+        "v3_sil": "v1 + sea-ice locking with the drag-form P_s (not the "
+                  "paper's; in effect locking on concentration alone)",
+        "v4_grounding_sil": "v2 + the same",
+        "v5_sil_force_balance": "v1 + sea-ice locking with the paper's P_s "
+                                "(force to hold the berg at the ice velocity)",
+        "v6_grounding_sil_force_balance": "v2 + the same",
     }
     variants = {}
     for name, segments in results.items():
@@ -168,21 +185,38 @@ def main() -> int:
             variants[name]["sil"] = sil_diagnostics(segments)
 
     # Sensitivity: reported, never used to pick the headline.
-    sensitivity = []
-    for a_s in SENS_A_S:
-        for p_star in SENS_P_STAR:
-            segs = run_segments(field_, ice_field=ice, verbose=False,
-                                sil_params={"a_s": a_s, "p_star": p_star})
-            summary, diag = summarise(segs), sil_diagnostics(segs)
-            if (a_s, p_star) == (sil.A_S, sil.P_STAR):
-                assert summary == summarise(results["v3_sil"]), "default run must equal v3"
-            sensitivity.append({
-                "a_s": a_s, "p_star": p_star,
-                "is_paper_default": (a_s, p_star) == (sil.A_S, sil.P_STAR),
-                "all": summary["all"], "moving": summary["moving"], "still": summary["still"],
-                "fraction_hours_lambda_gt_0": diag["fraction_hours_lambda_gt_0"],
-                "fraction_hours_lambda_eq_1": diag["fraction_hours_lambda_eq_1"],
-            })
+    def grid(base_params: dict, default_run: str) -> list[dict]:
+        out = []
+        for a_s in SENS_A_S:
+            for p_star in SENS_P_STAR:
+                segs = run_segments(field_, ice_field=ice, verbose=False,
+                                    sil_params={**base_params, "a_s": a_s, "p_star": p_star})
+                summary, diag = summarise(segs), sil_diagnostics(segs)
+                if (a_s, p_star) == (sil.A_S, sil.P_STAR):
+                    assert summary == summarise(results[default_run]), "default must match"
+                out.append({
+                    "a_s": a_s, "p_star": p_star,
+                    "is_paper_default": (a_s, p_star) == (sil.A_S, sil.P_STAR),
+                    "all": summary["all"], "moving": summary["moving"], "still": summary["still"],
+                    "fraction_hours_lambda_gt_0": diag["fraction_hours_lambda_gt_0"],
+                    "fraction_hours_lambda_eq_1": diag["fraction_hours_lambda_eq_1"],
+                })
+        return out
+
+    sensitivity = grid({}, "v3_sil")
+    sensitivity_forces = grid(FORCES, "v5_sil_force_balance")
+
+    # v1-v4 and the first grid were scored before v5/v6 existed. They must not move.
+    if OUT.exists():
+        first = json.loads(OUT.read_text())
+        for name in ("v1_wde17", "v2_grounding", "v3_sil", "v4_grounding_sil"):
+            old = {k: v for k, v in first["variants_error_km_per_day"][name].items()
+                   if k != "description"}
+            new = {k: v for k, v in variants[name].items() if k != "description"}
+            if old != new:
+                raise SystemExit(f"{name} no longer matches the first scoring run")
+        if first["sensitivity"]["runs"] != sensitivity:
+            raise SystemExit("the first sensitivity grid no longer matches")
 
     rows = []
     for i, s in enumerate(base):
@@ -204,14 +238,25 @@ def main() -> int:
                        "P_star": sil.P_STAR, "P_t_over_P_s": sil.PT_FACTOR,
                        "concentration_floor": sil.A_FLOOR,
                        "rho_si": sil.RHO_SI, "c_si": sil.C_SI,
+                       "assumed_berg_thickness_m": sil.ASSUMED_THICKNESS_M,
                        "note": "paper defaults, not tuned on this data"},
+        "run_order": [
+            "v1-v4 and the first sensitivity grid: scored 2026-11-24, first run",
+            "v5, v6 and the force-balance grid: added the same day after reading "
+            "the paper's PDF. P_s in the paper is |F_c+F_p+F_r+F_a+F_o|/W (its "
+            "Eq. 3); v3/v4 used the Eq. 2 drag form from a mis-transcribed brief. "
+            "No parameter was changed. v1-v4 are checked unchanged on every run.",
+        ],
         "differences_from_paper": [
             "berg dynamics are WDE17 (closed form), not NEMO-ICB",
             "zero wind",
             "surface currents only (no keel-depth average)",
             "daily sea-ice fields (day 0 of each CMEMS cycle), not model time steps",
             "ramp denominator is (v_s - v_t); the printed Eq. 5 has (v_t - v_s)",
-            "P_s uses the no-sea-ice velocity V_sumF where NEMO-ICB uses the berg velocity",
+            "v3/v4: P_s is the Eq. 2 drag form, not the paper's P_s",
+            "v5/v6: P_s is the paper's Eq. 3 on WDE17's forces (Coriolis, "
+            "pressure gradient, water drag), for a berg held at the ice "
+            "velocity, with an assumed 250 m berg thickness",
             "an unlocked berg feels no sea-ice drag (WDE17 has no such term)",
         ],
         "caveats": [
@@ -239,20 +284,24 @@ def main() -> int:
                     "is the paper-default run. No parameter was chosen from this.",
             "runs": sensitivity,
         },
+        "sensitivity_force_balance": {
+            "note": "v5 re-run on the same grid; sensitivity only.",
+            "runs": sensitivity_forces,
+        },
         "segments": rows,
     }
     OUT.write_text(json.dumps(payload, indent=2) + "\n")
 
     print(f"\n{len(base)} segments: {n_moving} moving (> {MOVING_KM:.0f} km), "
           f"{len(base) - n_moving} still. Error in km/day, median (mean).")
-    print(f"{'variant':20s} {'held':>4s} {'all':>13s} {'moving':>13s} {'still':>13s}")
+    print(f"{'variant':32s} {'held':>4s} {'all':>13s} {'moving':>13s} {'still':>13s}")
     cell = lambda st: f"{st['median']:5.2f} ({st['mean']:5.2f})"  # noqa: E731
-    print(f"{'persistence':20s} {'':>4s} {cell(persistence['all']):>13s} "
+    print(f"{'persistence':32s} {'':>4s} {cell(persistence['all']):>13s} "
           f"{cell(persistence['moving']):>13s} {cell(persistence['still']):>13s}")
     for name, v in variants.items():
-        print(f"{name:20s} {v['n_held']:4d} {cell(v['all']):>13s} "
+        print(f"{name:32s} {v['n_held']:4d} {cell(v['all']):>13s} "
               f"{cell(v['moving']):>13s} {cell(v['still']):>13s}")
-    for name in ("v3_sil", "v4_grounding_sil"):
+    for name in (n for n in variants if "sil" in variants[n]):
         d = variants[name]["sil"]
         print(f"{name}: {d['berg_hours']} berg-hours, lambda>0 in "
               f"{100 * d['fraction_hours_lambda_gt_0']:.1f}%, lambda=1 in "

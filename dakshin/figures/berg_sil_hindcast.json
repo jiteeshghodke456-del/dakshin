@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-24T09:27:55+00:00",
+  "generated": "2026-11-24T10:03:39+00:00",
   "rule": "Sea-ice locking, Marson et al. (2024), JGR Oceans 129, e2023JC020697, https://doi.org/10.1029/2023JC020697",
   "parameters": {
     "A_s": 0.9,
@@ -9,15 +9,21 @@
     "concentration_floor": 0.15,
     "rho_si": 916.7,
     "c_si": 0.9,
+    "assumed_berg_thickness_m": 250.0,
     "note": "paper defaults, not tuned on this data"
   },
+  "run_order": [
+    "v1-v4 and the first sensitivity grid: scored 2026-11-24, first run",
+    "v5, v6 and the force-balance grid: added the same day after reading the paper's PDF. P_s in the paper is |F_c+F_p+F_r+F_a+F_o|/W (its Eq. 3); v3/v4 used the Eq. 2 drag form from a mis-transcribed brief. No parameter was changed. v1-v4 are checked unchanged on every run."
+  ],
   "differences_from_paper": [
     "berg dynamics are WDE17 (closed form), not NEMO-ICB",
     "zero wind",
     "surface currents only (no keel-depth average)",
     "daily sea-ice fields (day 0 of each CMEMS cycle), not model time steps",
     "ramp denominator is (v_s - v_t); the printed Eq. 5 has (v_t - v_s)",
-    "P_s uses the no-sea-ice velocity V_sumF where NEMO-ICB uses the berg velocity",
+    "v3/v4: P_s is the Eq. 2 drag form, not the paper's P_s",
+    "v5/v6: P_s is the paper's Eq. 3 on WDE17's forces (Coriolis, pressure gradient, water drag), for a berg held at the ice velocity, with an assumed 250 m berg thickness",
     "an unlocked berg feels no sea-ice drag (WDE17 has no such term)"
   ],
   "caveats": [
@@ -103,7 +109,7 @@
       }
     },
     "v3_sil": {
-      "description": "v1 + sea-ice locking, paper defaults",
+      "description": "v1 + sea-ice locking with the drag-form P_s (not the paper's; in effect locking on concentration alone)",
       "n_held": 7,
       "all": {
         "n": 88,
@@ -132,7 +138,7 @@
       }
     },
     "v4_grounding_sil": {
-      "description": "v2 + sea-ice locking, paper defaults",
+      "description": "v2 + the same",
       "n_held": 25,
       "all": {
         "n": 88,
@@ -157,6 +163,64 @@
         "fraction_hours_lambda_eq_1": 0.7502,
         "mean_lambda": 0.8018,
         "segments_with_any_locking": 82,
+        "segments_with_no_ice_data_at_all": 0
+      }
+    },
+    "v5_sil_force_balance": {
+      "description": "v1 + sea-ice locking with the paper's P_s (force to hold the berg at the ice velocity)",
+      "n_held": 8,
+      "all": {
+        "n": 88,
+        "median": 4.34,
+        "mean": 4.82
+      },
+      "moving": {
+        "n": 13,
+        "median": 6.01,
+        "mean": 5.87
+      },
+      "still": {
+        "n": 75,
+        "median": 4.29,
+        "mean": 4.64
+      },
+      "sil": {
+        "berg_hours": 14472,
+        "hours_no_ice_data": 0,
+        "fraction_hours_no_ice_data": 0.0,
+        "fraction_hours_lambda_gt_0": 0.1988,
+        "fraction_hours_lambda_eq_1": 0.137,
+        "mean_lambda": 0.1699,
+        "segments_with_any_locking": 55,
+        "segments_with_no_ice_data_at_all": 0
+      }
+    },
+    "v6_grounding_sil_force_balance": {
+      "description": "v2 + the same",
+      "n_held": 21,
+      "all": {
+        "n": 88,
+        "median": 4.06,
+        "mean": 4.38
+      },
+      "moving": {
+        "n": 13,
+        "median": 6.01,
+        "mean": 5.67
+      },
+      "still": {
+        "n": 75,
+        "median": 3.84,
+        "mean": 4.16
+      },
+      "sil": {
+        "berg_hours": 13269,
+        "hours_no_ice_data": 0,
+        "fraction_hours_no_ice_data": 0.0,
+        "fraction_hours_lambda_gt_0": 0.1983,
+        "fraction_hours_lambda_eq_1": 0.1362,
+        "mean_lambda": 0.1695,
+        "segments_with_any_locking": 54,
         "segments_with_no_ice_data_at_all": 0
       }
     }
@@ -382,6 +446,209 @@
       }
     ]
   },
+  "sensitivity_force_balance": {
+    "note": "v5 re-run on the same grid; sensitivity only.",
+    "runs": [
+      {
+        "a_s": 0.85,
+        "p_star": 10000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.31,
+          "mean": 4.97
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.83
+        },
+        "still": {
+          "n": 75,
+          "median": 4.23,
+          "mean": 4.83
+        },
+        "fraction_hours_lambda_gt_0": 0.0418,
+        "fraction_hours_lambda_eq_1": 0.0206
+      },
+      {
+        "a_s": 0.85,
+        "p_star": 20000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.34,
+          "mean": 4.82
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.87
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.64
+        },
+        "fraction_hours_lambda_gt_0": 0.1988,
+        "fraction_hours_lambda_eq_1": 0.1372
+      },
+      {
+        "a_s": 0.85,
+        "p_star": 40000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.26,
+          "mean": 4.56
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.98
+        },
+        "still": {
+          "n": 75,
+          "median": 4.15,
+          "mean": 4.31
+        },
+        "fraction_hours_lambda_gt_0": 0.3759,
+        "fraction_hours_lambda_eq_1": 0.3277
+      },
+      {
+        "a_s": 0.9,
+        "p_star": 10000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.31,
+          "mean": 4.97
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.83
+        },
+        "still": {
+          "n": 75,
+          "median": 4.23,
+          "mean": 4.83
+        },
+        "fraction_hours_lambda_gt_0": 0.0418,
+        "fraction_hours_lambda_eq_1": 0.0206
+      },
+      {
+        "a_s": 0.9,
+        "p_star": 20000.0,
+        "is_paper_default": true,
+        "all": {
+          "n": 88,
+          "median": 4.34,
+          "mean": 4.82
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.87
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.64
+        },
+        "fraction_hours_lambda_gt_0": 0.1988,
+        "fraction_hours_lambda_eq_1": 0.137
+      },
+      {
+        "a_s": 0.9,
+        "p_star": 40000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.26,
+          "mean": 4.56
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.98
+        },
+        "still": {
+          "n": 75,
+          "median": 4.15,
+          "mean": 4.31
+        },
+        "fraction_hours_lambda_gt_0": 0.3757,
+        "fraction_hours_lambda_eq_1": 0.3269
+      },
+      {
+        "a_s": 0.95,
+        "p_star": 10000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.31,
+          "mean": 4.97
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.83
+        },
+        "still": {
+          "n": 75,
+          "median": 4.23,
+          "mean": 4.83
+        },
+        "fraction_hours_lambda_gt_0": 0.0416,
+        "fraction_hours_lambda_eq_1": 0.0201
+      },
+      {
+        "a_s": 0.95,
+        "p_star": 20000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.34,
+          "mean": 4.82
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.87
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.64
+        },
+        "fraction_hours_lambda_gt_0": 0.1985,
+        "fraction_hours_lambda_eq_1": 0.131
+      },
+      {
+        "a_s": 0.95,
+        "p_star": 40000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.26,
+          "mean": 4.56
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.01,
+          "mean": 5.98
+        },
+        "still": {
+          "n": 75,
+          "median": 4.16,
+          "mean": 4.32
+        },
+        "fraction_hours_lambda_gt_0": 0.3735,
+        "fraction_hours_lambda_eq_1": 0.3046
+      }
+    ]
+  },
   "segments": [
     {
       "berg": "B09G",
@@ -419,6 +686,28 @@
           "hours_fully_locked": 144,
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.55,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 6,
+          "hours_fully_locked": 4,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 4.619
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.55,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 6,
+          "hours_fully_locked": 4,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 4.619
         }
       }
     },
@@ -459,6 +748,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 9.96,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 28,
+          "hours_fully_locked": 13,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 21.603
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 9.96,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 28,
+          "hours_fully_locked": 13,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 21.603
+        }
       }
     },
     {
@@ -498,6 +809,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 10.03,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 14,
+          "hours_fully_locked": 11,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 12.236
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 10.03,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 14,
+          "hours_fully_locked": 11,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 12.236
+        }
       }
     },
     {
@@ -536,6 +869,28 @@
           "hours_fully_locked": 168,
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.85,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 11,
+          "hours_fully_locked": 3,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 5.607
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.85,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 11,
+          "hours_fully_locked": 3,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 5.607
         }
       }
     },
@@ -576,6 +931,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.09,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 56,
+          "hours_fully_locked": 45,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 51.129
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.09,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 56,
+          "hours_fully_locked": 45,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 51.129
+        }
       }
     },
     {
@@ -614,6 +991,28 @@
           "hours_fully_locked": 144,
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.04,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 68,
+          "hours_fully_locked": 38,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 60.005
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.04,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 68,
+          "hours_fully_locked": 38,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 60.005
         }
       }
     },
@@ -654,6 +1053,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.88,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 86,
+          "hours_fully_locked": 70,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 77.714
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.88,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 86,
+          "hours_fully_locked": 70,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 77.714
+        }
       }
     },
     {
@@ -693,6 +1114,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.88,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 54,
+          "hours_fully_locked": 40,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 47.446
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.88,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 54,
+          "hours_fully_locked": 40,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 47.446
+        }
       }
     },
     {
@@ -731,6 +1174,28 @@
           "hours_fully_locked": 168,
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.58,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 40,
+          "hours_fully_locked": 32,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 36.294
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.58,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 40,
+          "hours_fully_locked": 32,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 36.294
         }
       }
     },
@@ -771,6 +1236,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 101.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.72,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.72,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -810,6 +1297,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 167.95
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.62,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 12,
+          "hours_fully_locked": 10,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 10.895
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.62,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 12,
+          "hours_fully_locked": 10,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 10.895
+        }
       }
     },
     {
@@ -848,6 +1357,28 @@
           "hours_fully_locked": 100,
           "hours_no_ice_data": 0,
           "lambda_sum": 100.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 6.62,
+        "sil": {
+          "hours": 99,
+          "hours_locking": 4,
+          "hours_fully_locked": 1,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 2.896
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 6.62,
+        "sil": {
+          "hours": 99,
+          "hours_locking": 4,
+          "hours_fully_locked": 1,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 2.896
         }
       }
     },
@@ -888,6 +1419,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 108.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 9.32,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 13,
+          "hours_fully_locked": 7,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 8.441
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.89,
+        "sil": {
+          "hours": 96,
+          "hours_locking": 10,
+          "hours_fully_locked": 7,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 8.359
+        }
       }
     },
     {
@@ -926,6 +1479,28 @@
           "hours_fully_locked": 85,
           "hours_no_ice_data": 0,
           "lambda_sum": 85.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.1,
+        "sil": {
+          "hours": 89,
+          "hours_locking": 14,
+          "hours_fully_locked": 10,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 11.889
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.04,
+        "sil": {
+          "hours": 88,
+          "hours_locking": 13,
+          "hours_fully_locked": 9,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 10.889
         }
       }
     },
@@ -966,6 +1541,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.15,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 25,
+          "hours_fully_locked": 20,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 21.664
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.15,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 25,
+          "hours_fully_locked": 20,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 21.664
+        }
       }
     },
     {
@@ -1004,6 +1601,28 @@
           "hours_fully_locked": 192,
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 3.61,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 28,
+          "hours_fully_locked": 21,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 24.65
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 3.61,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 28,
+          "hours_fully_locked": 21,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 24.65
         }
       }
     },
@@ -1044,6 +1663,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 40.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.28,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 49,
+          "hours_fully_locked": 35,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 41.875
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.28,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 49,
+          "hours_fully_locked": 35,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 41.875
+        }
       }
     },
     {
@@ -1082,6 +1723,28 @@
           "hours_fully_locked": 36,
           "hours_no_ice_data": 0,
           "lambda_sum": 102.621
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.23,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 4,
+          "hours_fully_locked": 3,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 3.292
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.23,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 4,
+          "hours_fully_locked": 3,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 3.292
         }
       }
     },
@@ -1122,6 +1785,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 20.902
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.23,
+        "sil": {
+          "hours": 190,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.23,
+        "sil": {
+          "hours": 190,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -1160,6 +1845,28 @@
           "hours_fully_locked": 85,
           "hours_no_ice_data": 0,
           "lambda_sum": 91.384
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.29,
+        "sil": {
+          "hours": 102,
+          "hours_locking": 8,
+          "hours_fully_locked": 5,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 6.079
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.29,
+        "sil": {
+          "hours": 102,
+          "hours_locking": 8,
+          "hours_fully_locked": 5,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 6.079
         }
       }
     },
@@ -1200,6 +1907,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 162.854
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.15,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.15,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -1238,6 +1967,28 @@
           "hours_fully_locked": 4,
           "hours_no_ice_data": 0,
           "lambda_sum": 6.534
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.76,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.76,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -1278,6 +2029,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 83.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.73,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 34,
+          "hours_fully_locked": 19,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 24.363
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.04,
+        "sil": {
+          "hours": 66,
+          "hours_locking": 10,
+          "hours_fully_locked": 8,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 8.952
+        }
       }
     },
     {
@@ -1316,6 +2089,28 @@
           "hours_fully_locked": 101,
           "hours_no_ice_data": 0,
           "lambda_sum": 101.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.89,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 78,
+          "hours_fully_locked": 56,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 66.138
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.55,
+        "sil": {
+          "hours": 61,
+          "hours_locking": 24,
+          "hours_fully_locked": 3,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 12.417
         }
       }
     },
@@ -1356,6 +2151,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 93.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.55,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 44,
+          "hours_fully_locked": 26,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 33.327
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.06,
+        "sil": {
+          "hours": 55,
+          "hours_locking": 10,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 4.245
+        }
       }
     },
     {
@@ -1394,6 +2211,28 @@
           "hours_fully_locked": 168,
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.82,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.09,
+        "sil": {
+          "hours": 51,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -1434,6 +2273,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 102.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.54,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 128,
+          "hours_fully_locked": 90,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 113.85
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.5,
+        "sil": {
+          "hours": 132,
+          "hours_locking": 68,
+          "hours_fully_locked": 43,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 56.068
+        }
       }
     },
     {
@@ -1464,6 +2325,28 @@
         }
       },
       "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.94,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.94,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
         "status": "ok",
         "error_km_per_day": 1.94,
         "sil": {
@@ -1512,6 +2395,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 153.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.67,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 79,
+          "hours_fully_locked": 44,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 60.674
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.95,
+        "sil": {
+          "hours": 106,
+          "hours_locking": 49,
+          "hours_fully_locked": 20,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 34.277
+        }
       }
     },
     {
@@ -1550,6 +2455,28 @@
           "hours_fully_locked": 169,
           "hours_no_ice_data": 0,
           "lambda_sum": 169.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.97,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 6,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 2.126
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.97,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 6,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 2.126
         }
       }
     },
@@ -1590,6 +2517,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 82.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.52,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 39,
+          "hours_fully_locked": 23,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 29.765
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.52,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 39,
+          "hours_fully_locked": 23,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 29.765
+        }
       }
     },
     {
@@ -1628,6 +2577,28 @@
           "hours_fully_locked": 96,
           "hours_no_ice_data": 0,
           "lambda_sum": 103.804
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.19,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 33,
+          "hours_fully_locked": 15,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 25.896
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.19,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 33,
+          "hours_fully_locked": 15,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 25.896
         }
       }
     },
@@ -1668,6 +2639,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 125.632
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.84,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 34,
+          "hours_fully_locked": 21,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 27.214
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.84,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 34,
+          "hours_fully_locked": 21,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 27.214
+        }
       }
     },
     {
@@ -1707,6 +2700,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.22,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 65,
+          "hours_fully_locked": 58,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 61.118
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.22,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 65,
+          "hours_fully_locked": 58,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 61.118
+        }
       }
     },
     {
@@ -1745,6 +2760,28 @@
           "hours_fully_locked": 192,
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 10.4,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 24,
+          "hours_fully_locked": 18,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 20.331
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 10.4,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 24,
+          "hours_fully_locked": 18,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 20.331
         }
       }
     },
@@ -1785,6 +2822,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 143.415
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 14.03,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 6,
+          "hours_fully_locked": 1,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 4.188
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 14.03,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 6,
+          "hours_fully_locked": 1,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 4.188
+        }
       }
     },
     {
@@ -1823,6 +2882,28 @@
           "hours_fully_locked": 168,
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 8.02,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 8.02,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -1863,6 +2944,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 158.608
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.51,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.51,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -1901,6 +3004,28 @@
           "hours_fully_locked": 72,
           "hours_no_ice_data": 0,
           "lambda_sum": 104.31
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 9.7,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 9.7,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -1941,6 +3066,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 96.58
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 9.79,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 1,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.893
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 9.79,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 1,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.893
+        }
       }
     },
     {
@@ -1979,6 +3126,28 @@
           "hours_fully_locked": 95,
           "hours_no_ice_data": 0,
           "lambda_sum": 138.817
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.0,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.0,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -2019,6 +3188,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 62.775
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 10.5,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 7.89,
+        "sil": {
+          "hours": 122,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2058,6 +3249,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 143.1
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.34,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 3,
+          "hours_fully_locked": 3,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 3.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.34,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 3,
+          "hours_fully_locked": 3,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 3.0
+        }
       }
     },
     {
@@ -2088,6 +3301,28 @@
         }
       },
       "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.97,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.97,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
         "status": "ok",
         "error_km_per_day": 2.97,
         "sil": {
@@ -2136,6 +3371,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.08,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.08,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2174,6 +3431,28 @@
           "hours_fully_locked": 192,
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.93,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 6,
+          "hours_fully_locked": 4,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 5.168
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.93,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 6,
+          "hours_fully_locked": 4,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 5.168
         }
       }
     },
@@ -2214,6 +3493,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 134.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 11.11,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 4,
+          "hours_fully_locked": 4,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 4.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 10.65,
+        "sil": {
+          "hours": 141,
+          "hours_locking": 4,
+          "hours_fully_locked": 4,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 4.0
+        }
       }
     },
     {
@@ -2252,6 +3553,28 @@
           "hours_fully_locked": 168,
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 3.57,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 2,
+          "hours_fully_locked": 1,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 1.637
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 3.57,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 2,
+          "hours_fully_locked": 1,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 1.637
         }
       }
     },
@@ -2292,6 +3615,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.69,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.69,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2330,6 +3675,28 @@
           "hours_fully_locked": 144,
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.04,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.04,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -2370,6 +3737,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 45.44
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.71,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.71,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2408,6 +3797,28 @@
           "hours_fully_locked": 26,
           "hours_no_ice_data": 0,
           "lambda_sum": 57.841
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.89,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.89,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -2448,6 +3859,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 24.499
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.22,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.22,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2487,6 +3920,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 0.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 8.41,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 8.41,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2517,6 +3972,28 @@
         }
       },
       "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.35,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.35,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
         "status": "ok",
         "error_km_per_day": 4.35,
         "sil": {
@@ -2565,6 +4042,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 108.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 3.95,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 3.95,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2603,6 +4102,28 @@
           "hours_fully_locked": 192,
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.76,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 12,
+          "hours_fully_locked": 10,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 10.956
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.76,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 12,
+          "hours_fully_locked": 10,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 10.956
         }
       }
     },
@@ -2643,6 +4164,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 123.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 11.22,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 19,
+          "hours_fully_locked": 10,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 13.963
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 10.34,
+        "sil": {
+          "hours": 138,
+          "hours_locking": 19,
+          "hours_fully_locked": 10,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 13.963
+        }
       }
     },
     {
@@ -2681,6 +4224,28 @@
           "hours_fully_locked": 168,
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 3.84,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 1,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.57
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 3.84,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 1,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.57
         }
       }
     },
@@ -2721,6 +4286,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.9,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.9,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2759,6 +4346,28 @@
           "hours_fully_locked": 142,
           "hours_no_ice_data": 0,
           "lambda_sum": 143.846
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.01,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 6.01,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -2799,6 +4408,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 77.324
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.9,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.9,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2837,6 +4468,28 @@
           "hours_fully_locked": 23,
           "hours_no_ice_data": 0,
           "lambda_sum": 36.222
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.78,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.78,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -2877,6 +4530,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 35.337
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.18,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 1,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.894
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 7.18,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 1,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.894
+        }
       }
     },
     {
@@ -2916,6 +4591,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 0.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 8.4,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 8.4,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -2946,6 +4643,28 @@
         }
       },
       "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.29,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.29,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
         "status": "ok",
         "error_km_per_day": 4.29,
         "sil": {
@@ -2994,6 +4713,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.82,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 26,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 3.546
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.82,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 26,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 3.546
+        }
       }
     },
     {
@@ -3032,6 +4773,28 @@
           "hours_fully_locked": 192,
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.32,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 148,
+          "hours_fully_locked": 57,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 122.267
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.32,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 148,
+          "hours_fully_locked": 57,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 122.267
         }
       }
     },
@@ -3072,6 +4835,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.57,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 76,
+          "hours_fully_locked": 52,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 64.384
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.57,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 76,
+          "hours_fully_locked": 52,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 64.384
+        }
       }
     },
     {
@@ -3110,6 +4895,28 @@
           "hours_fully_locked": 168,
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.23,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 102,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 142.685
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.23,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 102,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 142.685
         }
       }
     },
@@ -3150,6 +4957,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.28,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 150,
+          "hours_fully_locked": 89,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 113.422
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.28,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 150,
+          "hours_fully_locked": 89,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 113.422
+        }
       }
     },
     {
@@ -3188,6 +5017,28 @@
           "hours_fully_locked": 78,
           "hours_no_ice_data": 0,
           "lambda_sum": 86.044
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.93,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 54,
+          "hours_fully_locked": 29,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 44.943
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.93,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 54,
+          "hours_fully_locked": 29,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 44.943
         }
       }
     },
@@ -3228,6 +5079,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 148.554
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.54,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 4.54,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -3266,6 +5139,28 @@
           "hours_fully_locked": 107,
           "hours_no_ice_data": 0,
           "lambda_sum": 128.289
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.2,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.54,
+        "sil": {
+          "hours": 93,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -3306,6 +5201,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 161.343
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.37,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.37,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -3345,6 +5262,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 59.515
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.35,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.35,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -3375,6 +5314,28 @@
         }
       },
       "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 5.72,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 5.72,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
         "status": "ok",
         "error_km_per_day": 5.72,
         "sil": {
@@ -3423,6 +5384,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 2.89,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.06,
+        "sil": {
+          "hours": 52,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
       }
     },
     {
@@ -3461,6 +5444,28 @@
           "hours_fully_locked": 121,
           "hours_no_ice_data": 0,
           "lambda_sum": 121.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.87,
+        "sil": {
+          "hours": 127,
+          "hours_locking": 20,
+          "hours_fully_locked": 8,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 14.742
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.75,
+        "sil": {
+          "hours": 52,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     },
@@ -3501,6 +5506,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.75,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 50,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 105.914
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.75,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 50,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 105.914
+        }
       }
     },
     {
@@ -3539,6 +5566,28 @@
           "hours_fully_locked": 168,
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.14,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 160,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 167.621
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.14,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 160,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 167.621
         }
       }
     },
@@ -3579,6 +5628,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.08,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 182,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 190.588
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.08,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 182,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 190.588
+        }
       }
     },
     {
@@ -3617,6 +5688,28 @@
           "hours_fully_locked": 144,
           "hours_no_ice_data": 0,
           "lambda_sum": 144.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.12,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 133,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 139.44
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.12,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 133,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 139.44
         }
       }
     },
@@ -3657,6 +5750,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.36,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 149,
+          "hours_fully_locked": 126,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 138.533
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.36,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 149,
+          "hours_fully_locked": 126,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 138.533
+        }
       }
     },
     {
@@ -3695,6 +5810,28 @@
           "hours_fully_locked": 192,
           "hours_no_ice_data": 0,
           "lambda_sum": 192.0
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 1.84,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 51,
+          "hours_fully_locked": 5,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 22.607
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.71,
+        "sil": {
+          "hours": 90,
+          "hours_locking": 31,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 10.906
         }
       }
     },
@@ -3735,6 +5872,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.03,
+        "sil": {
+          "hours": 143,
+          "hours_locking": 2,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.027
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.75,
+        "sil": {
+          "hours": 73,
+          "hours_locking": 2,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.027
+        }
       }
     },
     {
@@ -3774,6 +5933,28 @@
           "hours_no_ice_data": 0,
           "lambda_sum": 168.0
         }
+      },
+      "v5_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.74,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 102,
+          "hours_fully_locked": 74,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 85.798
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "ok",
+        "error_km_per_day": 0.74,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 102,
+          "hours_fully_locked": 74,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 85.798
+        }
       }
     },
     {
@@ -3812,6 +5993,28 @@
           "hours_fully_locked": 27,
           "hours_no_ice_data": 0,
           "lambda_sum": 98.415
+        }
+      },
+      "v5_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.05,
+        "sil": {
+          "hours": 138,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v6_grounding_sil_force_balance": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.76,
+        "sil": {
+          "hours": 62,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
         }
       }
     }
