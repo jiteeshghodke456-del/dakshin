@@ -59,7 +59,11 @@ def load_field() -> CurrentField:
     return field_
 
 
-def run_segments(field_: CurrentField, bathymetry=None) -> list[dict]:
+def run_segments(field_: CurrentField, bathymetry=None, ice_field=None,
+                 sil_params=None, verbose=True) -> list[dict]:
+    """Score every weekly fix-to-fix segment. `ice_field` adds sea-ice locking
+    (scripts/berg_sil_hindcast.py) and a per-segment `sil` hour count; without
+    it the rows are exactly what berg_hindcast.json holds."""
     t_min = dt.date.fromtimestamp(field_.t[0] * 86400.0)
     t_max = dt.date.fromtimestamp(field_.t[-1] * 86400.0)
     segments = []
@@ -75,7 +79,8 @@ def run_segments(field_: CurrentField, bathymetry=None) -> list[dict]:
                 continue
             start = dt.datetime(d0.year, d0.month, d0.day, 12)
             tr = forecast_track(name, lat0, lon0, L, W, field_, start, days,
-                                bathymetry=bathymetry)
+                                bathymetry=bathymetry, ice_field=ice_field,
+                                sil_params=sil_params)
             err = great_circle_km(tr.lats[-1], tr.lons[-1], lat1, lon1)
             pers = great_circle_km(lat0, lon0, lat1, lon1)
             segments.append({
@@ -87,8 +92,17 @@ def run_segments(field_: CurrentField, bathymetry=None) -> list[dict]:
                 "persistence_km": round(pers, 1),
                 "persistence_km_per_day": round(pers / days, 2),
             })
-            print(f"{name:6s} {d0}→{d1} ({days:2d} d) model {err:6.1f} km "
-                  f"persist {pers:6.1f} km  {tr.status}")
+            if ice_field is not None:
+                segments[-1]["sil"] = {
+                    "hours": len(tr.sil_lambda),
+                    "hours_locking": sum(lam > 0.0 for lam in tr.sil_lambda),
+                    "hours_fully_locked": sum(lam >= 1.0 for lam in tr.sil_lambda),
+                    "hours_no_ice_data": tr.ice_missing_steps,
+                    "lambda_sum": round(float(sum(tr.sil_lambda)), 3),
+                }
+            if verbose:
+                print(f"{name:6s} {d0}→{d1} ({days:2d} d) model {err:6.1f} km "
+                      f"persist {pers:6.1f} km  {tr.status}")
     return segments
 
 

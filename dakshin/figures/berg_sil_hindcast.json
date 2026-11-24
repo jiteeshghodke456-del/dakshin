@@ -1,0 +1,3819 @@
+{
+  "generated": "2026-11-24T09:27:55+00:00",
+  "rule": "Sea-ice locking, Marson et al. (2024), JGR Oceans 129, e2023JC020697, https://doi.org/10.1029/2023JC020697",
+  "parameters": {
+    "A_s": 0.9,
+    "A_t": 0.86,
+    "P_star": 20000.0,
+    "P_t_over_P_s": 0.8,
+    "concentration_floor": 0.15,
+    "rho_si": 916.7,
+    "c_si": 0.9,
+    "note": "paper defaults, not tuned on this data"
+  },
+  "differences_from_paper": [
+    "berg dynamics are WDE17 (closed form), not NEMO-ICB",
+    "zero wind",
+    "surface currents only (no keel-depth average)",
+    "daily sea-ice fields (day 0 of each CMEMS cycle), not model time steps",
+    "ramp denominator is (v_s - v_t); the printed Eq. 5 has (v_t - v_s)",
+    "P_s uses the no-sea-ice velocity V_sumF where NEMO-ICB uses the berg velocity",
+    "an unlocked berg feels no sea-ice drag (WDE17 has no such term)"
+  ],
+  "caveats": [
+    "USNIC positions are accurate to only a few km",
+    "weekly fixes: no track between them, no beacons",
+    "keel draught and berg thickness are assumed, USNIC publishes neither"
+  ],
+  "sea_ice": {
+    "source": "CMEMS GLO12 day 0 of each archived cycle (data/cmems_forecast_archive)",
+    "days": "2026-08-31..2026-11-23",
+    "stale_days_filled_from_nearest_good_day": {
+      "2026-09-20": "2026-09-19",
+      "2026-10-11": "2026-10-10",
+      "2026-11-10": "2026-11-09",
+      "2026-11-17": "2026-11-16"
+    }
+  },
+  "currents": "CMEMS GLO12 analysis surface currents, 2026-08-31..2026-11-20",
+  "n_segments": 88,
+  "split": {
+    "moving_km_threshold": 3.0,
+    "moving": 13,
+    "still": 75
+  },
+  "reproduces_committed_berg_hindcast": {
+    "v1": true,
+    "v2": true
+  },
+  "persistence_km_per_day": {
+    "all": {
+      "n": 88,
+      "median": 0.0,
+      "mean": 0.39
+    },
+    "moving": {
+      "n": 13,
+      "median": 2.45,
+      "mean": 2.54
+    },
+    "still": {
+      "n": 75,
+      "median": 0.0,
+      "mean": 0.02
+    }
+  },
+  "variants_error_km_per_day": {
+    "v1_wde17": {
+      "description": "WDE17 on CMEMS analysis surface currents, zero wind",
+      "n_held": 7,
+      "all": {
+        "n": 88,
+        "median": 4.31,
+        "mean": 4.98
+      },
+      "moving": {
+        "n": 13,
+        "median": 6.01,
+        "mean": 5.82
+      },
+      "still": {
+        "n": 75,
+        "median": 4.23,
+        "mean": 4.84
+      }
+    },
+    "v2_grounding": {
+      "description": "v1 + grounding (assumed keel 208 m on IBCSO)",
+      "n_held": 26,
+      "all": {
+        "n": 88,
+        "median": 4.13,
+        "mean": 4.52
+      },
+      "moving": {
+        "n": 13,
+        "median": 6.01,
+        "mean": 5.62
+      },
+      "still": {
+        "n": 75,
+        "median": 3.95,
+        "mean": 4.33
+      }
+    },
+    "v3_sil": {
+      "description": "v1 + sea-ice locking, paper defaults",
+      "n_held": 7,
+      "all": {
+        "n": 88,
+        "median": 4.38,
+        "mean": 5.4
+      },
+      "moving": {
+        "n": 13,
+        "median": 6.4,
+        "mean": 8.6
+      },
+      "still": {
+        "n": 75,
+        "median": 4.29,
+        "mean": 4.85
+      },
+      "sil": {
+        "berg_hours": 14440,
+        "hours_no_ice_data": 0,
+        "fraction_hours_no_ice_data": 0.0,
+        "fraction_hours_lambda_gt_0": 0.8533,
+        "fraction_hours_lambda_eq_1": 0.7564,
+        "mean_lambda": 0.8094,
+        "segments_with_any_locking": 82,
+        "segments_with_no_ice_data_at_all": 0
+      }
+    },
+    "v4_grounding_sil": {
+      "description": "v2 + sea-ice locking, paper defaults",
+      "n_held": 25,
+      "all": {
+        "n": 88,
+        "median": 4.25,
+        "mean": 4.83
+      },
+      "moving": {
+        "n": 13,
+        "median": 6.4,
+        "mean": 7.83
+      },
+      "still": {
+        "n": 75,
+        "median": 3.52,
+        "mean": 4.31
+      },
+      "sil": {
+        "berg_hours": 13524,
+        "hours_no_ice_data": 0,
+        "fraction_hours_no_ice_data": 0.0,
+        "fraction_hours_lambda_gt_0": 0.8452,
+        "fraction_hours_lambda_eq_1": 0.7502,
+        "mean_lambda": 0.8018,
+        "segments_with_any_locking": 82,
+        "segments_with_no_ice_data_at_all": 0
+      }
+    }
+  },
+  "ice_at_observed_berg_positions": {
+    "still": {
+      "samples": 601,
+      "samples_with_ice_data": 601,
+      "mean_ice_speed_m_per_s": 0.0776,
+      "mean_ice_speed_km_per_day": 6.7,
+      "mean_concentration": 0.918,
+      "fraction_samples_conc_ge_0p90": 0.775
+    },
+    "moving": {
+      "samples": 103,
+      "samples_with_ice_data": 103,
+      "mean_ice_speed_m_per_s": 0.1424,
+      "mean_ice_speed_km_per_day": 12.3,
+      "mean_concentration": 0.87,
+      "fraction_samples_conc_ge_0p90": 0.621
+    }
+  },
+  "sensitivity": {
+    "note": "v3 re-run on a grid; shown as sensitivity only. The headline is the paper-default run. No parameter was chosen from this.",
+    "runs": [
+      {
+        "a_s": 0.85,
+        "p_star": 10000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.82,
+          "mean": 5.56
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.64,
+          "mean": 8.89
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.98
+        },
+        "fraction_hours_lambda_gt_0": 0.9057,
+        "fraction_hours_lambda_eq_1": 0.8669
+      },
+      {
+        "a_s": 0.85,
+        "p_star": 20000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.82,
+          "mean": 5.56
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.64,
+          "mean": 8.89
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.98
+        },
+        "fraction_hours_lambda_gt_0": 0.9057,
+        "fraction_hours_lambda_eq_1": 0.8669
+      },
+      {
+        "a_s": 0.85,
+        "p_star": 40000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.82,
+          "mean": 5.56
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.64,
+          "mean": 8.89
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.98
+        },
+        "fraction_hours_lambda_gt_0": 0.9057,
+        "fraction_hours_lambda_eq_1": 0.8669
+      },
+      {
+        "a_s": 0.9,
+        "p_star": 10000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.38,
+          "mean": 5.4
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.4,
+          "mean": 8.6
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.85
+        },
+        "fraction_hours_lambda_gt_0": 0.8533,
+        "fraction_hours_lambda_eq_1": 0.7564
+      },
+      {
+        "a_s": 0.9,
+        "p_star": 20000.0,
+        "is_paper_default": true,
+        "all": {
+          "n": 88,
+          "median": 4.38,
+          "mean": 5.4
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.4,
+          "mean": 8.6
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.85
+        },
+        "fraction_hours_lambda_gt_0": 0.8533,
+        "fraction_hours_lambda_eq_1": 0.7564
+      },
+      {
+        "a_s": 0.9,
+        "p_star": 40000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.38,
+          "mean": 5.4
+        },
+        "moving": {
+          "n": 13,
+          "median": 6.4,
+          "mean": 8.6
+        },
+        "still": {
+          "n": 75,
+          "median": 4.29,
+          "mean": 4.85
+        },
+        "fraction_hours_lambda_gt_0": 0.8533,
+        "fraction_hours_lambda_eq_1": 0.7564
+      },
+      {
+        "a_s": 0.95,
+        "p_star": 10000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.38,
+          "mean": 5.28
+        },
+        "moving": {
+          "n": 13,
+          "median": 5.92,
+          "mean": 7.84
+        },
+        "still": {
+          "n": 75,
+          "median": 4.26,
+          "mean": 4.83
+        },
+        "fraction_hours_lambda_gt_0": 0.7278,
+        "fraction_hours_lambda_eq_1": 0.5593
+      },
+      {
+        "a_s": 0.95,
+        "p_star": 20000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.38,
+          "mean": 5.28
+        },
+        "moving": {
+          "n": 13,
+          "median": 5.92,
+          "mean": 7.84
+        },
+        "still": {
+          "n": 75,
+          "median": 4.26,
+          "mean": 4.83
+        },
+        "fraction_hours_lambda_gt_0": 0.7278,
+        "fraction_hours_lambda_eq_1": 0.5593
+      },
+      {
+        "a_s": 0.95,
+        "p_star": 40000.0,
+        "is_paper_default": false,
+        "all": {
+          "n": 88,
+          "median": 4.38,
+          "mean": 5.28
+        },
+        "moving": {
+          "n": 13,
+          "median": 5.92,
+          "mean": 7.84
+        },
+        "still": {
+          "n": 75,
+          "median": 4.26,
+          "mean": 4.83
+        },
+        "fraction_hours_lambda_gt_0": 0.7278,
+        "fraction_hours_lambda_eq_1": 0.5593
+      }
+    ]
+  },
+  "segments": [
+    {
+      "berg": "B09G",
+      "from": "2026-09-04",
+      "to": "2026-09-10",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 7.55
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 7.55
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.32,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.32,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-09-10",
+      "to": "2026-09-18",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 10.03
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 10.03
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 12.52,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 12.52,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-09-18",
+      "to": "2026-09-24",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 10.03
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 10.03
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 10.14,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 10.14,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-09-24",
+      "to": "2026-10-01",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.86
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.86
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.0,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.0,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-10-01",
+      "to": "2026-10-09",
+      "days": 8,
+      "persistence_km": 19.6,
+      "persistence_km_per_day": 2.45,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 7.03
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 7.03
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.38,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.38,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-10-09",
+      "to": "2026-10-15",
+      "days": 6,
+      "persistence_km": 19.6,
+      "persistence_km_per_day": 3.27,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 0.6
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 0.6
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.83,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.83,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-10-15",
+      "to": "2026-10-22",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.81
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.81
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.66,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.66,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-10-22",
+      "to": "2026-10-30",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.89
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.89
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.73,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.73,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-10-30",
+      "to": "2026-11-06",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 6.63
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 6.63
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 10.42,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 10.42,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-11-06",
+      "to": "2026-11-13",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.72
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.72
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.26,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 140,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 159.29
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 3.52,
+        "sil": {
+          "hours": 101,
+          "hours_locking": 101,
+          "hours_fully_locked": 101,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 101.0
+        }
+      }
+    },
+    {
+      "berg": "B09G",
+      "from": "2026-11-13",
+      "to": "2026-11-20",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.58
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.58
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 10.66,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 165,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 167.95
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 10.66,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 165,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 167.95
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-09-04",
+      "to": "2026-09-10",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 6.62
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 6.62
+      },
+      "v3_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 6.69,
+        "sil": {
+          "hours": 100,
+          "hours_locking": 100,
+          "hours_fully_locked": 100,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 100.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 6.69,
+        "sil": {
+          "hours": 100,
+          "hours_locking": 100,
+          "hours_fully_locked": 100,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 100.0
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-09-10",
+      "to": "2026-09-18",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 9.33
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.9
+      },
+      "v3_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.97,
+        "sil": {
+          "hours": 108,
+          "hours_locking": 108,
+          "hours_fully_locked": 108,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 108.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.97,
+        "sil": {
+          "hours": 108,
+          "hours_locking": 108,
+          "hours_fully_locked": 108,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 108.0
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-09-18",
+      "to": "2026-09-24",
+      "days": 6,
+      "persistence_km": 0.4,
+      "persistence_km_per_day": 0.07,
+      "moving": false,
+      "v1_wde17": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.1
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.05
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 19.04,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 6.69,
+        "sil": {
+          "hours": 85,
+          "hours_locking": 85,
+          "hours_fully_locked": 85,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 85.0
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-09-24",
+      "to": "2026-10-01",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.13
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.13
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.08,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.08,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-10-01",
+      "to": "2026-10-09",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.73
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 3.73
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.24,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.24,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-10-09",
+      "to": "2026-10-15",
+      "days": 6,
+      "persistence_km": 2.8,
+      "persistence_km_per_day": 0.47,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 6.35
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 6.35
+      },
+      "v3_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 7.1,
+        "sil": {
+          "hours": 40,
+          "hours_locking": 40,
+          "hours_fully_locked": 40,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 40.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 7.1,
+        "sil": {
+          "hours": 40,
+          "hours_locking": 40,
+          "hours_fully_locked": 40,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 40.0
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-10-15",
+      "to": "2026-10-22",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.23
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.23
+      },
+      "v3_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.99,
+        "sil": {
+          "hours": 160,
+          "hours_locking": 147,
+          "hours_fully_locked": 36,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 102.621
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.99,
+        "sil": {
+          "hours": 160,
+          "hours_locking": 147,
+          "hours_fully_locked": 36,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 102.621
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-10-22",
+      "to": "2026-10-30",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.23
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.23
+      },
+      "v3_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.33,
+        "sil": {
+          "hours": 189,
+          "hours_locking": 40,
+          "hours_fully_locked": 14,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 20.902
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.33,
+        "sil": {
+          "hours": 189,
+          "hours_locking": 40,
+          "hours_fully_locked": 14,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 20.902
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-10-30",
+      "to": "2026-11-06",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.27
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 4.27
+      },
+      "v3_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.4,
+        "sil": {
+          "hours": 92,
+          "hours_locking": 92,
+          "hours_fully_locked": 85,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 91.384
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.4,
+        "sil": {
+          "hours": 92,
+          "hours_locking": 92,
+          "hours_fully_locked": 85,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 91.384
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-11-06",
+      "to": "2026-11-13",
+      "days": 7,
+      "persistence_km": 7.5,
+      "persistence_km_per_day": 1.08,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.15
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.15
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.47,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 119,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 162.854
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.47,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 119,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 162.854
+        }
+      }
+    },
+    {
+      "berg": "C18B",
+      "from": "2026-11-13",
+      "to": "2026-11-20",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.76
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.76
+      },
+      "v3_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.77,
+        "sil": {
+          "hours": 143,
+          "hours_locking": 9,
+          "hours_fully_locked": 4,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 6.534
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.77,
+        "sil": {
+          "hours": 143,
+          "hours_locking": 9,
+          "hours_fully_locked": 4,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 6.534
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-09-04",
+      "to": "2026-09-10",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 5.68
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.09
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.73,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.99,
+        "sil": {
+          "hours": 83,
+          "hours_locking": 83,
+          "hours_fully_locked": 83,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 83.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-09-10",
+      "to": "2026-09-18",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 6.3
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.56
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 7.03,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.45,
+        "sil": {
+          "hours": 101,
+          "hours_locking": 101,
+          "hours_fully_locked": 101,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 101.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-09-18",
+      "to": "2026-09-24",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 7.75
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.09
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 5.21,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.0,
+        "sil": {
+          "hours": 93,
+          "hours_locking": 93,
+          "hours_fully_locked": 93,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 93.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-09-24",
+      "to": "2026-10-01",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 5.82
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.09
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.91,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.91,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-10-01",
+      "to": "2026-10-09",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.09
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.59
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.69,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.52,
+        "sil": {
+          "hours": 102,
+          "hours_locking": 102,
+          "hours_fully_locked": 102,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 102.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-10-09",
+      "to": "2026-10-15",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.24
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.04
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.94,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.94,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-10-15",
+      "to": "2026-10-22",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.62
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.73
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.45,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.8,
+        "sil": {
+          "hours": 153,
+          "hours_locking": 153,
+          "hours_fully_locked": 153,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 153.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-10-22",
+      "to": "2026-10-30",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 6.97
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 6.97
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.42,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.54,
+        "sil": {
+          "hours": 169,
+          "hours_locking": 169,
+          "hours_fully_locked": 169,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 169.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-10-30",
+      "to": "2026-11-06",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 7.59
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 7.59
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.27,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.7,
+        "sil": {
+          "hours": 82,
+          "hours_locking": 82,
+          "hours_fully_locked": 82,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 82.0
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-11-06",
+      "to": "2026-11-13",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.14
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.14
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.24,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 111,
+          "hours_fully_locked": 96,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 103.804
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.24,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 111,
+          "hours_fully_locked": 96,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 103.804
+        }
+      }
+    },
+    {
+      "berg": "C18C",
+      "from": "2026-11-13",
+      "to": "2026-11-20",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.55
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.55
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 7.37,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 152,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 166.632
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 5.65,
+        "sil": {
+          "hours": 127,
+          "hours_locking": 127,
+          "hours_fully_locked": 111,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 125.632
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-09-04",
+      "to": "2026-09-10",
+      "days": 6,
+      "persistence_km": 13.6,
+      "persistence_km_per_day": 2.27,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 6.09
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 6.09
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 9.8,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 9.8,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-09-10",
+      "to": "2026-09-18",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 10.4
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 10.4
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 13.87,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 13.87,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-09-18",
+      "to": "2026-09-24",
+      "days": 6,
+      "persistence_km": 0.5,
+      "persistence_km_per_day": 0.08,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 13.98
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 13.98
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 22.6,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 139,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 143.415
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 22.6,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 139,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 143.415
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-09-24",
+      "to": "2026-10-01",
+      "days": 7,
+      "persistence_km": 4.3,
+      "persistence_km_per_day": 0.61,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 8.02
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 8.02
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 12.26,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 12.26,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-10-01",
+      "to": "2026-10-09",
+      "days": 8,
+      "persistence_km": 21.8,
+      "persistence_km_per_day": 2.72,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 5.51
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 5.51
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.26,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 168,
+          "hours_fully_locked": 148,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 158.608
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.26,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 168,
+          "hours_fully_locked": 148,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 158.608
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-10-09",
+      "to": "2026-10-15",
+      "days": 6,
+      "persistence_km": 19.1,
+      "persistence_km_per_day": 3.19,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 9.7
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 9.7
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 20.92,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 127,
+          "hours_fully_locked": 72,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 104.31
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 20.92,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 127,
+          "hours_fully_locked": 72,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 104.31
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-10-15",
+      "to": "2026-10-22",
+      "days": 7,
+      "persistence_km": 9.5,
+      "persistence_km_per_day": 1.35,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 9.79
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 9.79
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 12.53,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 136,
+          "hours_fully_locked": 51,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 96.58
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 12.53,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 136,
+          "hours_fully_locked": 51,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 96.58
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-10-22",
+      "to": "2026-10-30",
+      "days": 8,
+      "persistence_km": 29.5,
+      "persistence_km_per_day": 3.69,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.0
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.0
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 5.13,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 152,
+          "hours_fully_locked": 95,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 138.817
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 5.13,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 152,
+          "hours_fully_locked": 95,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 138.817
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-10-30",
+      "to": "2026-11-06",
+      "days": 7,
+      "persistence_km": 19.1,
+      "persistence_km_per_day": 2.73,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 10.5
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 7.89
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 17.94,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 64,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 132.119
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 7.96,
+        "sil": {
+          "hours": 93,
+          "hours_locking": 93,
+          "hours_fully_locked": 20,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 62.775
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-11-06",
+      "to": "2026-11-13",
+      "days": 7,
+      "persistence_km": 16.0,
+      "persistence_km_per_day": 2.28,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.34
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.34
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.4,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 165,
+          "hours_fully_locked": 130,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 143.1
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.4,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 165,
+          "hours_fully_locked": 130,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 143.1
+        }
+      }
+    },
+    {
+      "berg": "C39",
+      "from": "2026-11-13",
+      "to": "2026-11-20",
+      "days": 7,
+      "persistence_km": 47.9,
+      "persistence_km_per_day": 6.84,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.97
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.97
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.97,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.97,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-09-04",
+      "to": "2026-09-10",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.08
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.08
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.45,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.45,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-09-10",
+      "to": "2026-09-18",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.93
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.93
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.46,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.46,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-09-18",
+      "to": "2026-09-24",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 11.11
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 10.65
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 11.86,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 9.75,
+        "sil": {
+          "hours": 134,
+          "hours_locking": 134,
+          "hours_fully_locked": 134,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 134.0
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-09-24",
+      "to": "2026-10-01",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.57
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 3.57
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.5,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.5,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-10-01",
+      "to": "2026-10-09",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.69
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.69
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.16,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.16,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-10-09",
+      "to": "2026-10-15",
+      "days": 6,
+      "persistence_km": 2.0,
+      "persistence_km_per_day": 0.34,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 6.04
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 6.04
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.92,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.92,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-10-15",
+      "to": "2026-10-22",
+      "days": 7,
+      "persistence_km": 2.4,
+      "persistence_km_per_day": 0.35,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.71
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.71
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.53,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 120,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 45.44
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.53,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 120,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 45.44
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-10-22",
+      "to": "2026-10-30",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 7.89
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 7.89
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.86,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 132,
+          "hours_fully_locked": 34,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 75.058
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 8.27,
+        "sil": {
+          "hours": 148,
+          "hours_locking": 97,
+          "hours_fully_locked": 26,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 57.841
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-10-30",
+      "to": "2026-11-06",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 7.22
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 7.22
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 7.57,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 69,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 24.499
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 7.57,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 69,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 24.499
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-11-06",
+      "to": "2026-11-13",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 8.41
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 8.41
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.41,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.41,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      }
+    },
+    {
+      "berg": "D15C",
+      "from": "2026-11-13",
+      "to": "2026-11-20",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.35
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.35
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.35,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.35,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-09-04",
+      "to": "2026-09-10",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.95
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 3.95
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.34,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 6.32,
+        "sil": {
+          "hours": 108,
+          "hours_locking": 108,
+          "hours_fully_locked": 108,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 108.0
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-09-10",
+      "to": "2026-09-18",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.76
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.76
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.36,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.36,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-09-18",
+      "to": "2026-09-24",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 11.19
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 10.43
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 12.01,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 8.77,
+        "sil": {
+          "hours": 123,
+          "hours_locking": 123,
+          "hours_fully_locked": 123,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 123.0
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-09-24",
+      "to": "2026-10-01",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.84
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 3.84
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.8,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 6.8,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-10-01",
+      "to": "2026-10-09",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.9
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.9
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.14,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 3.14,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-10-09",
+      "to": "2026-10-15",
+      "days": 6,
+      "persistence_km": 3.1,
+      "persistence_km_per_day": 0.52,
+      "moving": true,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 6.01
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 6.01
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.91,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 142,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 143.846
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.91,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 142,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 143.846
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-10-15",
+      "to": "2026-10-22",
+      "days": 7,
+      "persistence_km": 2.8,
+      "persistence_km_per_day": 0.4,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.9
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.9
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.42,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 104,
+          "hours_fully_locked": 46,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 77.324
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.42,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 104,
+          "hours_fully_locked": 46,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 77.324
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-10-22",
+      "to": "2026-10-30",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 7.78
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 7.78
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.54,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 91,
+          "hours_fully_locked": 32,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 51.969
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 7.87,
+        "sil": {
+          "hours": 146,
+          "hours_locking": 60,
+          "hours_fully_locked": 23,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 36.222
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-10-30",
+      "to": "2026-11-06",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 7.19
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 7.19
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 7.66,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 74,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 35.337
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 7.66,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 74,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 35.337
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-11-06",
+      "to": "2026-11-13",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 8.4
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 8.4
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.4,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 8.4,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      }
+    },
+    {
+      "berg": "D15D",
+      "from": "2026-11-13",
+      "to": "2026-11-20",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.29
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.29
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.29,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 4.29,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-09-04",
+      "to": "2026-09-10",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.96
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.96
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.37,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.37,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-09-10",
+      "to": "2026-09-18",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.55
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.56
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.44,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.44,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-09-18",
+      "to": "2026-09-24",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.23
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 3.23
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.92,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.92,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-09-24",
+      "to": "2026-10-01",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.18
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.18
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.82,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.82,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-10-01",
+      "to": "2026-10-09",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.37
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 3.09
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.2,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.2,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-10-09",
+      "to": "2026-10-15",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 3.17
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.92
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.62,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 91,
+          "hours_fully_locked": 78,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 86.044
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.62,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 91,
+          "hours_fully_locked": 78,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 86.044
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-10-15",
+      "to": "2026-10-22",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 4.54
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 4.54
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.95,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 156,
+          "hours_fully_locked": 140,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 148.554
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.95,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 156,
+          "hours_fully_locked": 140,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 148.554
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-10-22",
+      "to": "2026-10-30",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 5.2
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.54
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.02,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 158,
+          "hours_fully_locked": 107,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 128.289
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 2.02,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 158,
+          "hours_fully_locked": 107,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 128.289
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-10-30",
+      "to": "2026-11-06",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 5.37
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 5.37
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.55,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 142,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 161.343
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.55,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 142,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 161.343
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-11-06",
+      "to": "2026-11-13",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.35
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.35
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.61,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 92,
+          "hours_fully_locked": 19,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 59.515
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 1.61,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 92,
+          "hours_fully_locked": 19,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 59.515
+        }
+      }
+    },
+    {
+      "berg": "D23",
+      "from": "2026-11-13",
+      "to": "2026-11-20",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 5.72
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 5.72
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 5.72,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 5.72,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 0,
+          "hours_fully_locked": 0,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 0.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-09-04",
+      "to": "2026-09-10",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.89
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.06
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.11,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.11,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-09-10",
+      "to": "2026-09-18",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.85
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.75
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.58,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.35,
+        "sil": {
+          "hours": 121,
+          "hours_locking": 121,
+          "hours_fully_locked": 121,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 121.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-09-18",
+      "to": "2026-09-24",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.44
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.44
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.11,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.11,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-09-24",
+      "to": "2026-10-01",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 2.01
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 2.01
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.14,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.14,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-10-01",
+      "to": "2026-10-09",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.94
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 1.8
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.07,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.07,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-10-09",
+      "to": "2026-10-15",
+      "days": 6,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.44
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.44
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.1,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.1,
+        "sil": {
+          "hours": 144,
+          "hours_locking": 144,
+          "hours_fully_locked": 144,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 144.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-10-15",
+      "to": "2026-10-22",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.4
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.4
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.1,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.1,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-10-22",
+      "to": "2026-10-30",
+      "days": 8,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.98
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.71
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.11,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.11,
+        "sil": {
+          "hours": 192,
+          "hours_locking": 192,
+          "hours_fully_locked": 192,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 192.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-10-30",
+      "to": "2026-11-06",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.03
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.75
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.08,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.08,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-11-06",
+      "to": "2026-11-13",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "ok",
+        "error_km_per_day": 1.07
+      },
+      "v2_grounding": {
+        "status": "ok",
+        "error_km_per_day": 1.07
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.16,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.16,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 168,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 168.0
+        }
+      }
+    },
+    {
+      "berg": "D37",
+      "from": "2026-11-13",
+      "to": "2026-11-20",
+      "days": 7,
+      "persistence_km": 0.0,
+      "persistence_km_per_day": 0.0,
+      "moving": false,
+      "v1_wde17": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 2.05
+      },
+      "v2_grounding": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.76
+      },
+      "v3_sil": {
+        "status": "ok",
+        "error_km_per_day": 0.82,
+        "sil": {
+          "hours": 168,
+          "hours_locking": 168,
+          "hours_fully_locked": 49,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 127.108
+        }
+      },
+      "v4_grounding_sil": {
+        "status": "grounded or unknown",
+        "error_km_per_day": 0.78,
+        "sil": {
+          "hours": 139,
+          "hours_locking": 139,
+          "hours_fully_locked": 27,
+          "hours_no_ice_data": 0,
+          "lambda_sum": 98.415
+        }
+      }
+    }
+  ]
+}
