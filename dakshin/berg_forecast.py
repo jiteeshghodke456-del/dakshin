@@ -30,7 +30,7 @@ import xarray as xr
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from models.iceberg.drift import iceberg_velocity, relative_wind_forcing  # noqa: E402
-from models.iceberg.sil import sil_velocity  # noqa: E402
+from models.iceberg.sil import locking_force_per_width, sil_velocity  # noqa: E402
 
 M_PER_DEG = 111_195.0  # mean metres per degree of latitude
 STATUS_OK = "ok"
@@ -244,7 +244,7 @@ def _step_velocity(field_: CurrentField, lon, lat, when, length_m, width_m):
     if not (math.isfinite(uc) and math.isfinite(vc)):
         return None
     u, v = iceberg_velocity(uc, vc, 0.0, 0.0, lat, length_m, width_m)
-    return float(u), float(v), float(np.hypot(uc, vc))
+    return float(u), float(v), float(np.hypot(uc, vc)), float(uc), float(vc)
 
 
 def forecast_track(name: str, lat0: float, lon0: float,
@@ -266,7 +266,10 @@ def forecast_track(name: str, lat0: float, lon0: float,
 
     With `ice_field`, both RK2 stages pass the WDE17 velocity through the
     sea-ice locking rule of Marson et al. (2024) (models/iceberg/sil.py);
-    `sil_params` overrides its defaults. Where the ice field has no data the
+    `sil_params` overrides its defaults. `sil_params={"strength_rule":
+    "forces"}` uses the paper's strength threshold, the force needed to hold
+    this berg at the ice velocity; the default "drag" is the weaker form the
+    first hindcast run used. Where the ice field has no data the
     step uses the WDE17 velocity unchanged and is counted on the track.
     Without `ice_field` nothing about the integration changes.
     """
@@ -292,12 +295,21 @@ def forecast_track(name: str, lat0: float, lon0: float,
         track.status = STATUS_GROUNDED
         return track
 
+    sil_kwargs = dict(sil_params or {})
+    strength_rule = sil_kwargs.pop("strength_rule", "drag")
+    if strength_rule not in ("drag", "forces"):
+        raise ValueError(f"unknown strength_rule {strength_rule!r}")
+
     def with_ice(k, lo, la, when):
         """(u, v, lambda, ice_known) after sea-ice locking at this stage."""
         conc, thick, u_si, v_si = ice_field.sample(lo, la, when)
         known = all(math.isfinite(x) for x in (conc, thick, u_si, v_si))
-        return (*sil_velocity(k[0], k[1], conc, thick, u_si, v_si,
-                              **(sil_params or {})), known)
+        p_s = None
+        if strength_rule == "forces" and known:
+            p_s = locking_force_per_width(u_si, v_si, k[3], k[4], la,
+                                          length_m, width_m)
+        return (*sil_velocity(k[0], k[1], conc, thick, u_si, v_si, p_s=p_s,
+                              **sil_kwargs), known)
 
     while t < end:
         k1 = _step_velocity(field_, lon, lat, t, length_m, width_m)

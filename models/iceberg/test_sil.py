@@ -12,7 +12,7 @@ import math
 import pytest
 
 import sil
-from sil import C_SI, P_STAR, RHO_SI, ramp, sil_velocity
+from sil import C_SI, P_STAR, RHO_SI, locking_force_per_width, ramp, sil_velocity
 
 FREE = (0.05, -0.02)     # berg velocity without sea ice, m/s
 ICE = (-0.20, 0.10)      # sea-ice velocity, m/s
@@ -100,3 +100,54 @@ def test_overrides_move_the_thresholds():
     speed = math.sqrt(P_STAR * thick * math.exp(-1.0) / 0.9 / (0.5 * RHO_SI * C_SI * thick))
     assert sil_velocity(0.0, 0.0, conc, thick, speed, 0.0, p_star=P_STAR / 2)[2] == 0.0
     assert sil_velocity(0.0, 0.0, conc, thick, speed, 0.0, pt_factor=0.5)[2] == pytest.approx(0.8)
+
+
+# --- P_s as the paper defines it: |F_c + F_p + F_o| / W (its Eq. 3) ----------
+
+GIANT = dict(lat_deg=-66.0, length_m=30_000.0, width_m=20_000.0)
+
+
+def test_locking_force_is_zero_when_ice_and_current_agree():
+    assert locking_force_per_width(0.1, -0.05, 0.1, -0.05, **GIANT) == 0.0
+
+
+def test_locking_force_matches_a_hand_calculation():
+    # ice 0.1 m/s faster than the current, eastward, 30 x 20 km x 250 m berg
+    f = 2 * 7.2921e-5 * math.sin(math.radians(66.0))
+    rotation = 850.0 * 30_000.0 * 250.0 * f * 0.1                      # M f dV / W
+    drag = 0.5 * 0.9 * 850.0 * (2 / math.pi) * 50_000.0 * 250.0 * 0.01 / 20_000.0
+    expected = math.hypot(rotation, drag)
+    assert rotation == pytest.approx(84_935, rel=1e-3) and drag == pytest.approx(1_522, rel=1e-3)
+    assert locking_force_per_width(0.15, 0.0, 0.05, 0.0, **GIANT) == pytest.approx(expected)
+    # only the velocity difference matters, not its direction
+    assert locking_force_per_width(0.05, 0.1, 0.05, 0.0, **GIANT) == pytest.approx(expected)
+
+
+def test_locking_force_grows_with_berg_length_and_speed_difference():
+    base = locking_force_per_width(0.15, 0.0, 0.05, 0.0, **GIANT)
+    longer = locking_force_per_width(0.15, 0.0, 0.05, 0.0, lat_deg=-66.0,
+                                     length_m=60_000.0, width_m=20_000.0)
+    faster = locking_force_per_width(0.25, 0.0, 0.05, 0.0, **GIANT)
+    assert longer == pytest.approx(2 * base, rel=1e-3)
+    assert faster == pytest.approx(2 * base, rel=1e-3)
+
+
+def test_given_p_s_decides_locking_instead_of_the_drag_form():
+    # full cover, 1 m ice: strength P = 20,000 N/m
+    args = (*FREE, 1.0, 1.0, *ICE)
+    assert sil_velocity(*args)[2] == 1.0                     # drag form: locks
+    assert sil_velocity(*args, p_s=19_000.0)[2] == 1.0       # P above P_s
+    assert sil_velocity(*args, p_s=22_222.2)[2] == pytest.approx(0.5, abs=1e-3)
+    assert sil_velocity(*args, p_s=30_000.0) == (*FREE, 0.0)  # P below 0.8 P_s
+
+
+def test_a_giant_berg_needs_stronger_ice_than_a_small_one():
+    # same ice, same 0.1 m/s difference: 1.5 m of full pack holds a 200 m berg
+    # and cannot hold a 30 km one
+    small = locking_force_per_width(0.15, 0.0, 0.05, 0.0, lat_deg=-66.0,
+                                    length_m=200.0, width_m=150.0)
+    giant = locking_force_per_width(0.15, 0.0, 0.05, 0.0, **GIANT)
+    strength = P_STAR * 1.5
+    assert small < 0.8 * strength < strength < 0.8 * giant
+    assert sil_velocity(0.05, 0.0, 1.0, 1.5, 0.15, 0.0, p_s=small)[2] == 1.0
+    assert sil_velocity(0.05, 0.0, 1.0, 1.5, 0.15, 0.0, p_s=giant)[2] == 0.0

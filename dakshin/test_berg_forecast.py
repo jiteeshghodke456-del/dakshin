@@ -195,3 +195,25 @@ def test_recorded_lambda_is_the_midpoint_stage_of_each_hour():
     tr = forecast_track("T", -65.2, 20.3, field_=f, start=noon, days=1,
                         ice_field=ice, **GIANT)
     assert tr.sil_lambda == pytest.approx([(n + 0.5) / 24 for n in range(24)], abs=1e-5)
+
+
+def test_force_rule_locks_a_small_berg_but_not_a_giant_in_the_same_ice():
+    # 1.5 m of full pack drifting north while the current runs east. The
+    # paper's strength threshold scales with berg mass: this ice can hold a
+    # 200 m berg at its own velocity and cannot hold a 30 km one.
+    ice = uniform_ice(1.0, thick=1.5, v=0.1)
+    rule = {"strength_rule": "forces"}
+    giant = sheared_track(ice_field=ice, sil_params=rule)
+    assert giant.sil_lambda == [0.0] * 72
+    assert (giant.lats, giant.lons) == (sheared_track().lats, sheared_track().lons)
+
+    small = forecast_track("T", -65.2, 20.3, 200.0, 150.0, sheared_field(), START, 3,
+                           ice_field=ice, sil_params=rule)
+    assert small.sil_lambda == [1.0] * 72 and small.lons[-1] == small.lons[0]
+    # the first run's drag form locks the giant too: it ignores berg size
+    assert sheared_track(ice_field=ice).sil_lambda == [1.0] * 72
+
+
+def test_unknown_strength_rule_is_rejected():
+    with pytest.raises(ValueError, match="strength_rule"):
+        sheared_track(ice_field=uniform_ice(1.0), sil_params={"strength_rule": "typo"})
