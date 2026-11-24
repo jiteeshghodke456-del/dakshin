@@ -30,6 +30,7 @@ import xarray as xr
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from models.iceberg.drift import iceberg_velocity, relative_wind_forcing  # noqa: E402
+from models.iceberg.sil import sil_velocity  # noqa: E402
 
 M_PER_DEG = 111_195.0  # mean metres per degree of latitude
 STATUS_OK = "ok"
@@ -228,6 +229,11 @@ class Track:
     lons: list[float] = field(default_factory=list)
     status: str = STATUS_OK
     wind_forcing_R: float | None = None  # assumed 10 m/s wind, see module doc
+    # Sea-ice locking, filled only when forecast_track is given an ice field:
+    # one lambda per integrated step (the midpoint stage, whose velocity moves
+    # the berg), and how many of those steps had no sea-ice data at the berg.
+    sil_lambda: list[float] = field(default_factory=list)
+    ice_missing_steps: int = 0
 
     def positions(self):
         return list(zip(self.times, self.lats, self.lons))
@@ -247,7 +253,9 @@ def forecast_track(name: str, lat0: float, lon0: float,
                    start: dt.datetime, days: float,
                    dt_hours: float = 1.0,
                    bathymetry: "BathymetryGrid | None" = None,
-                   draught_m: float = ASSUMED_DRAUGHT_M) -> Track:
+                   draught_m: float = ASSUMED_DRAUGHT_M,
+                   ice_field: "IceField | None" = None,
+                   sil_params: dict | None = None) -> Track:
     """Midpoint (RK2) integration of one berg. Record hourly positions.
 
     With `bathymetry`, a berg whose assumed keel reaches the seabed
@@ -255,6 +263,12 @@ def forecast_track(name: str, lat0: float, lon0: float,
     first touches such a cell, and is not advected further — the v2 behaviour
     motivated by the v1 hindcast finding that most corridor giants are
     anchored. Without it, behaviour is exactly the original v1.
+
+    With `ice_field`, both RK2 stages pass the WDE17 velocity through the
+    sea-ice locking rule of Marson et al. (2024) (models/iceberg/sil.py);
+    `sil_params` overrides its defaults. Where the ice field has no data the
+    step uses the WDE17 velocity unchanged and is counted on the track.
+    Without `ice_field` nothing about the integration changes.
     """
     track = Track(name=name)
     lat, lon = float(lat0), float(lon0)
@@ -278,11 +292,20 @@ def forecast_track(name: str, lat0: float, lon0: float,
         track.status = STATUS_GROUNDED
         return track
 
+    def with_ice(k, lo, la, when):
+        """(u, v, lambda, ice_known) after sea-ice locking at this stage."""
+        conc, thick, u_si, v_si = ice_field.sample(lo, la, when)
+        known = all(math.isfinite(x) for x in (conc, thick, u_si, v_si))
+        return (*sil_velocity(k[0], k[1], conc, thick, u_si, v_si,
+                              **(sil_params or {})), known)
+
     while t < end:
         k1 = _step_velocity(field_, lon, lat, t, length_m, width_m)
         if k1 is None:
             track.status = STATUS_GROUNDED
             break
+        if ice_field is not None:
+            k1 = with_ice(k1, lon, lat, t)
         mid_lat = lat + k1[1] * h / 2 / M_PER_DEG
         mid_lon = lon + k1[0] * h / 2 / (M_PER_DEG * math.cos(math.radians(lat)))
         t_mid = t + dt.timedelta(seconds=h / 2)
@@ -290,6 +313,8 @@ def forecast_track(name: str, lat0: float, lon0: float,
         if k2 is None:
             track.status = STATUS_GROUNDED
             break
+        if ice_field is not None:
+            k2 = with_ice(k2, mid_lon, mid_lat, t_mid)
         new_lat = lat + k2[1] * h / M_PER_DEG
         new_lon = lon + k2[0] * h / (M_PER_DEG * math.cos(math.radians(lat)))
         if aground(new_lon, new_lat):
@@ -297,6 +322,9 @@ def forecast_track(name: str, lat0: float, lon0: float,
             break
         lat, lon = new_lat, new_lon
         t = t + dt.timedelta(seconds=h)
+        if ice_field is not None:
+            track.sil_lambda.append(k2[2])
+            track.ice_missing_steps += not k2[3]
         track.times.append(t); track.lats.append(lat); track.lons.append(lon)
     return track
 
