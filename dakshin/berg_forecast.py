@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import datetime as dt
 import math
+import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -132,6 +133,91 @@ class CurrentField:
             return float("nan")
         return float(q[0, 0] * (1 - fy) * (1 - fx) + q[0, 1] * (1 - fy) * fx
                      + q[1, 0] * fy * (1 - fx) + q[1, 1] * fy * fx)
+
+
+ICE_ARCHIVE = (Path(__file__).resolve().parent.parent
+               / "data" / "cmems_forecast_archive")
+
+
+def known_stale_dates(archive_dir: Path = ICE_ARCHIVE) -> set[dt.date]:
+    """Cycle dates listed in KNOWN_STALE.md: files that hold the previous
+    day's forecast under this day's name, so their day 0 is not an analysis."""
+    note = Path(archive_dir) / "KNOWN_STALE.md"
+    if not note.exists():
+        return set()
+    return {dt.date.fromisoformat(d) for d in
+            re.findall(r"cmems_siconc_(\d{4}-\d{2}-\d{2})\.nc", note.read_text())}
+
+
+class IceField:
+    """Daily sea-ice state: concentration A (0-1), thickness h (m) and ice
+    velocity (m/s), sampled by the same code as the currents.
+
+    Built from day 0 (the analysis day) of each archived CMEMS forecast cycle.
+    A day with no usable cycle is filled with the nearest good day's field and
+    recorded in `substituted` -- held, never interpolated into existence.
+    """
+
+    def __init__(self, conc: np.ndarray, thick: np.ndarray, u: np.ndarray,
+                 v: np.ndarray, lat: np.ndarray, lon: np.ndarray,
+                 day_centers: np.ndarray,
+                 substituted: dict[dt.date, dt.date] | None = None):
+        """All fields (n_days, n_lat, n_lon); day_centers: float days since epoch."""
+        # two CurrentField samplers, so the bilinear-in-space, linear-in-time
+        # rule and its refuse-to-invent NaN behaviour are literally shared
+        self._state = CurrentField(conc, thick, lat, lon, day_centers)
+        self._drift = CurrentField(u, v, lat, lon, day_centers)
+        self.lat, self.lon, self.t = lat, lon, day_centers
+        self.substituted = substituted or {}
+
+    @classmethod
+    def from_archive(cls, archive_dir: Path = ICE_ARCHIVE,
+                     skip: set[dt.date] | None = None) -> "IceField":
+        """Load day 0 of every cmems_siconc_<date>.nc cycle except `skip`
+        (default: the dates in KNOWN_STALE.md)."""
+        archive_dir = Path(archive_dir)
+        skip = known_stale_dates(archive_dir) if skip is None else skip
+        good: dict[dt.date, tuple] = {}
+        lat = lon = None
+        for p in sorted(archive_dir.glob("cmems_siconc_*.nc")):
+            day = dt.date.fromisoformat(p.stem[-10:])
+            if day in skip:
+                continue
+            with xr.open_dataset(p) as ds:
+                first = ds["time"].values[0].astype("datetime64[D]").astype(dt.date)
+                if first != day:
+                    raise ValueError(f"{p.name}: first time step is {first}, not {day}")
+                lat_v, lon_v = ds["latitude"].values, ds["longitude"].values
+                if lat is None:
+                    lat, lon = lat_v, lon_v
+                elif not (np.array_equal(lat, lat_v) and np.array_equal(lon, lon_v)):
+                    raise ValueError(f"{p} is on a different grid")
+                good[day] = tuple(ds[k].isel(time=0).values.astype(np.float32)
+                                  for k in ("siconc", "sithick", "usi", "vsi"))
+        if not good:
+            raise FileNotFoundError(f"no usable sea-ice cycles in {archive_dir}")
+
+        days = [min(good) + dt.timedelta(days=i)
+                for i in range((max(good) - min(good)).days + 1)]
+        substituted = {}
+        stacks = ([], [], [], [])
+        for day in days:
+            src = day
+            if day not in good:
+                # nearest good day; on a tie the earlier one
+                src = min(good, key=lambda g: (abs((g - day).days), g))
+                substituted[day] = src
+            for stack, grid in zip(stacks, good[src]):
+                stack.append(grid)
+        t = np.array([np.datetime64(d).astype("datetime64[s]").astype(float) / 86400.0 + 0.5
+                      for d in days])
+        return cls(*(np.stack(st) for st in stacks), lat, lon, t, substituted)
+
+    def sample(self, lon: float, lat: float,
+               when: dt.datetime) -> tuple[float, float, float, float]:
+        """(A, h, u_si, v_si) at a point and instant; NaN where unknowable."""
+        return (*self._state.sample(lon, lat, when),
+                *self._drift.sample(lon, lat, when))
 
 
 @dataclass
