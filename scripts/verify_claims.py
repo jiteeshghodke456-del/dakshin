@@ -67,9 +67,28 @@ check("SIL hours locking / fully locked",
 check("SIL ice speed at still / moving bergs km/day",
       (sj['ice_at_observed_berg_positions']['still']['mean_ice_speed_km_per_day'],
        sj['ice_at_observed_berg_positions']['moving']['mean_ice_speed_km_per_day']), (6.7, 12.3))
+v5, v6 = sv['v5_sil_force_balance'], sv['v6_grounding_sil_force_balance']
+check("SIL v5 (paper P_s) all median/mean", (v5['all']['median'], v5['all']['mean']), (4.34, 4.82))
+check("SIL v5 moving median/mean", (v5['moving']['median'], v5['moving']['mean']), (6.01, 5.87))
+check("SIL v6 all median/mean", (v6['all']['median'], v6['all']['mean']), (4.06, 4.38))
+check("SIL v5 hours locking / fully locked",
+      (v5['sil']['fraction_hours_lambda_gt_0'], v5['sil']['fraction_hours_lambda_eq_1']),
+      (0.1988, 0.137))
+dj = json.loads((R / 'dakshin/figures/ice_drift_check.json').read_text())
+box, near = dj['headline_nominal_quality'], dj['nominal_within_200km_of_a_hindcast_berg']
+check("ice drift box: n, observed, model, ratio",
+      (box['n'], box['observed_speed_km_per_day']['mean'], box['model_speed_km_per_day']['mean'],
+       box['model_over_observed_mean_speed']), (53800, 12.05, 10.61, 0.88))
+check("ice drift near bergs: n, observed, model, ratio",
+      (near['n'], near['observed_speed_km_per_day']['mean'], near['model_speed_km_per_day']['mean'],
+       near['model_over_observed_mean_speed']), (4933, 7.96, 9.43, 1.18))
+check("ice drift box correlation", (box['correlation']['east'], box['correlation']['north']), (0.86, 0.81))
 sil_doc = (R / 'docs/SIL_EXPERIMENT.md').read_text()
 for token in ["4.38 (5.40)", "6.40 (8.60)", "4.31 (4.98)", "6.01 (5.82)", "3.52 (4.31)",
-              "2.45 (2.54)", "85.3 %", "75.6 %", "14,440", "10.1029/2023JC020697"]:
+              "2.45 (2.54)", "85.3 %", "75.6 %", "14,440", "10.1029/2023JC020697",
+              "4.34 (4.82)", "6.01 (5.87)", "4.06 (4.38)", "13.7 %", "19.9 %", "14,472",
+              "53,800", "12.05 km/day", "10.61 km/day", "4,933", "7.96", "9.43",
+              "10.15770/EUM_SAF_OSI_NRT_2007"]:
     (ok if token in sil_doc else bad).append(f"SIL_EXPERIMENT.md contains {token!r}")
 
 res = (R / 'docs/PROTOTYPE_RESULTS.md').read_text()
