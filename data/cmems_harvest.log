@@ -1452,3 +1452,60 @@ cmems_sst_2026-11-24.nc: 10.68 MB -> 1.43 MB (7.5x smaller, int16 packed)
 2026-11-25T04:17:12+00:00 already have cmems_cur_2026-11-24.nc, skipping
 2026-11-25T04:17:12+00:00 already have cmems_wav_2026-11-24.nc, skipping
 2026-11-25T04:17:12+00:00 already have cmems_sst_2026-11-24.nc, skipping
+2026-11-25T21:48:43+00:00 harvesting cycle 2026-11-25
+INFO - 2026-11-25T21:48:45Z - Selected dataset version: "202406"
+INFO - 2026-11-25T21:48:45Z - Selected dataset part: "default"
+WARNING - 2026-11-25T21:48:45Z - Some of your subset selection [2026-11-25 00:00:00+00:00, 2026-12-05 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-04 00:00:00+00:00]
+INFO - 2026-11-25T21:48:50Z - Total size of the download: 40.66 MB.
+{
+  "file_size": "40.66 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-25T21:48:51+00:00 saved cmems_siconc_2026-11-25.nc (10 daily steps)
+cmems_siconc_2026-11-25.nc: 42.62 MB -> 4.30 MB (9.9x smaller, int16 packed)
+2026-11-25T21:48:51+00:00 compressed cmems_siconc_2026-11-25.nc
+INFO - 2026-11-25T21:48:54Z - Selected dataset version: "202406"
+INFO - 2026-11-25T21:48:54Z - Selected dataset part: "default"
+WARNING - 2026-11-25T21:48:54Z - Some of your subset selection [2026-11-25 00:00:00+00:00, 2026-12-05 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-04 00:00:00+00:00]
+WARNING - 2026-11-25T21:48:54Z - Some of your subset selection [0.0, 1.0] for the depth dimension exceed the dataset coordinates [0.49402499198913574, 5727.9169921875]
+INFO - 2026-11-25T21:48:59Z - Total size of the download: 20.34 MB.
+{
+  "file_size": "20.34 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-25T21:48:59+00:00 saved cmems_cur_2026-11-25.nc (10 daily steps)
+cmems_cur_2026-11-25.nc: 21.33 MB -> 3.89 MB (5.5x smaller, int16 packed)
+2026-11-25T21:49:00+00:00 compressed cmems_cur_2026-11-25.nc
+INFO - 2026-11-25T21:49:03Z - Selected dataset version: "202411"
+INFO - 2026-11-25T21:49:03Z - Selected dataset part: "default"
+WARNING - 2026-11-25T21:49:03Z - The dataset cmems_mod_glo_wav_anfc_0.083deg_PT3H-i, version '202411', part 'default' is currently being updated. Data after 2026-11-24T12:00:00.000Z may not be up to date.
+  0%|          | [00:00<?]  2%|▏         | [00:02<02:22] 23%|██▎       | [00:02<00:07] 36%|███▌      | [00:03<00:03] 43%|████▎     | [00:04<00:04] 52%|█████▏    | [00:04<00:03] 61%|██████    | [00:04<00:02] 73%|███████▎  | [00:04<00:01] 86%|████████▌ | [00:05<00:00] 93%|█████████▎| [00:05<00:00]100%|██████████| [00:05<00:00]
+INFO - 2026-11-25T21:49:11Z - Total size of the download: 81.30 MB.
+{
+  "file_size": "81.30 MB",
+  "data_transfer_size": "1280.70 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+reduced cmems_wav_2026-11-25.nc: 10 days
+2026-11-25T21:49:12+00:00 saved cmems_wav_2026-11-25.nc (10 daily steps)
+cmems_wav_2026-11-25.nc: 2.18 MB -> 1.70 MB (1.3x smaller, int16 packed)
+2026-11-25T21:49:13+00:00 compressed cmems_wav_2026-11-25.nc
+INFO - 2026-11-25T21:49:16Z - Selected dataset version: "202406"
+INFO - 2026-11-25T21:49:16Z - Selected dataset part: "default"
+WARNING - 2026-11-25T21:49:16Z - Some of your subset selection [2026-11-25 00:00:00+00:00, 2026-12-05 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-04 00:00:00+00:00]
+WARNING - 2026-11-25T21:49:16Z - Some of your subset selection [0.0, 1.0] for the depth dimension exceed the dataset coordinates [0.49402499198913574, 5727.9169921875]
+INFO - 2026-11-25T21:49:20Z - Total size of the download: 10.18 MB.
+{
+  "file_size": "10.18 MB",
+  "data_transfer_size": "80.04 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-25T21:49:20+00:00 saved cmems_sst_2026-11-25.nc
+cmems_sst_2026-11-25.nc: 10.68 MB -> 1.47 MB (7.3x smaller, int16 packed)
+2026-11-25T21:49:21+00:00 compressed cmems_sst_2026-11-25.nc
