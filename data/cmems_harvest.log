@@ -1517,3 +1517,60 @@ cmems_sst_2026-11-25.nc: 10.68 MB -> 1.47 MB (7.3x smaller, int16 packed)
 2026-11-26T03:37:25+00:00 already have cmems_cur_2026-11-25.nc, skipping
 2026-11-26T03:37:25+00:00 already have cmems_wav_2026-11-25.nc, skipping
 2026-11-26T03:37:25+00:00 already have cmems_sst_2026-11-25.nc, skipping
+2026-11-26T21:41:33+00:00 harvesting cycle 2026-11-26
+INFO - 2026-11-26T21:41:36Z - Selected dataset version: "202406"
+INFO - 2026-11-26T21:41:36Z - Selected dataset part: "default"
+WARNING - 2026-11-26T21:41:36Z - Some of your subset selection [2026-11-26 00:00:00+00:00, 2026-12-06 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-05 00:00:00+00:00]
+INFO - 2026-11-26T21:41:41Z - Total size of the download: 40.66 MB.
+{
+  "file_size": "40.66 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-26T21:41:42+00:00 saved cmems_siconc_2026-11-26.nc (10 daily steps)
+cmems_siconc_2026-11-26.nc: 42.62 MB -> 4.12 MB (10.3x smaller, int16 packed)
+2026-11-26T21:41:43+00:00 compressed cmems_siconc_2026-11-26.nc
+INFO - 2026-11-26T21:41:45Z - Selected dataset version: "202406"
+INFO - 2026-11-26T21:41:45Z - Selected dataset part: "default"
+WARNING - 2026-11-26T21:41:45Z - Some of your subset selection [2026-11-26 00:00:00+00:00, 2026-12-06 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-05 00:00:00+00:00]
+WARNING - 2026-11-26T21:41:45Z - Some of your subset selection [0.0, 1.0] for the depth dimension exceed the dataset coordinates [0.49402499198913574, 5727.9169921875]
+INFO - 2026-11-26T21:41:50Z - Total size of the download: 20.34 MB.
+{
+  "file_size": "20.34 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-26T21:41:50+00:00 saved cmems_cur_2026-11-26.nc (10 daily steps)
+cmems_cur_2026-11-26.nc: 21.33 MB -> 3.90 MB (5.5x smaller, int16 packed)
+2026-11-26T21:41:51+00:00 compressed cmems_cur_2026-11-26.nc
+INFO - 2026-11-26T21:41:54Z - Selected dataset version: "202411"
+INFO - 2026-11-26T21:41:54Z - Selected dataset part: "default"
+WARNING - 2026-11-26T21:41:54Z - The dataset cmems_mod_glo_wav_anfc_0.083deg_PT3H-i, version '202411', part 'default' is currently being updated. Data after 2026-11-25T12:00:00.000Z may not be up to date.
+  0%|          | [00:00<?]  2%|▏         | [00:02<01:59] 21%|██▏       | [00:02<00:06] 32%|███▏      | [00:02<00:03] 43%|████▎     | [00:03<00:04] 61%|██████    | [00:04<00:01] 73%|███████▎  | [00:04<00:01] 93%|█████████▎| [00:04<00:00]100%|██████████| [00:04<00:00]
+INFO - 2026-11-26T21:42:02Z - Total size of the download: 81.30 MB.
+{
+  "file_size": "81.30 MB",
+  "data_transfer_size": "1280.70 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+reduced cmems_wav_2026-11-26.nc: 10 days
+2026-11-26T21:42:03+00:00 saved cmems_wav_2026-11-26.nc (10 daily steps)
+cmems_wav_2026-11-26.nc: 2.21 MB -> 1.73 MB (1.3x smaller, int16 packed)
+2026-11-26T21:42:04+00:00 compressed cmems_wav_2026-11-26.nc
+INFO - 2026-11-26T21:42:07Z - Selected dataset version: "202406"
+INFO - 2026-11-26T21:42:07Z - Selected dataset part: "default"
+WARNING - 2026-11-26T21:42:07Z - Some of your subset selection [2026-11-26 00:00:00+00:00, 2026-12-06 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-05 00:00:00+00:00]
+WARNING - 2026-11-26T21:42:07Z - Some of your subset selection [0.0, 1.0] for the depth dimension exceed the dataset coordinates [0.49402499198913574, 5727.9169921875]
+INFO - 2026-11-26T21:42:10Z - Total size of the download: 10.18 MB.
+{
+  "file_size": "10.18 MB",
+  "data_transfer_size": "80.04 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-26T21:42:11+00:00 saved cmems_sst_2026-11-26.nc
+cmems_sst_2026-11-26.nc: 10.68 MB -> 1.51 MB (7.0x smaller, int16 packed)
+2026-11-26T21:42:11+00:00 compressed cmems_sst_2026-11-26.nc
