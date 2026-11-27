@@ -1582,3 +1582,59 @@ cmems_sst_2026-11-26.nc: 10.68 MB -> 1.51 MB (7.0x smaller, int16 packed)
 2026-11-27T03:40:23+00:00 already have cmems_cur_2026-11-26.nc, skipping
 2026-11-27T03:40:23+00:00 already have cmems_wav_2026-11-26.nc, skipping
 2026-11-27T03:40:23+00:00 already have cmems_sst_2026-11-26.nc, skipping
+2026-11-27T21:26:18+00:00 harvesting cycle 2026-11-27
+INFO - 2026-11-27T21:26:21Z - Selected dataset version: "202406"
+INFO - 2026-11-27T21:26:21Z - Selected dataset part: "default"
+WARNING - 2026-11-27T21:26:21Z - Some of your subset selection [2026-11-27 00:00:00+00:00, 2026-12-07 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-06 00:00:00+00:00]
+INFO - 2026-11-27T21:26:28Z - Total size of the download: 40.66 MB.
+{
+  "file_size": "40.66 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-27T21:26:28+00:00 saved cmems_siconc_2026-11-27.nc (10 daily steps)
+cmems_siconc_2026-11-27.nc: 42.62 MB -> 4.08 MB (10.4x smaller, int16 packed)
+2026-11-27T21:26:29+00:00 compressed cmems_siconc_2026-11-27.nc
+INFO - 2026-11-27T21:26:33Z - Selected dataset version: "202406"
+INFO - 2026-11-27T21:26:33Z - Selected dataset part: "default"
+WARNING - 2026-11-27T21:26:33Z - Some of your subset selection [2026-11-27 00:00:00+00:00, 2026-12-07 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-06 00:00:00+00:00]
+WARNING - 2026-11-27T21:26:33Z - Some of your subset selection [0.0, 1.0] for the depth dimension exceed the dataset coordinates [0.49402499198913574, 5727.9169921875]
+INFO - 2026-11-27T21:26:38Z - Total size of the download: 20.34 MB.
+{
+  "file_size": "20.34 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-27T21:26:38+00:00 saved cmems_cur_2026-11-27.nc (10 daily steps)
+cmems_cur_2026-11-27.nc: 21.33 MB -> 3.91 MB (5.5x smaller, int16 packed)
+2026-11-27T21:26:39+00:00 compressed cmems_cur_2026-11-27.nc
+INFO - 2026-11-27T21:26:42Z - Selected dataset version: "202411"
+INFO - 2026-11-27T21:26:42Z - Selected dataset part: "default"
+  0%|          | [00:00<?]  2%|▏         | [00:03<02:54] 25%|██▌       | [00:03<00:07] 39%|███▉      | [00:03<00:04] 48%|████▊     | [00:05<00:04] 54%|█████▎    | [00:05<00:03] 73%|███████▎  | [00:05<00:01] 86%|████████▌ | [00:06<00:00] 93%|█████████▎| [00:06<00:00]100%|██████████| [00:06<00:00]
+INFO - 2026-11-27T21:26:52Z - Total size of the download: 81.30 MB.
+{
+  "file_size": "81.30 MB",
+  "data_transfer_size": "1280.70 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+reduced cmems_wav_2026-11-27.nc: 10 days
+2026-11-27T21:26:53+00:00 saved cmems_wav_2026-11-27.nc (10 daily steps)
+cmems_wav_2026-11-27.nc: 2.25 MB -> 1.76 MB (1.3x smaller, int16 packed)
+2026-11-27T21:26:54+00:00 compressed cmems_wav_2026-11-27.nc
+INFO - 2026-11-27T21:26:58Z - Selected dataset version: "202406"
+INFO - 2026-11-27T21:26:58Z - Selected dataset part: "default"
+WARNING - 2026-11-27T21:26:58Z - Some of your subset selection [2026-11-27 00:00:00+00:00, 2026-12-07 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-12-06 00:00:00+00:00]
+WARNING - 2026-11-27T21:26:58Z - Some of your subset selection [0.0, 1.0] for the depth dimension exceed the dataset coordinates [0.49402499198913574, 5727.9169921875]
+INFO - 2026-11-27T21:27:02Z - Total size of the download: 10.18 MB.
+{
+  "file_size": "10.18 MB",
+  "data_transfer_size": "80.04 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-27T21:27:03+00:00 saved cmems_sst_2026-11-27.nc
+cmems_sst_2026-11-27.nc: 10.68 MB -> 1.53 MB (7.0x smaller, int16 packed)
+2026-11-27T21:27:03+00:00 compressed cmems_sst_2026-11-27.nc
