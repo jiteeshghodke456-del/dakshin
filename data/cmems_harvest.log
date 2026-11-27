@@ -1578,3 +1578,7 @@ cmems_sst_2026-11-26.nc: 10.68 MB -> 1.51 MB (7.0x smaller, int16 packed)
 2026-11-27T01:02:31+00:00 already have cmems_cur_2026-11-26.nc, skipping
 2026-11-27T01:02:31+00:00 already have cmems_wav_2026-11-26.nc, skipping
 2026-11-27T01:02:31+00:00 already have cmems_sst_2026-11-26.nc, skipping
+2026-11-27T03:40:23+00:00 already have cmems_siconc_2026-11-26.nc, skipping
+2026-11-27T03:40:23+00:00 already have cmems_cur_2026-11-26.nc, skipping
+2026-11-27T03:40:23+00:00 already have cmems_wav_2026-11-26.nc, skipping
+2026-11-27T03:40:23+00:00 already have cmems_sst_2026-11-26.nc, skipping
